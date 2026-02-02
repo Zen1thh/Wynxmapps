@@ -1,0 +1,116 @@
+import { Station, Booking, User, ChartData, Review } from './types';
+
+export const MOCK_STATIONS: Station[] = [
+    { 
+        id: '1', 
+        name: 'Ayala Triangle Gardens', 
+        location: 'Paseo de Roxas, Makati, Metro Manila', 
+        status: 'Online', 
+        chargerType: 'DC Fast', 
+        power: '150kW', 
+        rating: 4.8, 
+        totalSlots: 8, 
+        availableSlots: 3, 
+        solarOutput: 450,
+        coordinates: { lat: 14.5547, lng: 121.0244 }
+    },
+    { 
+        id: '2', 
+        name: 'BGC High Street', 
+        location: 'Taguig, Metro Manila', 
+        status: 'Online', 
+        chargerType: 'Level 2', 
+        power: '22kW', 
+        rating: 4.5, 
+        totalSlots: 12, 
+        availableSlots: 8, 
+        solarOutput: 320,
+        coordinates: { lat: 14.5509, lng: 121.0503 }
+    },
+    { 
+        id: '3', 
+        name: 'SLEX Shell Mamplasan', 
+        location: 'South Luzon Expressway, Biñan', 
+        status: 'Maintenance', 
+        chargerType: 'DC Fast', 
+        power: '350kW', 
+        rating: 4.2, 
+        totalSlots: 4, 
+        availableSlots: 0, 
+        solarOutput: 150,
+        coordinates: { lat: 14.3051, lng: 121.0964 }
+    },
+    { 
+        id: '4', 
+        name: 'SM Mall of Asia', 
+        location: 'Seaside Blvd, Pasay, Metro Manila', 
+        status: 'Offline', 
+        chargerType: 'Level 2', 
+        power: '11kW', 
+        rating: 3.9, 
+        totalSlots: 20, 
+        availableSlots: 20, 
+        solarOutput: 0,
+        coordinates: { lat: 14.5353, lng: 120.9826 }
+    },
+    { 
+        id: '5', 
+        name: 'Intramuros Tech Hub', 
+        location: 'General Luna St, Manila', 
+        status: 'Online', 
+        chargerType: 'DC Fast', 
+        power: '150kW', 
+        rating: 4.9, 
+        totalSlots: 6, 
+        availableSlots: 1, 
+        solarOutput: 510,
+        coordinates: { lat: 14.5905, lng: 120.9765 }
+    },
+];
+
+export const MOCK_BOOKINGS: Booking[] = [
+    { id: 'BK-001', userId: 'usr_1', stationName: 'Ayala Triangle Gardens', stationId: '1', date: '2023-10-25', time: '14:00', status: 'Active', amount: 25.50 },
+    { id: 'BK-002', userId: 'usr_2', stationName: 'BGC High Street', stationId: '2', date: '2023-10-25', time: '10:30', status: 'Completed', amount: 12.00 },
+    { id: 'BK-003', userId: 'usr_3', stationName: 'Intramuros Tech Hub', stationId: '5', date: '2023-10-24', time: '18:00', status: 'Completed', amount: 30.00 },
+    { id: 'BK-004', userId: 'usr_4', stationName: 'Ayala Triangle Gardens', stationId: '1', date: '2023-10-26', time: '09:00', status: 'Pending', amount: 28.00 },
+    { id: 'BK-005', userId: 'usr_5', stationName: 'SLEX Shell Mamplasan', stationId: '3', date: '2023-10-23', time: '12:00', status: 'Cancelled', amount: 0.00 },
+];
+
+export const MOCK_USERS: User[] = [
+    { id: 'usr_1', name: 'Alex Johnson', email: 'alex@example.com', role: 'Subscriber', status: 'Active', subscriptionPlan: 'SolarElite' },
+    { id: 'usr_2', name: 'Sarah Connor', email: 'sarah@example.com', role: 'User', status: 'Active', subscriptionPlan: 'Basic' },
+    { id: 'usr_3', name: 'Michael Chen', email: 'mike.chen@tech.com', role: 'Subscriber', status: 'Active', subscriptionPlan: 'Premium' },
+    { id: 'usr_4', name: 'Emily Blunt', email: 'emily@studio.com', role: 'User', status: 'Inactive', subscriptionPlan: 'Basic' },
+    { id: 'usr_5', name: 'David Kim', email: 'dkim@finance.com', role: 'Subscriber', status: 'Active', subscriptionPlan: 'Premium' },
+];
+
+export const MOCK_REVIEWS: Review[] = [
+    { id: 'rev_1', userId: 'usr_1', userName: 'Alex Johnson', stationId: '1', stationName: 'Ayala Triangle Gardens', rating: 5, comment: 'Great charging speed and the solar canopy is a nice touch!', date: '2023-10-25', status: 'Published' },
+    { id: 'rev_2', userId: 'usr_4', userName: 'Emily Blunt', stationId: '2', stationName: 'BGC High Street', rating: 2, comment: 'One of the connectors was broken. Please fix.', date: '2023-10-24', status: 'Flagged' },
+    { id: 'rev_3', userId: 'usr_3', userName: 'Michael Chen', stationId: '5', stationName: 'Intramuros Tech Hub', rating: 4, comment: 'Good location but busy during lunch hours.', date: '2023-10-23', status: 'Published' },
+];
+
+export const REVENUE_DATA: ChartData[] = [
+    { name: 'Jan', value: 4000, value2: 2400 },
+    { name: 'Feb', value: 3000, value2: 1398 },
+    { name: 'Mar', value: 2000, value2: 9800 },
+    { name: 'Apr', value: 2780, value2: 3908 },
+    { name: 'May', value: 1890, value2: 4800 },
+    { name: 'Jun', value: 2390, value2: 3800 },
+    { name: 'Jul', value: 3490, value2: 4300 },
+    { name: 'Aug', value: 4200, value2: 5100 },
+    { name: 'Sep', value: 3800, value2: 4600 },
+    { name: 'Oct', value: 5100, value2: 5800 },
+    { name: 'Nov', value: 4600, value2: 5200 },
+    { name: 'Dec', value: 6000, value2: 6400 },
+];
+
+export const STATION_USAGE_DATA: ChartData[] = [
+    { name: 'Mon', value: 65 },
+    { name: 'Tue', value: 59 },
+    { name: 'Wed', value: 80 },
+    { name: 'Thu', value: 81 },
+    { name: 'Fri', value: 56 },
+    { name: 'Sat', value: 95 },
+    { name: 'Sun', value: 88 },
+];
