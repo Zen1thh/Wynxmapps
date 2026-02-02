@@ -12,7 +12,16 @@ export const MOCK_STATIONS: Station[] = [
         totalSlots: 8, 
         availableSlots: 3, 
         solarOutput: 450,
-        coordinates: { lat: 14.5547, lng: 121.0244 }
+        energyStored: 320,
+        maxEnergyStorage: 500,
+        coordinates: { lat: 14.5547, lng: 121.0244 },
+        sessions: [
+            { driverName: 'Marco P.', driverAvatar: 'https://i.pravatar.cc/150?img=11', carModel: 'Tesla Model 3', chargeLevel: 78, timeElapsed: '45m', timeToFull: '20m' },
+            { driverName: 'Sarah L.', driverAvatar: 'https://i.pravatar.cc/150?img=5', carModel: 'Hyundai Ioniq 5', chargeLevel: 45, timeElapsed: '15m', timeToFull: '55m' },
+            { driverName: 'Miguel R.', driverAvatar: 'https://i.pravatar.cc/150?img=3', carModel: 'Nissan Leaf', chargeLevel: 92, timeElapsed: '1h 10m', timeToFull: '5m' },
+            { driverName: 'Anna K.', driverAvatar: 'https://i.pravatar.cc/150?img=9', carModel: 'Kia EV6', chargeLevel: 25, timeElapsed: '10m', timeToFull: '1h 05m' },
+            { driverName: 'John D.', driverAvatar: 'https://i.pravatar.cc/150?img=13', carModel: 'BYD Atto 3', chargeLevel: 60, timeElapsed: '30m', timeToFull: '40m' }
+        ]
     },
     { 
         id: '2', 
@@ -25,7 +34,15 @@ export const MOCK_STATIONS: Station[] = [
         totalSlots: 12, 
         availableSlots: 8, 
         solarOutput: 320,
-        coordinates: { lat: 14.5509, lng: 121.0503 }
+        energyStored: 210,
+        maxEnergyStorage: 600,
+        coordinates: { lat: 14.5509, lng: 121.0503 },
+        sessions: [
+            { driverName: 'Jessica T.', driverAvatar: 'https://i.pravatar.cc/150?img=24', carModel: 'Porsche Taycan', chargeLevel: 88, timeElapsed: '2h 15m', timeToFull: '25m' },
+            { driverName: 'Robert Y.', driverAvatar: 'https://i.pravatar.cc/150?img=68', carModel: 'Audi e-tron', chargeLevel: 34, timeElapsed: '1h 00m', timeToFull: '4h 20m' },
+            { driverName: 'Lisa M.', driverAvatar: 'https://i.pravatar.cc/150?img=44', carModel: 'BMW iX', chargeLevel: 55, timeElapsed: '2h 30m', timeToFull: '3h 10m' },
+            { driverName: 'Kevin B.', driverAvatar: 'https://i.pravatar.cc/150?img=53', carModel: 'Jaguar I-PACE', chargeLevel: 70, timeElapsed: '3h 10m', timeToFull: '1h 50m' }
+        ]
     },
     { 
         id: '3', 
@@ -38,7 +55,10 @@ export const MOCK_STATIONS: Station[] = [
         totalSlots: 4, 
         availableSlots: 0, 
         solarOutput: 150,
-        coordinates: { lat: 14.3051, lng: 121.0964 }
+        energyStored: 85,
+        maxEnergyStorage: 400,
+        coordinates: { lat: 14.3051, lng: 121.0964 },
+        sessions: [] // No active sessions during maintenance
     },
     { 
         id: '4', 
@@ -51,7 +71,10 @@ export const MOCK_STATIONS: Station[] = [
         totalSlots: 20, 
         availableSlots: 20, 
         solarOutput: 0,
-        coordinates: { lat: 14.5353, lng: 120.9826 }
+        energyStored: 0,
+        maxEnergyStorage: 800,
+        coordinates: { lat: 14.5353, lng: 120.9826 },
+        sessions: []
     },
     { 
         id: '5', 
@@ -64,7 +87,16 @@ export const MOCK_STATIONS: Station[] = [
         totalSlots: 6, 
         availableSlots: 1, 
         solarOutput: 510,
-        coordinates: { lat: 14.5905, lng: 120.9765 }
+        energyStored: 480,
+        maxEnergyStorage: 500,
+        coordinates: { lat: 14.5905, lng: 120.9765 },
+        sessions: [
+            { driverName: 'Carlos S.', driverAvatar: 'https://i.pravatar.cc/150?img=60', carModel: 'Volvo XC40', chargeLevel: 82, timeElapsed: '50m', timeToFull: '15m' },
+            { driverName: 'Maria G.', driverAvatar: 'https://i.pravatar.cc/150?img=41', carModel: 'Mercedes EQC', chargeLevel: 15, timeElapsed: '05m', timeToFull: '1h 25m' },
+            { driverName: 'James W.', driverAvatar: 'https://i.pravatar.cc/150?img=33', carModel: 'Tesla Model Y', chargeLevel: 65, timeElapsed: '35m', timeToFull: '30m' },
+            { driverName: 'Patricia H.', driverAvatar: 'https://i.pravatar.cc/150?img=20', carModel: 'Hyundai Kona', chargeLevel: 95, timeElapsed: '1h 15m', timeToFull: '5m' },
+            { driverName: 'David L.', driverAvatar: 'https://i.pravatar.cc/150?img=12', carModel: 'MG ZS EV', chargeLevel: 40, timeElapsed: '25m', timeToFull: '55m' }
+        ]
     },
 ];
 

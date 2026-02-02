@@ -1,3 +1,12 @@
+export interface StationSession {
+    driverName: string;
+    driverAvatar: string;
+    carModel: string;
+    chargeLevel: number; // percentage
+    timeElapsed: string;
+    timeToFull: string;
+}
+
 export interface Station {
     id: string;
     name: string;
@@ -9,10 +18,13 @@ export interface Station {
     totalSlots: number;
     availableSlots: number;
     solarOutput: number; // in kWh
+    energyStored: number; // in kWh
+    maxEnergyStorage: number; // in kWh (Capacity)
     coordinates: {
         lat: number;
         lng: number;
     };
+    sessions?: StationSession[];
 }
 
 export interface Booking {

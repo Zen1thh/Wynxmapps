@@ -3,7 +3,7 @@ import { Card } from './ui/Card';
 import { Modal } from './ui/Modal';
 import { MOCK_STATIONS } from '../constants';
 import { Station } from '../types';
-import { Battery, Zap, Edit, Trash2, Search, Map as MapIcon, LayoutGrid, Layers, Sun, Moon, Satellite, MapPin, Navigation, Crosshair, Check, X, AlertCircle } from 'lucide-react';
+import { Battery, Zap, Edit, Trash2, Search, Map as MapIcon, LayoutGrid, Layers, Sun, Moon, Satellite, MapPin, Navigation, Crosshair, Check, X, AlertCircle, AlertTriangle } from 'lucide-react';
 import gsap from 'gsap';
 import L from 'leaflet';
 
@@ -33,7 +33,14 @@ export const Stations: React.FC = () => {
     const [viewMode, setViewMode] = useState<'list' | 'map'>('map');
     const [mapStyle, setMapStyle] = useState<MapStyle>('dark');
     const [stations, setStations] = useState<Station[]>(MOCK_STATIONS);
+    
+    // Modal States
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    
+    // Edit/Delete Logic State
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [stationToDelete, setStationToDelete] = useState<Station | null>(null);
     
     // Pinpoint Mode State
     const [isPinpointMode, setIsPinpointMode] = useState(false);
@@ -47,6 +54,8 @@ export const Stations: React.FC = () => {
         power: '',
         totalSlots: 4,
         solarOutput: 0,
+        energyStored: 0,
+        maxEnergyStorage: 500,
         lat: 14.5995,
         lng: 120.9842
     });
@@ -107,32 +116,161 @@ export const Stations: React.FC = () => {
                         popupAnchor: [0, -10]
                     });
 
+                    // SVG Strings for Popup Icons
+                    const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
+                    const zapIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+                    const starIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="text-yellow-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+                    const mapPinIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><path d="M20 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
+                    const userIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+                    const lockIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+
+                    // Generate Sessions HTML
+                    let sessionsHtml = '';
+
+                    // 1. Active Sessions
+                    if (station.sessions && station.sessions.length > 0) {
+                        sessionsHtml += station.sessions.map(session => `
+                            <div class="flex items-center gap-3 p-2 bg-white/5 rounded-lg border border-white/5 mb-2 last:mb-0 hover:bg-white/10 transition-colors">
+                                <img src="${session.driverAvatar}" class="w-9 h-9 rounded-full border border-white/10 object-cover shadow-sm" alt="${session.driverName}" />
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex justify-between items-center mb-0.5">
+                                        <span class="text-xs font-bold text-white truncate">${session.carModel}</span>
+                                        <span class="text-[10px] ${session.chargeLevel > 80 ? 'text-emerald-400' : session.chargeLevel > 30 ? 'text-blue-400' : 'text-amber-400'} font-bold">${session.chargeLevel}%</span>
+                                    </div>
+                                    <div class="flex justify-between text-[10px] text-slate-400">
+                                        <span class="flex items-center gap-1">⚡ ${session.timeElapsed}</span>
+                                        <span class="flex items-center gap-1">⏳ ${session.timeToFull} left</span>
+                                    </div>
+                                    <div class="w-full bg-slate-700/50 h-1 rounded-full mt-1.5 overflow-hidden">
+                                        <div class="h-full ${session.chargeLevel > 80 ? 'bg-emerald-500' : session.chargeLevel > 30 ? 'bg-blue-500' : 'bg-amber-500'}" style="width: ${session.chargeLevel}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+
+                    // 2. Available Slots (Empty User Placeholders)
+                    for (let i = 0; i < station.availableSlots; i++) {
+                        sessionsHtml += `
+                            <div class="flex items-center gap-3 p-2 rounded-lg border border-dashed border-white/10 mb-2 last:mb-0 bg-white/[0.02] hover:bg-white/[0.05] transition-colors">
+                                <div class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center border border-white/5 text-slate-500">
+                                    ${userIcon}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-xs font-medium text-slate-400">Available Slot</div>
+                                    <div class="text-[10px] text-slate-500">Ready for connection</div>
+                                </div>
+                                 <div class="px-2 py-0.5 rounded text-[9px] bg-emerald-500/10 text-emerald-500 border border-emerald-500/10 uppercase font-bold tracking-wider">Empty</div>
+                            </div>
+                        `;
+                    }
+
+                    // 3. Unavailable/Maintenance Slots
+                    const occupiedCount = station.sessions ? station.sessions.length : 0;
+                    const unavailableCount = Math.max(0, station.totalSlots - occupiedCount - station.availableSlots);
+
+                    for (let i = 0; i < unavailableCount; i++) {
+                        sessionsHtml += `
+                            <div class="flex items-center gap-3 p-2 rounded-lg border border-dashed border-white/5 mb-2 last:mb-0 bg-black/20 opacity-50 cursor-not-allowed">
+                                <div class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center border border-white/5 text-slate-600">
+                                    ${lockIcon}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-xs font-medium text-slate-500">Slot Unavailable</div>
+                                    <div class="text-[10px] text-slate-600">${station.status === 'Maintenance' ? 'Maintenance Mode' : 'System Offline'}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    // Calculate battery percentage
+                    const storagePct = station.maxEnergyStorage > 0 ? Math.min(100, Math.round((station.energyStored / station.maxEnergyStorage) * 100)) : 0;
+                    const storageColor = storagePct > 50 ? 'bg-emerald-500' : storagePct > 20 ? 'bg-amber-500' : 'bg-red-500';
+                    const storageTextColor = storagePct > 50 ? 'text-emerald-400' : storagePct > 20 ? 'text-amber-400' : 'text-red-400';
+
                     const popupContent = `
-                        <div class="p-2 min-w-[150px]">
-                            <h3 class="font-bold text-sm mb-1">${station.name}</h3>
-                            <div class="text-xs text-slate-300 mb-2">${station.location}</div>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                                station.status === 'Online' ? 'bg-emerald-500/20 text-emerald-400' : 
-                                station.status === 'Maintenance' ? 'bg-amber-500/20 text-amber-400' : 'bg-red-500/20 text-red-400'
-                            }">${station.status}</span>
-                            <div class="flex items-center gap-1 mt-2 text-xs text-slate-400">
-                                <span class="font-semibold text-white">${station.availableSlots}/${station.totalSlots}</span> Slots Available
+                        <div class="min-w-[340px] font-sans">
+                            <div class="flex justify-between items-start mb-3 border-b border-white/10 pb-3">
+                                <div>
+                                    <h3 class="font-bold text-base text-white leading-tight">${station.name}</h3>
+                                    <div class="flex items-center gap-1 text-xs text-slate-400 mt-1">
+                                       ${mapPinIcon} <span class="truncate max-w-[220px]">${station.location}</span>
+                                    </div>
+                                </div>
+                                 <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                                    station.status === 'Online' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20' : 
+                                    station.status === 'Maintenance' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/20' : 
+                                    'bg-red-500/20 text-red-400 border border-red-500/20'
+                                }">${station.status}</span>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="col-span-2 bg-white/5 p-3 rounded-lg border border-white/5">
+                                    <div class="flex justify-between items-center mb-1.5">
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="text-[10px] text-slate-400 uppercase tracking-wide font-bold">Storage Status</span>
+                                            ${storagePct < 20 ? `<span class="flex h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>` : ''}
+                                        </div>
+                                        <span class="text-xs font-bold ${storageTextColor}">${storagePct}%</span>
+                                    </div>
+                                    <div class="w-full h-2.5 bg-slate-700/40 rounded-full overflow-hidden mb-1.5 shadow-inner">
+                                        <div class="h-full ${storageColor} transition-all duration-500 shadow-[0_0_10px_rgba(0,0,0,0.3)] relative" style="width: ${storagePct}%">
+                                            <div class="absolute inset-0 bg-white/20"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between items-center text-[10px]">
+                                        <span class="text-white font-medium flex items-center gap-1">Available: ${station.energyStored} kWh</span>
+                                        <span class="text-slate-500">Cap: ${station.maxEnergyStorage} kWh</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-2 mb-4">
+                                <div class="bg-white/5 p-2 rounded-lg border border-white/5 flex flex-col items-center justify-center text-center">
+                                    <div class="text-[9px] text-slate-400 uppercase tracking-wide mb-1">Solar Gen</div>
+                                    <div class="flex items-center gap-1 text-sm font-bold text-white">
+                                       ${sunIcon} ${station.solarOutput}
+                                    </div>
+                                </div>
+                                 <div class="bg-white/5 p-2 rounded-lg border border-white/5 flex flex-col items-center justify-center text-center">
+                                    <div class="text-[9px] text-slate-400 uppercase tracking-wide mb-1">Max Power</div>
+                                    <div class="flex items-center gap-1 text-sm font-bold text-white">
+                                       ${zapIcon} ${station.power}
+                                    </div>
+                                </div>
+                                 <div class="bg-white/5 p-2 rounded-lg border border-white/5 flex flex-col items-center justify-center text-center">
+                                    <div class="text-[9px] text-slate-400 uppercase tracking-wide mb-1">Rating</div>
+                                    <div class="flex items-center gap-1 text-sm font-bold text-white">
+                                       ${starIcon} ${station.rating}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center text-xs mb-2 pt-1 border-t border-white/5 pt-3">
+                                <span class="text-slate-400 font-medium uppercase tracking-wider">Live Sessions</span>
+                                <span class="text-white font-bold bg-white/10 px-2 py-0.5 rounded text-[10px] border border-white/5">
+                                   ${station.totalSlots - station.availableSlots}/${station.totalSlots} Slots Active
+                                </span>
+                            </div>
+
+                            <div class="max-h-[160px] overflow-y-auto custom-scrollbar pr-1 -mr-1">
+                                ${sessionsHtml}
                             </div>
                         </div>
                     `;
                     
-                    const tooltip = L.tooltip({
-                        permanent: false,
-                        direction: 'top',
-                        className: 'custom-tooltip',
-                        offset: [0, -12],
-                        opacity: 1
+                    const popup = L.popup({
+                        maxWidth: 360,
+                        minWidth: 340,
+                        closeButton: false, 
+                        autoPan: true,
+                        autoPanPadding: [20, 20],
+                        offset: [0, -20]
                     }).setContent(popupContent);
 
                     const marker = L.marker([station.coordinates.lat, station.coordinates.lng], { icon })
                         .addTo(map)
-                        .bindPopup(popupContent)
-                        .bindTooltip(tooltip);
+                        .bindPopup(popup);
                     
                     markersRef.current[station.id] = marker;
                 });
@@ -232,13 +370,32 @@ export const Stations: React.FC = () => {
         if (isPinpointMode) return; // Disable selection in pinpoint mode
 
         if (mapInstanceRef.current) {
-            mapInstanceRef.current.flyTo([station.coordinates.lat, station.coordinates.lng], 16, {
+            const map = mapInstanceRef.current;
+            const targetZoom = 16;
+            
+            // Calculate a new center point that places the marker in the lower half of the screen
+            // This ensures the tall popup (which opens upwards) fits within the view
+            const latLng = L.latLng(station.coordinates.lat, station.coordinates.lng);
+            
+            // Project the marker's lat/lng to pixel coordinates at the target zoom level
+            const point = map.project(latLng, targetZoom);
+            
+            // Subtract pixels from the Y coordinate to shift the view center "North"
+            // This moves the marker "South" (downwards) in the viewport
+            // 180px is a good offset for the tall popup to fit
+            const targetPoint = point.subtract([0, 180]); 
+            
+            // Unproject back to LatLng for the flyTo method
+            const targetCenter = map.unproject(targetPoint, targetZoom);
+
+            map.flyTo(targetCenter, targetZoom, {
                 duration: 1.2,
                 easeLinearity: 0.25
             });
+
             const marker = markersRef.current[station.id];
             if (marker) {
-                setTimeout(() => marker.openPopup(), 400);
+                setTimeout(() => marker.openPopup(), 300);
             }
         }
     };
@@ -261,33 +418,11 @@ export const Stations: React.FC = () => {
                 lng: Number(pinpointCoords.lng.toFixed(6))
             }));
             setIsPinpointMode(false);
-            setIsModalOpen(true);
+            openModal();
         }
     };
 
-    const handleAddStation = (e: React.FormEvent) => {
-        e.preventDefault();
-        const station: Station = {
-            id: (stations.length + 1).toString(),
-            name: newStation.name,
-            location: newStation.location,
-            status: newStation.status as any,
-            chargerType: 'DC Fast', // Default for now
-            power: newStation.power || '50kW',
-            rating: 5.0, // Default rating for new station
-            totalSlots: Number(newStation.totalSlots),
-            availableSlots: Number(newStation.totalSlots), // All slots available initially
-            solarOutput: Number(newStation.solarOutput),
-            coordinates: {
-                lat: Number(newStation.lat),
-                lng: Number(newStation.lng)
-            }
-        };
-        
-        setStations([...stations, station]);
-        setIsModalOpen(false);
-        
-        // Reset form
+    const resetForm = () => {
         setNewStation({
             name: '',
             location: '',
@@ -295,9 +430,99 @@ export const Stations: React.FC = () => {
             power: '',
             totalSlots: 4,
             solarOutput: 0,
+            energyStored: 0,
+            maxEnergyStorage: 500,
             lat: 14.5995,
             lng: 120.9842
         });
+        setEditingId(null);
+    };
+
+    const openModal = (station?: Station) => {
+        if (station) {
+            setEditingId(station.id);
+            setNewStation({
+                name: station.name,
+                location: station.location,
+                status: station.status,
+                power: station.power,
+                totalSlots: station.totalSlots,
+                solarOutput: station.solarOutput,
+                energyStored: station.energyStored,
+                maxEnergyStorage: station.maxEnergyStorage,
+                lat: station.coordinates.lat,
+                lng: station.coordinates.lng
+            });
+        } else {
+            resetForm();
+        }
+        setIsModalOpen(true);
+    };
+
+    const handleDeleteClick = (station: Station) => {
+        setStationToDelete(station);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = () => {
+        if (stationToDelete) {
+            setStations(prev => prev.filter(s => s.id !== stationToDelete.id));
+            setIsDeleteModalOpen(false);
+            setStationToDelete(null);
+        }
+    };
+
+    const handleSaveStation = (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        if (editingId) {
+            // Update existing station
+            setStations(prev => prev.map(s => {
+                if (s.id === editingId) {
+                    return {
+                        ...s,
+                        name: newStation.name,
+                        location: newStation.location,
+                        status: newStation.status as any,
+                        power: newStation.power,
+                        totalSlots: Number(newStation.totalSlots),
+                        availableSlots: Math.min(s.availableSlots, Number(newStation.totalSlots)), // Adjust available if total reduced
+                        solarOutput: Number(newStation.solarOutput),
+                        energyStored: Number(newStation.energyStored),
+                        maxEnergyStorage: Number(newStation.maxEnergyStorage),
+                        coordinates: {
+                            lat: Number(newStation.lat),
+                            lng: Number(newStation.lng)
+                        }
+                    };
+                }
+                return s;
+            }));
+        } else {
+            // Add new station
+            const station: Station = {
+                id: (Math.random() * 10000).toString(), // Simple ID generation
+                name: newStation.name,
+                location: newStation.location,
+                status: newStation.status as any,
+                chargerType: 'DC Fast', // Default
+                power: newStation.power || '50kW',
+                rating: 5.0, // Default
+                totalSlots: Number(newStation.totalSlots),
+                availableSlots: Number(newStation.totalSlots),
+                solarOutput: Number(newStation.solarOutput),
+                energyStored: Number(newStation.energyStored),
+                maxEnergyStorage: Number(newStation.maxEnergyStorage),
+                coordinates: {
+                    lat: Number(newStation.lat),
+                    lng: Number(newStation.lng)
+                }
+            };
+            setStations([...stations, station]);
+        }
+        
+        setIsModalOpen(false);
+        resetForm();
     };
 
     return (
@@ -335,7 +560,7 @@ export const Stations: React.FC = () => {
                         />
                     </div>
                     <button 
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => openModal()}
                         className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors shadow-lg shadow-blue-500/20 whitespace-nowrap"
                     >
                         + Add Station
@@ -389,10 +614,18 @@ export const Stations: React.FC = () => {
                                         <span className="text-yellow-400 font-bold">{station.rating} ★</span>
                                     </div>
                                     <div className="flex gap-2">
-                                        <button className="p-2 hover:bg-blue-500/20 rounded-lg text-slate-400 hover:text-blue-400 transition-colors">
+                                        <button 
+                                            onClick={() => openModal(station)}
+                                            className="p-2 hover:bg-blue-500/20 rounded-lg text-slate-400 hover:text-blue-400 transition-colors"
+                                            title="Edit Station"
+                                        >
                                             <Edit size={16} />
                                         </button>
-                                        <button className="p-2 hover:bg-red-500/20 rounded-lg text-slate-400 hover:text-red-400 transition-colors">
+                                        <button 
+                                            onClick={() => handleDeleteClick(station)}
+                                            className="p-2 hover:bg-red-500/20 rounded-lg text-slate-400 hover:text-red-400 transition-colors"
+                                            title="Delete Station"
+                                        >
                                             <Trash2 size={16} />
                                         </button>
                                     </div>
@@ -499,48 +732,88 @@ export const Stations: React.FC = () => {
                             </div>
                             
                             <div className="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar">
-                                {stations.map(station => (
-                                    <div 
-                                        key={station.id}
-                                        onClick={() => handleStationSelect(station)}
-                                        className={`p-3 rounded-xl bg-white/5 border border-white/5 transition-all cursor-pointer group relative overflow-hidden ${isPinpointMode ? 'opacity-50 pointer-events-none' : 'hover:bg-white/10 hover:border-blue-500/30'}`}
-                                    >
-                                        <div className="absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                        <div className="relative z-10">
-                                            <div className="flex justify-between items-start mb-1">
-                                                <h4 className="font-bold text-sm text-white group-hover:text-blue-400 transition-colors truncate pr-2">{station.name}</h4>
-                                                <span className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
-                                                    station.status === 'Online' ? 'bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]' : 
-                                                    station.status === 'Maintenance' ? 'bg-amber-500' : 'bg-red-500'
-                                                }`}></span>
-                                            </div>
-                                            <p className="text-xs text-slate-400 truncate mb-2">{station.location}</p>
-                                            <div className="flex items-center justify-between text-xs">
-                                                <span className="flex items-center gap-1 text-slate-300 bg-black/20 px-1.5 py-0.5 rounded border border-white/5">
-                                                    <Zap size={10} className="text-yellow-400" /> {station.power}
-                                                </span>
-                                                <button className="text-blue-400 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-                                                    <Navigation size={10} /> Locate
-                                                </button>
+                                {stations.map(station => {
+                                    const storagePct = station.maxEnergyStorage > 0 ? Math.min(100, Math.round((station.energyStored / station.maxEnergyStorage) * 100)) : 0;
+                                    const storageColor = storagePct > 50 ? 'bg-emerald-500' : storagePct > 20 ? 'bg-amber-500' : 'bg-red-500';
+                                    const storageTextColor = storagePct > 50 ? 'text-emerald-400' : storagePct > 20 ? 'text-amber-400' : 'text-red-400';
+
+                                    return (
+                                        <div 
+                                            key={station.id}
+                                            onClick={() => handleStationSelect(station)}
+                                            className={`p-3 rounded-xl bg-white/5 border border-white/5 transition-all cursor-pointer group relative overflow-hidden ${isPinpointMode ? 'opacity-50 pointer-events-none' : 'hover:bg-white/10 hover:border-blue-500/30'}`}
+                                        >
+                                            <div className="absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                            <div className="relative z-10">
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <h4 className="font-bold text-sm text-white group-hover:text-blue-400 transition-colors truncate pr-2">{station.name}</h4>
+                                                    <span className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
+                                                        station.status === 'Online' ? 'bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]' : 
+                                                        station.status === 'Maintenance' ? 'bg-amber-500' : 'bg-red-500'
+                                                    }`}></span>
+                                                </div>
+                                                
+                                                <div className="flex items-center gap-1 text-xs text-slate-400 mb-3">
+                                                    <MapPin size={10} className="shrink-0" />
+                                                    <p className="truncate">{station.location}</p>
+                                                </div>
+
+                                                <div className="grid grid-cols-2 gap-2 mb-3">
+                                                     <div className="bg-black/20 rounded px-2 py-1.5 border border-white/5 flex items-center justify-between">
+                                                        <span className="text-[10px] text-slate-400">Slots</span>
+                                                        <div className="flex items-center gap-1.5">
+                                                            <span className={`w-1.5 h-1.5 rounded-full ${station.availableSlots > 0 ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
+                                                            <span className="text-[10px] font-bold text-white">{station.availableSlots}/{station.totalSlots}</span>
+                                                        </div>
+                                                     </div>
+                                                     <div className="bg-black/20 rounded px-2 py-1.5 border border-white/5 flex items-center justify-between">
+                                                         <span className="text-[10px] text-slate-400">Power</span>
+                                                         <div className="flex items-center gap-1">
+                                                            <Zap size={10} className="text-yellow-400" />
+                                                            <span className="text-[10px] font-bold text-white">{station.power}</span>
+                                                         </div>
+                                                     </div>
+                                                </div>
+
+                                                <div className="bg-white/5 rounded-lg p-2.5 border border-white/5">
+                                                    <div className="flex justify-between items-center mb-1.5">
+                                                        <div className="flex items-center gap-1.5">
+                                                            <Battery size={10} className="text-slate-400" />
+                                                            <span className="text-[10px] font-medium text-slate-300">Storage</span>
+                                                        </div>
+                                                        <span className={`text-[10px] font-bold ${storageTextColor}`}>{storagePct}%</span>
+                                                    </div>
+                                                    <div className="w-full h-1.5 bg-slate-700/30 rounded-full overflow-hidden mb-1.5">
+                                                         <div className={`h-full ${storageColor} rounded-full transition-all duration-500`} style={{width: `${storagePct}%`}}></div>
+                                                    </div>
+                                                     <div className="flex justify-between items-center text-[9px]">
+                                                        <span className="text-white font-medium">{station.energyStored} <span className="text-slate-500">kWh</span></span>
+                                                        <span className="text-slate-500">Cap: {station.maxEnergyStorage}</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div className="mt-2 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-3 right-3 pointer-events-none">
+                                                     <Navigation size={12} className="text-blue-400" />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>
                 )}
             </div>
 
-            {/* Add Station Modal */}
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Add New Station">
-                <form onSubmit={handleAddStation} className="space-y-4">
+            {/* Add/Edit Station Modal */}
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingId ? "Edit Station" : "Add New Station"}>
+                <form onSubmit={handleSaveStation} className="space-y-4">
                     <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 flex items-start gap-3">
                          <div className="bg-blue-500/20 p-1.5 rounded-full mt-0.5">
                             <MapPin size={14} className="text-blue-400" />
                          </div>
                          <div>
-                             <p className="text-xs text-blue-300 font-medium uppercase tracking-wide mb-1">Coordinates Selected</p>
+                             <p className="text-xs text-blue-300 font-medium uppercase tracking-wide mb-1">Coordinates</p>
                              <p className="text-sm text-white font-mono">{newStation.lat}, {newStation.lng}</p>
                          </div>
                     </div>
@@ -646,6 +919,31 @@ export const Stations: React.FC = () => {
                             />
                         </div>
                     </div>
+                     
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-slate-400 mb-1">Energy Stored (kWh)</label>
+                            <input 
+                                type="number"
+                                min="0"
+                                name="energyStored" 
+                                value={newStation.energyStored} 
+                                onChange={handleInputChange} 
+                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" 
+                            />
+                        </div>
+                         <div>
+                            <label className="block text-sm font-medium text-slate-400 mb-1">Max Capacity (kWh)</label>
+                            <input 
+                                type="number"
+                                min="0"
+                                name="maxEnergyStorage" 
+                                value={newStation.maxEnergyStorage} 
+                                onChange={handleInputChange} 
+                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" 
+                            />
+                        </div>
+                    </div>
 
                     <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-6">
                         <button 
@@ -659,10 +957,47 @@ export const Stations: React.FC = () => {
                             type="submit" 
                             className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-blue-500/20"
                         >
-                            Add Station
+                            {editingId ? "Save Changes" : "Add Station"}
                         </button>
                     </div>
                 </form>
+            </Modal>
+
+            {/* Delete Confirmation Modal */}
+            <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} title="Delete Station">
+                <div className="space-y-4">
+                    {stationToDelete?.status === 'Online' && (
+                        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start gap-3">
+                            <AlertTriangle className="text-red-500 flex-shrink-0 mt-0.5" size={20} />
+                            <div>
+                                <h4 className="text-red-400 font-bold text-sm uppercase tracking-wide">Critical Warning</h4>
+                                <p className="text-sm text-red-200 mt-1">
+                                    This station is currently <strong>Online</strong>. Deleting it may disrupt active user sessions and bookings.
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                    
+                    <p className="text-slate-300">
+                        Are you sure you want to permanently delete <strong className="text-white">{stationToDelete?.name}</strong>? 
+                        This action cannot be undone.
+                    </p>
+
+                    <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-4">
+                        <button 
+                            onClick={() => setIsDeleteModalOpen(false)} 
+                            className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            onClick={confirmDelete} 
+                            className="bg-red-600 hover:bg-red-500 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-red-500/20 flex items-center gap-2"
+                        >
+                            <Trash2 size={16} /> Delete Station
+                        </button>
+                    </div>
+                </div>
             </Modal>
         </div>
     );
