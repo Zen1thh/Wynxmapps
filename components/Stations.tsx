@@ -3,7 +3,7 @@ import { Card } from './ui/Card';
 import { Modal } from './ui/Modal';
 import { MOCK_STATIONS } from '../constants';
 import { Station } from '../types';
-import { Battery, Zap, Edit, Trash2, Search, Map as MapIcon, LayoutGrid, Layers, Sun, Moon, Satellite, MapPin, Navigation, Crosshair, Check, X, AlertCircle, AlertTriangle } from 'lucide-react';
+import { Battery, Zap, Edit, Trash2, Search, Map as MapIcon, LayoutGrid, Layers, Sun, Moon, Satellite, MapPin, Navigation, Crosshair, Check, X, AlertCircle, AlertTriangle, Star } from 'lucide-react';
 import gsap from 'gsap';
 import L from 'leaflet';
 
@@ -620,64 +620,134 @@ export const Stations: React.FC = () => {
                 {viewMode === 'list' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                         {stations.map((station) => (
-                            <Card key={station.id} className="relative overflow-hidden group hover:border-blue-500/30 transition-colors">
-                                <div className="absolute top-0 right-0 p-4">
-                                    <span className={`px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${
-                                        station.status === 'Online' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                                        station.status === 'Maintenance' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                                        'bg-red-500/10 text-red-400 border border-red-500/20'
+                            <Card key={station.id} className="relative overflow-hidden group hover:border-blue-500/30 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-900/10 flex flex-col">
+                                {/* Header Section */}
+                                <div className="flex justify-between items-start mb-5 relative z-10">
+                                    <div className="flex items-start gap-4">
+                                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg transition-transform duration-300 group-hover:scale-110 shrink-0 ${
+                                            station.status === 'Online' ? 'bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-emerald-500/20' : 
+                                            station.status === 'Maintenance' ? 'bg-gradient-to-br from-amber-500 to-amber-700 shadow-amber-500/20' :
+                                            'bg-gradient-to-br from-red-500 to-red-700 shadow-red-500/20'
+                                        }`}>
+                                            <Zap size={24} fill="currentColor" />
+                                        </div>
+                                        <div className="min-w-0">
+                                             <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors leading-tight truncate">{station.name}</h3>
+                                             <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-1">
+                                                <MapPin size={12} className="shrink-0" />
+                                                <span className="truncate">{station.location}</span>
+                                             </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border backdrop-blur-md shrink-0 ${
+                                        station.status === 'Online' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                                        station.status === 'Maintenance' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                                        'bg-red-500/10 text-red-400 border-red-500/20'
                                     }`}>
                                         {station.status}
                                     </span>
                                 </div>
-                                
-                                <div className="flex items-start gap-4 mb-4">
-                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform duration-300">
-                                        <Zap size={24} fill="currentColor" />
+
+                                {/* Metrics Grid */}
+                                <div className="grid grid-cols-2 gap-3 mb-5">
+                                    {/* Availability Card */}
+                                    <div className="bg-slate-800/50 rounded-xl p-3 border border-white/5 hover:border-white/10 transition-colors">
+                                         <div className="flex justify-between items-center mb-2">
+                                            <span className="text-[10px] uppercase tracking-wide text-slate-500 font-bold">Availability</span>
+                                            <span className={`text-xs font-bold ${station.availableSlots > 0 ? 'text-blue-400' : 'text-red-400'}`}>
+                                                {Math.round((station.availableSlots / station.totalSlots) * 100)}%
+                                            </span>
+                                         </div>
+                                         <div className="flex items-center gap-2 mb-2">
+                                             <div className="flex-1 h-1.5 bg-slate-700/50 rounded-full overflow-hidden">
+                                                 <div className={`h-full rounded-full ${station.availableSlots > 0 ? 'bg-blue-500' : 'bg-red-500'}`} style={{ width: `${(station.availableSlots / station.totalSlots) * 100}%`}}></div>
+                                             </div>
+                                         </div>
+                                         <div className="flex justify-between text-xs font-medium">
+                                             <span className="text-white flex items-center gap-1">
+                                                {station.availableSlots} <span className="text-slate-500 text-[10px] uppercase font-normal">Free</span>
+                                             </span>
+                                             <span className="text-slate-400 flex items-center gap-1">
+                                                {station.totalSlots} <span className="text-slate-600 text-[10px] uppercase font-normal">Total</span>
+                                             </span>
+                                         </div>
                                     </div>
-                                    <div>
-                                        <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">{station.name}</h3>
-                                        <p className="text-sm text-slate-400">{station.location}</p>
+
+                                    {/* Energy Card */}
+                                     <div className="bg-slate-800/50 rounded-xl p-3 border border-white/5 hover:border-white/10 transition-colors">
+                                         <div className="flex justify-between items-center mb-2">
+                                            <span className="text-[10px] uppercase tracking-wide text-slate-500 font-bold">Storage</span>
+                                            <Battery size={12} className={station.energyStored > 0 ? 'text-emerald-400' : 'text-slate-600'} />
+                                         </div>
+                                         <div className="flex items-baseline gap-1 mb-1">
+                                             <span className="text-lg font-bold text-white leading-none">{station.energyStored}</span>
+                                             <span className="text-xs text-slate-500">kWh</span>
+                                         </div>
+                                         <div className="w-full h-1 bg-slate-700/50 rounded-full overflow-hidden">
+                                            <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${(station.energyStored / station.maxEnergyStorage) * 100}%`}}></div>
+                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4 mb-6">
-                                    <div className="bg-white/5 rounded-lg p-3 border border-white/5">
-                                        <div className="flex items-center gap-2 text-slate-400 text-xs mb-1">
-                                            <Battery size={14} /> Power
+                                {/* Tech Specs */}
+                                <div className="flex items-center gap-3 py-3 border-t border-white/5 mb-4">
+                                    <div className="flex-1 flex items-center gap-2">
+                                        <div className="p-1.5 rounded-lg bg-white/5 text-slate-400">
+                                            <Zap size={14} />
                                         </div>
-                                        <p className="text-white font-semibold">{station.power}</p>
+                                        <div className="min-w-0">
+                                            <p className="text-[9px] text-slate-500 uppercase tracking-wide">Power</p>
+                                            <p className="text-xs font-bold text-white truncate">{station.power}</p>
+                                        </div>
                                     </div>
-                                    <div className="bg-white/5 rounded-lg p-3 border border-white/5">
-                                        <div className="flex items-center gap-2 text-slate-400 text-xs mb-1">
-                                            <Zap size={14} /> Solar Output
+                                    <div className="w-[1px] h-6 bg-white/5"></div>
+                                    <div className="flex-1 flex items-center gap-2">
+                                        <div className="p-1.5 rounded-lg bg-white/5 text-slate-400">
+                                            <Sun size={14} />
                                         </div>
-                                        <p className="text-white font-semibold">{station.solarOutput} kWh</p>
+                                        <div className="min-w-0">
+                                            <p className="text-[9px] text-slate-500 uppercase tracking-wide">Solar</p>
+                                            <p className="text-xs font-bold text-white truncate">{station.solarOutput} <span className="text-[9px] font-normal text-slate-500">kWh</span></p>
+                                        </div>
+                                    </div>
+                                     <div className="w-[1px] h-6 bg-white/5"></div>
+                                    <div className="flex-1 flex items-center gap-2">
+                                        <div className="p-1.5 rounded-lg bg-white/5 text-slate-400">
+                                            <LayoutGrid size={14} />
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-[9px] text-slate-500 uppercase tracking-wide">Type</p>
+                                            <p className="text-xs font-bold text-white truncate">{station.chargerType}</p>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
-                                    <div className="text-sm">
-                                        <span className="text-slate-400">Rating: </span>
-                                        <span className="text-yellow-400 font-bold">{station.rating} ★</span>
+                                {/* Footer Actions */}
+                                <div className="flex items-center justify-between mt-auto pt-1">
+                                    <div className="flex items-center gap-1.5 bg-yellow-500/10 px-2.5 py-1.5 rounded-lg border border-yellow-500/20">
+                                        <Star size={12} className="text-yellow-400" fill="currentColor" />
+                                        <span className="text-xs font-bold text-yellow-400">{station.rating}</span>
                                     </div>
                                     <div className="flex gap-2">
                                         <button 
                                             onClick={() => openModal(station)}
-                                            className="p-2 hover:bg-blue-500/20 rounded-lg text-slate-400 hover:text-blue-400 transition-colors"
-                                            title="Edit Station"
+                                            className="flex items-center gap-2 px-3 py-1.5 bg-white/5 hover:bg-blue-600 hover:text-white text-slate-300 rounded-lg text-xs font-bold transition-all border border-white/5 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-600/20 group/edit"
                                         >
-                                            <Edit size={16} />
+                                            <Edit size={14} className="group-hover/edit:scale-110 transition-transform" /> Edit Station
                                         </button>
-                                        <button 
+                                         <button 
                                             onClick={() => handleDeleteClick(station)}
-                                            className="p-2 hover:bg-red-500/20 rounded-lg text-slate-400 hover:text-red-400 transition-colors"
-                                            title="Delete Station"
+                                            className="p-1.5 hover:bg-red-500/20 text-slate-500 hover:text-red-400 rounded-lg transition-colors border border-transparent hover:border-red-500/20"
+                                            title="Delete"
                                         >
                                             <Trash2 size={16} />
                                         </button>
                                     </div>
                                 </div>
+                                
+                                {/* Decorational Background Gradient */}
+                                <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl pointer-events-none group-hover:bg-blue-600/20 transition-colors"></div>
                             </Card>
                         ))}
                     </div>

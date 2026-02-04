@@ -1,3 +1,4 @@
+
 import { Station, Booking, User, ChartData, Review } from './types';
 
 // Helper for dynamic dates
@@ -136,7 +137,7 @@ export const MOCK_BOOKINGS: Booking[] = [
 ];
 
 export const MOCK_USERS: User[] = [
-    { id: 'usr_1', name: 'Alex Johnson', email: 'alex@example.com', role: 'Subscriber', status: 'Active', subscriptionPlan: 'SolarElite' },
+    { id: 'usr_1', name: 'Alex Johnson', email: 'alex@example.com', role: 'Subscriber', status: 'Active', subscriptionPlan: 'Elite' },
     { id: 'usr_2', name: 'Sarah Connor', email: 'sarah@example.com', role: 'User', status: 'Active', subscriptionPlan: 'Basic' },
     { id: 'usr_3', name: 'Michael Chen', email: 'mike.chen@tech.com', role: 'Subscriber', status: 'Active', subscriptionPlan: 'Premium' },
     { id: 'usr_4', name: 'Emily Blunt', email: 'emily@studio.com', role: 'User', status: 'Inactive', subscriptionPlan: 'Basic' },

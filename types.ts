@@ -1,4 +1,5 @@
 
+
 export interface StationSession {
     driverName: string;
     driverAvatar: string;
@@ -50,7 +51,7 @@ export interface User {
     email: string;
     role: 'Admin' | 'Subscriber' | 'User';
     status: 'Active' | 'Inactive';
-    subscriptionPlan?: 'Basic' | 'Premium' | 'SolarElite';
+    subscriptionPlan?: 'Free' | 'Basic' | 'Standard' | 'Deluxe' | 'Premium' | 'Elite' | 'Supreme';
 }
 
 export interface Review {
@@ -76,6 +77,7 @@ export enum ViewState {
     STATIONS = 'STATIONS',
     BOOKINGS = 'BOOKINGS',
     USERS = 'USERS',
+    SUBSCRIPTIONS = 'SUBSCRIPTIONS',
     SUPPORT = 'SUPPORT',
     REVIEWS = 'REVIEWS',
     SETTINGS = 'SETTINGS'

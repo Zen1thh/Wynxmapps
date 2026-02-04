@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Card } from './ui/Card';
 import { Modal } from './ui/Modal';
@@ -1178,8 +1177,9 @@ export const Bookings: React.FC = () => {
                                             const user = getUserForBooking(selectedBooking.userId);
                                             // Handle subscription plan display
                                             let plan = user?.subscriptionPlan || 'Free';
+                                            
                                             // Map legacy mock data 'SolarElite' to 'Elite' for consistency with requested list
-                                            if (plan === 'SolarElite') plan = 'Elite';
+                                            if ((plan as string) === 'SolarElite') plan = 'Elite';
 
                                             const getPlanColor = (p: string) => {
                                                 switch (p) {

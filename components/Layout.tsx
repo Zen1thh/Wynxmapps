@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ViewState } from '../types';
 import { 
-    LayoutDashboard, MapPin, Calendar, Users, MessageSquare, Settings, LogOut, Bell, Search, Menu, Star
+    LayoutDashboard, MapPin, Calendar, Users, MessageSquare, Settings, LogOut, Bell, Search, Menu, Star, CreditCard
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -76,6 +76,12 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
                         label="Users" 
                         active={currentView === ViewState.USERS}
                         onClick={() => { setCurrentView(ViewState.USERS); setSidebarOpen(false); }}
+                    />
+                     <NavItem 
+                        icon={<CreditCard size={18} />} 
+                        label="Subscription" 
+                        active={currentView === ViewState.SUBSCRIPTIONS}
+                        onClick={() => { setCurrentView(ViewState.SUBSCRIPTIONS); setSidebarOpen(false); }}
                     />
                     <NavItem 
                         icon={<Star size={18} />} 

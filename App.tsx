@@ -6,6 +6,7 @@ import { Bookings } from './components/Bookings';
 import { Users } from './components/Users';
 import { Support } from './components/Support';
 import { Reviews } from './components/Reviews';
+import { Subscription } from './components/Subscription';
 import { ViewState } from './types';
 
 const PlaceholderView: React.FC<{ title: string }> = ({ title }) => (
@@ -28,6 +29,8 @@ function App() {
             return <Bookings />;
         case ViewState.USERS:
             return <Users />;
+        case ViewState.SUBSCRIPTIONS:
+            return <Subscription />;
         case ViewState.SUPPORT:
             return <Support />;
         case ViewState.REVIEWS:

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { Card } from './ui/Card';
 import { MOCK_USERS } from '../constants';
@@ -60,7 +61,7 @@ export const Users: React.FC = () => {
                                     <td className="px-6 py-4">
                                         {user.subscriptionPlan ? (
                                             <span className={`px-2 py-1 rounded-md text-xs font-medium ${
-                                                user.subscriptionPlan === 'SolarElite' ? 'bg-amber-500/10 text-amber-400' : 
+                                                user.subscriptionPlan === 'Elite' ? 'bg-amber-500/10 text-amber-400' : 
                                                 user.subscriptionPlan === 'Premium' ? 'bg-purple-500/10 text-purple-400' :
                                                 'bg-slate-500/10 text-slate-400'
                                             }`}>
