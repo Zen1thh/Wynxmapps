@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 interface CardProps {
   children: React.ReactNode;
@@ -8,9 +8,9 @@ interface CardProps {
   action?: React.ReactNode;
 }
 
-export const Card: React.FC<CardProps> = ({ children, className = '', title, subtitle, action }) => {
+export const Card = forwardRef<HTMLDivElement, CardProps>(({ children, className = '', title, subtitle, action }, ref) => {
   return (
-    <div className={`glass-card rounded-2xl p-6 flex flex-col ${className}`}>
+    <div ref={ref} className={`glass-card rounded-2xl p-6 flex flex-col ${className}`}>
       {(title || action) && (
         <div className="flex justify-between items-start mb-4">
           <div>
@@ -25,4 +25,6 @@ export const Card: React.FC<CardProps> = ({ children, className = '', title, sub
       </div>
     </div>
   );
-};
+});
+
+Card.displayName = 'Card';

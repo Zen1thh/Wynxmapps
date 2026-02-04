@@ -129,24 +129,47 @@ export const Stations: React.FC = () => {
 
                     // 1. Active Sessions
                     if (station.sessions && station.sessions.length > 0) {
-                        sessionsHtml += station.sessions.map(session => `
-                            <div class="flex items-center gap-3 p-2 bg-white/5 rounded-lg border border-white/5 mb-2 last:mb-0 hover:bg-white/10 transition-colors">
-                                <img src="${session.driverAvatar}" class="w-9 h-9 rounded-full border border-white/10 object-cover shadow-sm" alt="${session.driverName}" />
+                        sessionsHtml += station.sessions.map(session => {
+                            const plan = session.subscriptionPlan || 'Free';
+                            let planClass = 'bg-slate-500/10 text-slate-400 border-slate-500/20'; // Free/Basic
+                            
+                            if (plan === 'Supreme') planClass = 'bg-rose-500/10 text-rose-400 border-rose-500/20 shadow-[0_0_6px_rgba(244,63,94,0.2)]';
+                            else if (plan === 'Elite') planClass = 'bg-amber-500/10 text-amber-400 border-amber-500/20 shadow-[0_0_6px_rgba(245,158,11,0.2)]';
+                            else if (plan === 'Premium') planClass = 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+                            else if (plan === 'Deluxe') planClass = 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20';
+                            else if (plan === 'Standard') planClass = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+                            else if (plan === 'Basic') planClass = 'bg-slate-500/10 text-slate-300 border-slate-500/20';
+
+                            return `
+                            <div class="flex items-start gap-3 p-2.5 bg-white/5 rounded-xl border border-white/5 mb-2 last:mb-0 hover:bg-white/10 transition-colors group">
+                                <div class="relative mt-0.5">
+                                    <img src="${session.driverAvatar}" class="w-10 h-10 rounded-full border border-white/10 object-cover shadow-sm" alt="${session.driverName}" />
+                                    ${['Supreme', 'Elite'].includes(plan) ? `<div class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#0f172a] flex items-center justify-center border border-white/10 text-[8px] shadow-sm">👑</div>` : ''}
+                                </div>
                                 <div class="flex-1 min-w-0">
-                                    <div class="flex justify-between items-center mb-0.5">
-                                        <span class="text-xs font-bold text-white truncate">${session.carModel}</span>
-                                        <span class="text-[10px] ${session.chargeLevel > 80 ? 'text-emerald-400' : session.chargeLevel > 30 ? 'text-blue-400' : 'text-amber-400'} font-bold">${session.chargeLevel}%</span>
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-bold text-white truncate max-w-[100px]">${session.driverName}</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded border font-bold uppercase tracking-wider ${planClass}">${plan}</span>
                                     </div>
-                                    <div class="flex justify-between text-[10px] text-slate-400">
-                                        <span class="flex items-center gap-1">⚡ ${session.timeElapsed}</span>
-                                        <span class="flex items-center gap-1">⏳ ${session.timeToFull} left</span>
+                                    
+                                    <div class="flex justify-between items-center mb-1.5">
+                                         <span class="text-[10px] text-slate-400 font-medium truncate flex items-center gap-1">
+                                            ${session.carModel}
+                                         </span>
+                                         <span class="text-[10px] ${session.chargeLevel > 80 ? 'text-emerald-400' : session.chargeLevel > 30 ? 'text-blue-400' : 'text-amber-400'} font-bold">${session.chargeLevel}%</span>
                                     </div>
-                                    <div class="w-full bg-slate-700/50 h-1 rounded-full mt-1.5 overflow-hidden">
+
+                                    <div class="w-full bg-slate-700/50 h-1.5 rounded-full mb-2 overflow-hidden">
                                         <div class="h-full ${session.chargeLevel > 80 ? 'bg-emerald-500' : session.chargeLevel > 30 ? 'bg-blue-500' : 'bg-amber-500'}" style="width: ${session.chargeLevel}%"></div>
+                                    </div>
+                                    
+                                    <div class="flex justify-between text-[9px] text-slate-500">
+                                        <span class="flex items-center gap-1">⚡ ${session.timeElapsed}</span>
+                                        <span class="flex items-center gap-1">⏳ ${session.timeToFull}</span>
                                     </div>
                                 </div>
                             </div>
-                        `).join('');
+                        `}).join('');
                     }
 
                     // 2. Available Slots (Empty User Placeholders)
@@ -188,8 +211,9 @@ export const Stations: React.FC = () => {
                     const storageColor = storagePct > 50 ? 'bg-emerald-500' : storagePct > 20 ? 'bg-amber-500' : 'bg-red-500';
                     const storageTextColor = storagePct > 50 ? 'text-emerald-400' : storagePct > 20 ? 'text-amber-400' : 'text-red-400';
 
+                    // Update popup content to include a scrolling wrapper with max-height to prevent cutoff
                     const popupContent = `
-                        <div class="min-w-[340px] font-sans">
+                        <div class="min-w-[340px] max-h-[360px] overflow-y-auto overflow-x-hidden font-sans pr-2">
                             <div class="flex justify-between items-start mb-3 border-b border-white/10 pb-3">
                                 <div>
                                     <h3 class="font-bold text-base text-white leading-tight">${station.name}</h3>
@@ -253,7 +277,7 @@ export const Stations: React.FC = () => {
                                 </span>
                             </div>
 
-                            <div class="max-h-[160px] overflow-y-auto custom-scrollbar pr-1 -mr-1">
+                            <div class="pb-1">
                                 ${sessionsHtml}
                             </div>
                         </div>
@@ -264,13 +288,37 @@ export const Stations: React.FC = () => {
                         minWidth: 340,
                         closeButton: false, 
                         autoPan: true,
-                        autoPanPadding: [20, 20],
+                        autoPanPadding: [50, 50], // Increased padding
                         offset: [0, -20]
                     }).setContent(popupContent);
 
                     const marker = L.marker([station.coordinates.lat, station.coordinates.lng], { icon })
                         .addTo(map)
                         .bindPopup(popup);
+
+                    // Add smart center on click to show popup fully
+                    marker.on('click', () => {
+                        const map = mapInstanceRef.current;
+                        if (map) {
+                            const targetZoom = Math.max(map.getZoom(), 15);
+                            const latLng = L.latLng(station.coordinates.lat, station.coordinates.lng);
+                            
+                            // Project marker to pixel coordinates
+                            const point = map.project(latLng, targetZoom);
+                            
+                            // Move the center point "up" by 160px pixels.
+                            // This means the map viewport shifts UP, so the marker moves DOWN in the view.
+                            // Since popup opens upwards, moving marker down gives space above it.
+                            const targetPoint = point.subtract([0, 160]); 
+                            
+                            const targetCenter = map.unproject(targetPoint, targetZoom);
+                            
+                            map.flyTo(targetCenter, targetZoom, {
+                                duration: 0.8,
+                                easeLinearity: 0.25
+                            });
+                        }
+                    });
                     
                     markersRef.current[station.id] = marker;
                 });

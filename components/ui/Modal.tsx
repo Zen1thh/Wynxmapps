@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import gsap from 'gsap';
@@ -7,9 +8,10 @@ interface ModalProps {
     onClose: () => void;
     title: string;
     children: React.ReactNode;
+    className?: string;
 }
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, className }) => {
     const overlayRef = useRef(null);
     const contentRef = useRef(null);
 
@@ -40,19 +42,21 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
             />
             <div 
                 ref={contentRef} 
-                className="relative bg-[#0f172a] border border-white/10 rounded-2xl w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+                className={`relative bg-[#0f172a] border border-white/10 rounded-2xl w-full shadow-2xl flex flex-col max-h-[95vh] overflow-hidden ${className || 'max-w-lg'}`}
             >
-                <div className="flex items-center justify-between p-6 border-b border-white/5 bg-slate-900/50">
-                    <h3 className="text-xl font-bold text-white">{title}</h3>
+                <div className="flex items-center justify-between p-4 border-b border-white/5 bg-slate-900/50">
+                    <h3 className="text-lg font-bold text-white">{title}</h3>
                     <button 
                         onClick={onClose}
-                        className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
                     >
                         <X size={20} />
                     </button>
                 </div>
-                <div className="p-6 overflow-y-auto custom-scrollbar">
-                    {children}
+                <div className="p-0 overflow-y-auto custom-scrollbar flex-1">
+                    <div className="p-6">
+                        {children}
+                    </div>
                 </div>
             </div>
         </div>

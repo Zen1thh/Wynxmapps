@@ -1,5 +1,12 @@
 import { Station, Booking, User, ChartData, Review } from './types';
 
+// Helper for dynamic dates
+const getDate = (daysAgo: number) => {
+    const date = new Date();
+    date.setDate(date.getDate() - daysAgo);
+    return date.toISOString().split('T')[0];
+};
+
 export const MOCK_STATIONS: Station[] = [
     { 
         id: '1', 
@@ -16,11 +23,11 @@ export const MOCK_STATIONS: Station[] = [
         maxEnergyStorage: 500,
         coordinates: { lat: 14.5547, lng: 121.0244 },
         sessions: [
-            { driverName: 'Marco P.', driverAvatar: 'https://i.pravatar.cc/150?img=11', carModel: 'Tesla Model 3', chargeLevel: 78, timeElapsed: '45m', timeToFull: '20m' },
-            { driverName: 'Sarah L.', driverAvatar: 'https://i.pravatar.cc/150?img=5', carModel: 'Hyundai Ioniq 5', chargeLevel: 45, timeElapsed: '15m', timeToFull: '55m' },
-            { driverName: 'Miguel R.', driverAvatar: 'https://i.pravatar.cc/150?img=3', carModel: 'Nissan Leaf', chargeLevel: 92, timeElapsed: '1h 10m', timeToFull: '5m' },
-            { driverName: 'Anna K.', driverAvatar: 'https://i.pravatar.cc/150?img=9', carModel: 'Kia EV6', chargeLevel: 25, timeElapsed: '10m', timeToFull: '1h 05m' },
-            { driverName: 'John D.', driverAvatar: 'https://i.pravatar.cc/150?img=13', carModel: 'BYD Atto 3', chargeLevel: 60, timeElapsed: '30m', timeToFull: '40m' }
+            { driverName: 'Marco P.', driverAvatar: 'https://i.pravatar.cc/150?img=11', carModel: 'Tesla Model 3', chargeLevel: 78, timeElapsed: '45m', timeToFull: '20m', subscriptionPlan: 'Elite' },
+            { driverName: 'Sarah L.', driverAvatar: 'https://i.pravatar.cc/150?img=5', carModel: 'Hyundai Ioniq 5', chargeLevel: 45, timeElapsed: '15m', timeToFull: '55m', subscriptionPlan: 'Premium' },
+            { driverName: 'Miguel R.', driverAvatar: 'https://i.pravatar.cc/150?img=3', carModel: 'Nissan Leaf', chargeLevel: 92, timeElapsed: '1h 10m', timeToFull: '5m', subscriptionPlan: 'Standard' },
+            { driverName: 'Anna K.', driverAvatar: 'https://i.pravatar.cc/150?img=9', carModel: 'Kia EV6', chargeLevel: 25, timeElapsed: '10m', timeToFull: '1h 05m', subscriptionPlan: 'Basic' },
+            { driverName: 'John D.', driverAvatar: 'https://i.pravatar.cc/150?img=13', carModel: 'BYD Atto 3', chargeLevel: 60, timeElapsed: '30m', timeToFull: '40m', subscriptionPlan: 'Free' }
         ]
     },
     { 
@@ -38,10 +45,10 @@ export const MOCK_STATIONS: Station[] = [
         maxEnergyStorage: 600,
         coordinates: { lat: 14.5509, lng: 121.0503 },
         sessions: [
-            { driverName: 'Jessica T.', driverAvatar: 'https://i.pravatar.cc/150?img=24', carModel: 'Porsche Taycan', chargeLevel: 88, timeElapsed: '2h 15m', timeToFull: '25m' },
-            { driverName: 'Robert Y.', driverAvatar: 'https://i.pravatar.cc/150?img=68', carModel: 'Audi e-tron', chargeLevel: 34, timeElapsed: '1h 00m', timeToFull: '4h 20m' },
-            { driverName: 'Lisa M.', driverAvatar: 'https://i.pravatar.cc/150?img=44', carModel: 'BMW iX', chargeLevel: 55, timeElapsed: '2h 30m', timeToFull: '3h 10m' },
-            { driverName: 'Kevin B.', driverAvatar: 'https://i.pravatar.cc/150?img=53', carModel: 'Jaguar I-PACE', chargeLevel: 70, timeElapsed: '3h 10m', timeToFull: '1h 50m' }
+            { driverName: 'Jessica T.', driverAvatar: 'https://i.pravatar.cc/150?img=24', carModel: 'Porsche Taycan', chargeLevel: 88, timeElapsed: '2h 15m', timeToFull: '25m', subscriptionPlan: 'Supreme' },
+            { driverName: 'Robert Y.', driverAvatar: 'https://i.pravatar.cc/150?img=68', carModel: 'Audi e-tron', chargeLevel: 34, timeElapsed: '1h 00m', timeToFull: '4h 20m', subscriptionPlan: 'Deluxe' },
+            { driverName: 'Lisa M.', driverAvatar: 'https://i.pravatar.cc/150?img=44', carModel: 'BMW iX', chargeLevel: 55, timeElapsed: '2h 30m', timeToFull: '3h 10m', subscriptionPlan: 'Premium' },
+            { driverName: 'Kevin B.', driverAvatar: 'https://i.pravatar.cc/150?img=53', carModel: 'Jaguar I-PACE', chargeLevel: 70, timeElapsed: '3h 10m', timeToFull: '1h 50m', subscriptionPlan: 'Standard' }
         ]
     },
     { 
@@ -91,21 +98,41 @@ export const MOCK_STATIONS: Station[] = [
         maxEnergyStorage: 500,
         coordinates: { lat: 14.5905, lng: 120.9765 },
         sessions: [
-            { driverName: 'Carlos S.', driverAvatar: 'https://i.pravatar.cc/150?img=60', carModel: 'Volvo XC40', chargeLevel: 82, timeElapsed: '50m', timeToFull: '15m' },
-            { driverName: 'Maria G.', driverAvatar: 'https://i.pravatar.cc/150?img=41', carModel: 'Mercedes EQC', chargeLevel: 15, timeElapsed: '05m', timeToFull: '1h 25m' },
-            { driverName: 'James W.', driverAvatar: 'https://i.pravatar.cc/150?img=33', carModel: 'Tesla Model Y', chargeLevel: 65, timeElapsed: '35m', timeToFull: '30m' },
-            { driverName: 'Patricia H.', driverAvatar: 'https://i.pravatar.cc/150?img=20', carModel: 'Hyundai Kona', chargeLevel: 95, timeElapsed: '1h 15m', timeToFull: '5m' },
-            { driverName: 'David L.', driverAvatar: 'https://i.pravatar.cc/150?img=12', carModel: 'MG ZS EV', chargeLevel: 40, timeElapsed: '25m', timeToFull: '55m' }
+            { driverName: 'Carlos S.', driverAvatar: 'https://i.pravatar.cc/150?img=60', carModel: 'Volvo XC40', chargeLevel: 82, timeElapsed: '50m', timeToFull: '15m', subscriptionPlan: 'Elite' },
+            { driverName: 'Maria G.', driverAvatar: 'https://i.pravatar.cc/150?img=41', carModel: 'Mercedes EQC', chargeLevel: 15, timeElapsed: '05m', timeToFull: '1h 25m', subscriptionPlan: 'Basic' },
+            { driverName: 'James W.', driverAvatar: 'https://i.pravatar.cc/150?img=33', carModel: 'Tesla Model Y', chargeLevel: 65, timeElapsed: '35m', timeToFull: '30m', subscriptionPlan: 'Deluxe' },
+            { driverName: 'Patricia H.', driverAvatar: 'https://i.pravatar.cc/150?img=20', carModel: 'Hyundai Kona', chargeLevel: 95, timeElapsed: '1h 15m', timeToFull: '5m', subscriptionPlan: 'Supreme' },
+            { driverName: 'David L.', driverAvatar: 'https://i.pravatar.cc/150?img=12', carModel: 'MG ZS EV', chargeLevel: 40, timeElapsed: '25m', timeToFull: '55m', subscriptionPlan: 'Free' }
         ]
     },
 ];
 
 export const MOCK_BOOKINGS: Booking[] = [
-    { id: 'BK-001', userId: 'usr_1', stationName: 'Ayala Triangle Gardens', stationId: '1', date: '2023-10-25', time: '14:00', status: 'Active', amount: 25.50 },
-    { id: 'BK-002', userId: 'usr_2', stationName: 'BGC High Street', stationId: '2', date: '2023-10-25', time: '10:30', status: 'Completed', amount: 12.00 },
-    { id: 'BK-003', userId: 'usr_3', stationName: 'Intramuros Tech Hub', stationId: '5', date: '2023-10-24', time: '18:00', status: 'Completed', amount: 30.00 },
-    { id: 'BK-004', userId: 'usr_4', stationName: 'Ayala Triangle Gardens', stationId: '1', date: '2023-10-26', time: '09:00', status: 'Pending', amount: 28.00 },
-    { id: 'BK-005', userId: 'usr_5', stationName: 'SLEX Shell Mamplasan', stationId: '3', date: '2023-10-23', time: '12:00', status: 'Cancelled', amount: 0.00 },
+    { id: 'BK-001', userId: 'usr_1', stationName: 'Ayala Triangle Gardens', stationId: '1', date: getDate(0), time: '14:00', status: 'Active', amount: 25.50 },
+    { id: 'BK-002', userId: 'usr_2', stationName: 'BGC High Street', stationId: '2', date: getDate(0), time: '10:30', status: 'Completed', amount: 12.00 },
+    { id: 'BK-003', userId: 'usr_3', stationName: 'Intramuros Tech Hub', stationId: '5', date: getDate(0), time: '18:00', status: 'Completed', amount: 30.00 },
+    { id: 'BK-004', userId: 'usr_4', stationName: 'Ayala Triangle Gardens', stationId: '1', date: getDate(0), time: '09:00', status: 'Pending', amount: 28.00 },
+    { id: 'BK-005', userId: 'usr_5', stationName: 'SLEX Shell Mamplasan', stationId: '3', date: getDate(0), time: '12:00', status: 'Cancelled', amount: 0.00 },
+    { id: 'BK-006', userId: 'usr_1', stationName: 'SM Mall of Asia', stationId: '4', date: getDate(1), time: '16:00', status: 'Completed', amount: 18.50 },
+    { id: 'BK-007', userId: 'usr_3', stationName: 'BGC High Street', stationId: '2', date: getDate(1), time: '11:15', status: 'Pending', amount: 15.00 },
+    { id: 'BK-008', userId: 'usr_2', stationName: 'Ayala Triangle Gardens', stationId: '1', date: getDate(1), time: '08:00', status: 'Completed', amount: 22.00 },
+    { id: 'BK-009', userId: 'usr_4', stationName: 'Intramuros Tech Hub', stationId: '5', date: getDate(2), time: '13:30', status: 'Active', amount: 35.00 },
+    { id: 'BK-010', userId: 'usr_5', stationName: 'SLEX Shell Mamplasan', stationId: '3', date: getDate(2), time: '20:00', status: 'Cancelled', amount: 0.00 },
+    { id: 'BK-011', userId: 'usr_1', stationName: 'BGC High Street', stationId: '2', date: getDate(3), time: '14:45', status: 'Completed', amount: 14.50 },
+    { id: 'BK-012', userId: 'usr_2', stationName: 'Ayala Triangle Gardens', stationId: '1', date: getDate(3), time: '10:00', status: 'Pending', amount: 26.50 },
+    { id: 'BK-013', userId: 'usr_3', stationName: 'SM Mall of Asia', stationId: '4', date: getDate(4), time: '17:30', status: 'Completed', amount: 19.00 },
+    { id: 'BK-014', userId: 'usr_4', stationName: 'Intramuros Tech Hub', stationId: '5', date: getDate(5), time: '12:15', status: 'Active', amount: 32.00 },
+    { id: 'BK-015', userId: 'usr_5', stationName: 'SLEX Shell Mamplasan', stationId: '3', date: getDate(6), time: '09:45', status: 'Cancelled', amount: 0.00 },
+    { id: 'BK-016', userId: 'usr_1', stationName: 'Ayala Triangle Gardens', stationId: '1', date: getDate(7), time: '15:00', status: 'Completed', amount: 24.00 },
+    { id: 'BK-017', userId: 'usr_2', stationName: 'BGC High Street', stationId: '2', date: getDate(8), time: '11:00', status: 'Pending', amount: 16.00 },
+    { id: 'BK-018', userId: 'usr_3', stationName: 'Intramuros Tech Hub', stationId: '5', date: getDate(10), time: '18:30', status: 'Completed', amount: 29.50 },
+    { id: 'BK-019', userId: 'usr_4', stationName: 'SM Mall of Asia', stationId: '4', date: getDate(12), time: '14:20', status: 'Active', amount: 21.00 },
+    { id: 'BK-020', userId: 'usr_5', stationName: 'SLEX Shell Mamplasan', stationId: '3', date: getDate(14), time: '08:30', status: 'Completed', amount: 45.00 },
+    { id: 'BK-021', userId: 'usr_1', stationName: 'BGC High Street', stationId: '2', date: getDate(15), time: '13:00', status: 'Pending', amount: 13.50 },
+    { id: 'BK-022', userId: 'usr_2', stationName: 'Ayala Triangle Gardens', stationId: '1', date: getDate(20), time: '19:00', status: 'Completed', amount: 27.00 },
+    { id: 'BK-023', userId: 'usr_3', stationName: 'Intramuros Tech Hub', stationId: '5', date: getDate(22), time: '10:45', status: 'Active', amount: 33.00 },
+    { id: 'BK-024', userId: 'usr_4', stationName: 'SM Mall of Asia', stationId: '4', date: getDate(25), time: '16:15', status: 'Completed', amount: 20.50 },
+    { id: 'BK-025', userId: 'usr_5', stationName: 'SLEX Shell Mamplasan', stationId: '3', date: getDate(28), time: '15:30', status: 'Pending', amount: 42.00 },
 ];
 
 export const MOCK_USERS: User[] = [
@@ -117,9 +144,9 @@ export const MOCK_USERS: User[] = [
 ];
 
 export const MOCK_REVIEWS: Review[] = [
-    { id: 'rev_1', userId: 'usr_1', userName: 'Alex Johnson', stationId: '1', stationName: 'Ayala Triangle Gardens', rating: 5, comment: 'Great charging speed and the solar canopy is a nice touch!', date: '2023-10-25', status: 'Published' },
-    { id: 'rev_2', userId: 'usr_4', userName: 'Emily Blunt', stationId: '2', stationName: 'BGC High Street', rating: 2, comment: 'One of the connectors was broken. Please fix.', date: '2023-10-24', status: 'Flagged' },
-    { id: 'rev_3', userId: 'usr_3', userName: 'Michael Chen', stationId: '5', stationName: 'Intramuros Tech Hub', rating: 4, comment: 'Good location but busy during lunch hours.', date: '2023-10-23', status: 'Published' },
+    { id: 'rev_1', userId: 'usr_1', userName: 'Alex Johnson', stationId: '1', stationName: 'Ayala Triangle Gardens', rating: 5, comment: 'Great charging speed and the solar canopy is a nice touch!', date: getDate(0), status: 'Published' },
+    { id: 'rev_2', userId: 'usr_4', userName: 'Emily Blunt', stationId: '2', stationName: 'BGC High Street', rating: 2, comment: 'One of the connectors was broken. Please fix.', date: getDate(1), status: 'Flagged' },
+    { id: 'rev_3', userId: 'usr_3', userName: 'Michael Chen', stationId: '5', stationName: 'Intramuros Tech Hub', rating: 4, comment: 'Good location but busy during lunch hours.', date: getDate(2), status: 'Published' },
 ];
 
 export const REVENUE_DATA: ChartData[] = [

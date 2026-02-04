@@ -1,3 +1,4 @@
+
 export interface StationSession {
     driverName: string;
     driverAvatar: string;
@@ -5,6 +6,7 @@ export interface StationSession {
     chargeLevel: number; // percentage
     timeElapsed: string;
     timeToFull: string;
+    subscriptionPlan?: 'Free' | 'Basic' | 'Standard' | 'Deluxe' | 'Premium' | 'Elite' | 'Supreme';
 }
 
 export interface Station {
@@ -36,6 +38,10 @@ export interface Booking {
     time: string;
     status: 'Completed' | 'Pending' | 'Cancelled' | 'Active';
     amount: number;
+    // Extended properties for detailed view logic
+    vehicle?: string;
+    duration?: string;
+    energyConsumed?: number; // kWh
 }
 
 export interface User {
