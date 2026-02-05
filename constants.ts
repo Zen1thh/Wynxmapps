@@ -137,11 +137,102 @@ export const MOCK_BOOKINGS: Booking[] = [
 ];
 
 export const MOCK_USERS: User[] = [
-    { id: 'usr_1', name: 'Alex Johnson', email: 'alex@example.com', role: 'Subscriber', status: 'Active', subscriptionPlan: 'Elite' },
-    { id: 'usr_2', name: 'Sarah Connor', email: 'sarah@example.com', role: 'User', status: 'Active', subscriptionPlan: 'Basic' },
-    { id: 'usr_3', name: 'Michael Chen', email: 'mike.chen@tech.com', role: 'Subscriber', status: 'Active', subscriptionPlan: 'Premium' },
-    { id: 'usr_4', name: 'Emily Blunt', email: 'emily@studio.com', role: 'User', status: 'Inactive', subscriptionPlan: 'Basic' },
-    { id: 'usr_5', name: 'David Kim', email: 'dkim@finance.com', role: 'Subscriber', status: 'Active', subscriptionPlan: 'Premium' },
+    { 
+        id: 'usr_000', 
+        name: 'Mark Johnson', 
+        email: 'mark.admin@wynx.com', 
+        role: 'Super Admin', 
+        status: 'Active', 
+        subscriptionPlan: 'Supreme',
+        avatar: 'https://i.pravatar.cc/150?u=mark',
+        lastLogin: getDate(0),
+        joinDate: '2023-01-15',
+        phoneNumber: '+63 917 123 4567'
+    },
+    { 
+        id: 'usr_1', 
+        name: 'Alex Johnson', 
+        email: 'alex@example.com', 
+        role: 'Subscriber', 
+        status: 'Active', 
+        subscriptionPlan: 'Elite',
+        avatar: 'https://i.pravatar.cc/150?u=alex',
+        lastLogin: getDate(0),
+        joinDate: '2023-05-20',
+        phoneNumber: '+63 917 555 0001'
+    },
+    { 
+        id: 'usr_2', 
+        name: 'Sarah Connor', 
+        email: 'sarah@example.com', 
+        role: 'User', 
+        status: 'Active', 
+        subscriptionPlan: 'Basic',
+        avatar: 'https://i.pravatar.cc/150?u=sarah',
+        lastLogin: getDate(1),
+        joinDate: '2023-08-12',
+        phoneNumber: '+63 918 777 9999'
+    },
+    { 
+        id: 'usr_3', 
+        name: 'Michael Chen', 
+        email: 'mike.chen@tech.com', 
+        role: 'Admin', 
+        status: 'Active', 
+        subscriptionPlan: 'Premium',
+        avatar: 'https://i.pravatar.cc/150?u=mike',
+        lastLogin: getDate(0),
+        joinDate: '2023-03-10',
+        phoneNumber: '+63 920 123 8888'
+    },
+    { 
+        id: 'usr_4', 
+        name: 'Emily Blunt', 
+        email: 'emily@studio.com', 
+        role: 'User', 
+        status: 'Inactive', 
+        subscriptionPlan: 'Basic',
+        avatar: 'https://i.pravatar.cc/150?u=emily',
+        lastLogin: getDate(14),
+        joinDate: '2023-11-05',
+        phoneNumber: '+63 916 444 3322'
+    },
+    { 
+        id: 'usr_5', 
+        name: 'David Kim', 
+        email: 'dkim@finance.com', 
+        role: 'Subscriber', 
+        status: 'Active', 
+        subscriptionPlan: 'Premium',
+        avatar: 'https://i.pravatar.cc/150?u=david',
+        lastLogin: getDate(2),
+        joinDate: '2023-06-25',
+        phoneNumber: '+63 917 999 1111'
+    },
+    {
+        id: 'usr_6',
+        name: 'Jessica Pearson',
+        email: 'j.pearson@law.com',
+        role: 'Subscriber',
+        status: 'Suspended',
+        subscriptionPlan: 'Supreme',
+        avatar: 'https://i.pravatar.cc/150?u=jessica',
+        lastLogin: getDate(5),
+        joinDate: '2023-02-14',
+        phoneNumber: '+63 917 888 7777'
+    },
+    {
+        id: 'usr_7',
+        name: 'Harvey Specter',
+        email: 'h.specter@law.com',
+        role: 'Admin',
+        status: 'Active',
+        subscriptionPlan: 'Elite',
+        avatar: 'https://i.pravatar.cc/150?u=harvey',
+        lastLogin: getDate(0),
+        joinDate: '2023-02-15',
+        phoneNumber: '+63 917 777 6666'
+    }
 ];
 
 export const MOCK_REVIEWS: Review[] = [

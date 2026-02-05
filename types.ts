@@ -49,9 +49,13 @@ export interface User {
     id: string;
     name: string;
     email: string;
-    role: 'Admin' | 'Subscriber' | 'User';
-    status: 'Active' | 'Inactive';
+    role: 'Super Admin' | 'Admin' | 'Subscriber' | 'User';
+    status: 'Active' | 'Inactive' | 'Suspended';
     subscriptionPlan?: 'Free' | 'Basic' | 'Standard' | 'Deluxe' | 'Premium' | 'Elite' | 'Supreme';
+    avatar?: string;
+    lastLogin: string;
+    joinDate: string;
+    phoneNumber?: string;
 }
 
 export interface Review {
