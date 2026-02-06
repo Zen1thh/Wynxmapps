@@ -1,5 +1,5 @@
-
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import gsap from 'gsap';
 
@@ -14,30 +14,40 @@ interface ModalProps {
 export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, className }) => {
     const overlayRef = useRef(null);
     const contentRef = useRef(null);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        if (isOpen) {
-            gsap.fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3 });
-            gsap.fromTo(contentRef.current, 
-                { opacity: 0, scale: 0.95, y: 10 }, 
-                { opacity: 1, scale: 1, y: 0, duration: 0.3, delay: 0.05, ease: "power2.out" }
-            );
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
+
+    useEffect(() => {
+        let ctx: gsap.Context;
+        if (isOpen && overlayRef.current && contentRef.current) {
+            ctx = gsap.context(() => {
+                gsap.fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+                gsap.fromTo(contentRef.current, 
+                    { opacity: 0, scale: 0.95, y: 10 }, 
+                    { opacity: 1, scale: 1, y: 0, duration: 0.3, delay: 0.05, ease: "power2.out" }
+                );
+            });
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
         }
         return () => {
+             if (ctx) ctx.revert();
              document.body.style.overflow = 'unset';
         }
     }, [isOpen]);
 
-    if (!isOpen) return null;
+    if (!isOpen || !mounted) return null;
 
-    return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    return createPortal(
+        <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
             <div 
                 ref={overlayRef} 
-                className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" 
+                className="absolute inset-0 bg-slate-900/80 backdrop-blur-md" 
                 onClick={onClose}
             />
             <div 
@@ -59,6 +69,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };

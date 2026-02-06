@@ -99,7 +99,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+            <main className="flex-1 flex flex-col h-full overflow-hidden relative z-0">
                 {/* Background Blobs */}
                 <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none -translate-x-1/2 -translate-y-1/2" />
                 <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none translate-x-1/3 translate-y-1/3" />

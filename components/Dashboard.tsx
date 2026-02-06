@@ -27,9 +27,6 @@ const StatCard: React.FC<{
 
     return (
         <div ref={cardRef} className="glass-card rounded-2xl p-4 flex justify-between items-center relative overflow-hidden group">
-            <div className={`absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300 transform scale-150 ${colorClass}`}>
-                {icon}
-            </div>
             <div className="z-10">
                 <p className="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">{title}</p>
                 <div className="flex items-baseline gap-2">
@@ -67,11 +64,6 @@ export const Dashboard: React.FC = () => {
                 <div>
                     <h1 className="text-2xl font-bold text-white">Wynxsmapp Admin Dashboard</h1>
                     <p className="text-slate-400 text-sm">Welcome back, Admin. Here is the latest solar charging data.</p>
-                </div>
-                <div className="flex gap-2">
-                    <button className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors shadow-lg shadow-blue-500/20">
-                        Generate Report
-                    </button>
                 </div>
             </div>
 
