@@ -1,9 +1,11 @@
+
+
 import React, { useEffect, useRef, useState } from 'react';
 import { Card } from './ui/Card';
 import { Modal } from './ui/Modal';
 import { MOCK_STATIONS } from '../constants';
 import { Station } from '../types';
-import { Battery, Zap, Edit, Trash2, Search, Map as MapIcon, LayoutGrid, Layers, Sun, Moon, Satellite, MapPin, Navigation, Crosshair, Check, X, AlertCircle, AlertTriangle, Star } from 'lucide-react';
+import { Battery, Zap, Edit, Trash2, Search, Map as MapIcon, LayoutGrid, Layers, Sun, Moon, Satellite, MapPin, Navigation, Crosshair, Check, X, AlertCircle, AlertTriangle, Star, AlertOctagon, Calendar, Wrench } from 'lucide-react';
 import gsap from 'gsap';
 import L from 'leaflet';
 
@@ -51,6 +53,9 @@ export const Stations: React.FC = () => {
         name: '',
         location: '',
         status: 'Online',
+        errorDetail: '',
+        firstOperated: '',
+        lastMaintenance: '',
         power: '',
         totalSlots: 4,
         solarOutput: 0,
@@ -98,15 +103,20 @@ export const Stations: React.FC = () => {
                 const map = mapInstanceRef.current;
 
                 // Clear existing markers (standard station markers)
-                Object.values(markersRef.current).forEach(marker => marker.remove());
+                Object.values(markersRef.current).forEach((marker: L.Marker) => marker.remove());
                 markersRef.current = {};
 
                 // Add Markers from current state
                 stations.forEach(station => {
                     const statusColor = station.status === 'Online' ? 'bg-emerald-500' : 
-                                      station.status === 'Maintenance' ? 'bg-amber-500' : 'bg-red-500';
+                                      station.status === 'Maintenance' ? 'bg-amber-500' : 
+                                      station.status === 'Error' ? 'bg-rose-600 animate-pulse' :
+                                      'bg-red-500';
+                                      
                     const glowColor = station.status === 'Online' ? 'shadow-emerald-500/50' : 
-                                    station.status === 'Maintenance' ? 'shadow-amber-500/50' : 'shadow-red-500/50';
+                                    station.status === 'Maintenance' ? 'shadow-amber-500/50' :
+                                    station.status === 'Error' ? 'shadow-rose-600/60' :
+                                    'shadow-red-500/50';
 
                     const icon = L.divIcon({
                         className: 'custom-marker',
@@ -123,6 +133,9 @@ export const Stations: React.FC = () => {
                     const mapPinIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><path d="M20 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
                     const userIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
                     const lockIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+                    const alertIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-rose-400"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+                    const calendarIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+                    const wrenchIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`;
 
                     // Generate Sessions HTML
                     let sessionsHtml = '';
@@ -214,16 +227,37 @@ export const Stations: React.FC = () => {
                     // Update popup content to include a scrolling wrapper with max-height to prevent cutoff
                     const popupContent = `
                         <div class="min-w-[340px] max-h-[360px] overflow-y-auto overflow-x-hidden font-sans pr-2">
+                            ${station.status === 'Error' ? `
+                            <div class="mb-3 p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-start gap-2.5">
+                                <div class="mt-0.5">${alertIcon}</div>
+                                <div>
+                                    <div class="text-xs font-bold text-rose-400 uppercase tracking-wide">System Error</div>
+                                    <div class="text-[11px] text-rose-200 mt-0.5 leading-snug">${station.errorDetail || 'Unknown system error detected.'}</div>
+                                </div>
+                            </div>
+                            ` : ''}
+
                             <div class="flex justify-between items-start mb-3 border-b border-white/10 pb-3">
                                 <div>
                                     <h3 class="font-bold text-base text-white leading-tight">${station.name}</h3>
                                     <div class="flex items-center gap-1 text-xs text-slate-400 mt-1">
                                        ${mapPinIcon} <span class="truncate max-w-[220px]">${station.location}</span>
                                     </div>
+                                    <div class="flex flex-col gap-0.5 mt-1">
+                                        ${station.firstOperated ? `
+                                        <div class="flex items-center gap-1 text-xs text-slate-500">
+                                           ${calendarIcon} <span>Started: ${station.firstOperated}</span>
+                                        </div>` : ''}
+                                        ${station.lastMaintenance ? `
+                                        <div class="flex items-center gap-1 text-xs text-slate-500">
+                                           ${wrenchIcon} <span>Maint: ${station.lastMaintenance}</span>
+                                        </div>` : ''}
+                                    </div>
                                 </div>
                                  <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
                                     station.status === 'Online' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20' : 
                                     station.status === 'Maintenance' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/20' : 
+                                    station.status === 'Error' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/20' :
                                     'bg-red-500/20 text-red-400 border border-red-500/20'
                                 }">${station.status}</span>
                             </div>
@@ -307,8 +341,6 @@ export const Stations: React.FC = () => {
                             const point = map.project(latLng, targetZoom);
                             
                             // Move the center point "up" by 160px pixels.
-                            // This means the map viewport shifts UP, so the marker moves DOWN in the view.
-                            // Since popup opens upwards, moving marker down gives space above it.
                             const targetPoint = point.subtract([0, 160]); 
                             
                             const targetCenter = map.unproject(targetPoint, targetZoom);
@@ -379,6 +411,8 @@ export const Stations: React.FC = () => {
             if (pinpointMarkerRef.current) {
                 pinpointMarkerRef.current.remove();
                 pinpointMarkerRef.current = null;
+                tileLayerRef.current = null;
+                markersRef.current = {};
             }
             setPinpointCoords(null);
         }
@@ -422,15 +456,12 @@ export const Stations: React.FC = () => {
             const targetZoom = 16;
             
             // Calculate a new center point that places the marker in the lower half of the screen
-            // This ensures the tall popup (which opens upwards) fits within the view
             const latLng = L.latLng(station.coordinates.lat, station.coordinates.lng);
             
             // Project the marker's lat/lng to pixel coordinates at the target zoom level
             const point = map.project(latLng, targetZoom);
             
             // Subtract pixels from the Y coordinate to shift the view center "North"
-            // This moves the marker "South" (downwards) in the viewport
-            // 180px is a good offset for the tall popup to fit
             const targetPoint = point.subtract([0, 180]); 
             
             // Unproject back to LatLng for the flyTo method
@@ -448,7 +479,7 @@ export const Stations: React.FC = () => {
         }
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setNewStation(prev => ({ ...prev, [name]: value }));
     };
@@ -475,6 +506,9 @@ export const Stations: React.FC = () => {
             name: '',
             location: '',
             status: 'Online',
+            errorDetail: '',
+            firstOperated: '',
+            lastMaintenance: '',
             power: '',
             totalSlots: 4,
             solarOutput: 0,
@@ -493,6 +527,9 @@ export const Stations: React.FC = () => {
                 name: station.name,
                 location: station.location,
                 status: station.status,
+                errorDetail: station.errorDetail || '',
+                firstOperated: station.firstOperated || '',
+                lastMaintenance: station.lastMaintenance || '',
                 power: station.power,
                 totalSlots: station.totalSlots,
                 solarOutput: station.solarOutput,
@@ -532,6 +569,9 @@ export const Stations: React.FC = () => {
                         name: newStation.name,
                         location: newStation.location,
                         status: newStation.status as any,
+                        errorDetail: newStation.status === 'Error' ? newStation.errorDetail : undefined,
+                        firstOperated: newStation.firstOperated,
+                        lastMaintenance: newStation.lastMaintenance,
                         power: newStation.power,
                         totalSlots: Number(newStation.totalSlots),
                         availableSlots: Math.min(s.availableSlots, Number(newStation.totalSlots)), // Adjust available if total reduced
@@ -553,6 +593,9 @@ export const Stations: React.FC = () => {
                 name: newStation.name,
                 location: newStation.location,
                 status: newStation.status as any,
+                errorDetail: newStation.status === 'Error' ? newStation.errorDetail : undefined,
+                firstOperated: newStation.firstOperated,
+                lastMaintenance: newStation.lastMaintenance,
                 chargerType: 'DC Fast', // Default
                 power: newStation.power || '50kW',
                 rating: 5.0, // Default
@@ -627,9 +670,10 @@ export const Stations: React.FC = () => {
                                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg transition-transform duration-300 group-hover:scale-110 shrink-0 ${
                                             station.status === 'Online' ? 'bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-emerald-500/20' : 
                                             station.status === 'Maintenance' ? 'bg-gradient-to-br from-amber-500 to-amber-700 shadow-amber-500/20' :
+                                            station.status === 'Error' ? 'bg-gradient-to-br from-rose-500 to-rose-700 shadow-rose-500/20 animate-pulse' :
                                             'bg-gradient-to-br from-red-500 to-red-700 shadow-red-500/20'
                                         }`}>
-                                            <Zap size={24} fill="currentColor" />
+                                            {station.status === 'Error' ? <AlertOctagon size={24} fill="currentColor" className="text-white" /> : <Zap size={24} fill="currentColor" />}
                                         </div>
                                         <div className="min-w-0">
                                              <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors leading-tight truncate">{station.name}</h3>
@@ -637,17 +681,43 @@ export const Stations: React.FC = () => {
                                                 <MapPin size={12} className="shrink-0" />
                                                 <span className="truncate">{station.location}</span>
                                              </div>
+                                             <div className="flex flex-col gap-1 mt-1">
+                                                {station.firstOperated && (
+                                                    <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                                                        <Calendar size={12} className="shrink-0" />
+                                                        <span>Since {station.firstOperated}</span>
+                                                    </div>
+                                                )}
+                                                {station.lastMaintenance && (
+                                                    <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                                                        <Wrench size={12} className="shrink-0" />
+                                                        <span>Maint: {station.lastMaintenance}</span>
+                                                    </div>
+                                                )}
+                                             </div>
                                         </div>
                                     </div>
                                     
                                     <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border backdrop-blur-md shrink-0 ${
                                         station.status === 'Online' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                                         station.status === 'Maintenance' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                                        station.status === 'Error' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20 animate-pulse' :
                                         'bg-red-500/10 text-red-400 border-red-500/20'
                                     }`}>
                                         {station.status}
                                     </span>
                                 </div>
+                                
+                                {/* Error Alert in List View */}
+                                {station.status === 'Error' && (
+                                    <div className="mx-0 mb-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-start gap-3 relative z-10">
+                                        <AlertOctagon className="text-rose-500 shrink-0 mt-0.5" size={18} />
+                                        <div>
+                                            <h4 className="text-rose-400 font-bold text-xs uppercase tracking-wide">System Error</h4>
+                                            <p className="text-rose-200 text-xs mt-0.5 leading-snug">{station.errorDetail || 'Unknown system failure. Immediate attention required.'}</p>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* Metrics Grid */}
                                 <div className="grid grid-cols-2 gap-3 mb-5">
@@ -836,6 +906,11 @@ export const Stations: React.FC = () => {
                                         <span className="text-xs font-bold text-white hidden sm:inline">Offline ({stations.filter(s => s.status === 'Offline').length})</span>
                                         <span className="text-xs font-bold text-white sm:hidden">{stations.filter(s => s.status === 'Offline').length}</span>
                                     </div>
+                                    <div className="bg-slate-900/80 backdrop-blur-md p-3 rounded-xl border border-rose-500/20 flex items-center gap-3">
+                                        <div className="w-3 h-3 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.5)] animate-pulse"></div>
+                                        <span className="text-xs font-bold text-white hidden sm:inline">Error ({stations.filter(s => s.status === 'Error').length})</span>
+                                        <span className="text-xs font-bold text-white sm:hidden">{stations.filter(s => s.status === 'Error').length}</span>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -859,7 +934,7 @@ export const Stations: React.FC = () => {
                                         <div 
                                             key={station.id}
                                             onClick={() => handleStationSelect(station)}
-                                            className={`p-3 rounded-xl bg-white/5 border border-white/5 transition-all cursor-pointer group relative overflow-hidden ${isPinpointMode ? 'opacity-50 pointer-events-none' : 'hover:bg-white/10 hover:border-blue-500/30'}`}
+                                            className={`p-3 rounded-xl bg-white/5 border transition-all cursor-pointer group relative overflow-hidden ${isPinpointMode ? 'opacity-50 pointer-events-none' : 'hover:bg-white/10 hover:border-blue-500/30'} ${station.status === 'Error' ? 'border-rose-500/30' : 'border-white/5'}`}
                                         >
                                             <div className="absolute inset-0 bg-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                             <div className="relative z-10">
@@ -867,7 +942,9 @@ export const Stations: React.FC = () => {
                                                     <h4 className="font-bold text-sm text-white group-hover:text-blue-400 transition-colors truncate pr-2">{station.name}</h4>
                                                     <span className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
                                                         station.status === 'Online' ? 'bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]' : 
-                                                        station.status === 'Maintenance' ? 'bg-amber-500' : 'bg-red-500'
+                                                        station.status === 'Maintenance' ? 'bg-amber-500' : 
+                                                        station.status === 'Error' ? 'bg-rose-500 animate-pulse shadow-[0_0_5px_rgba(244,63,94,0.5)]' :
+                                                        'bg-red-500'
                                                     }`}></span>
                                                 </div>
                                                 
@@ -892,6 +969,16 @@ export const Stations: React.FC = () => {
                                                          </div>
                                                      </div>
                                                 </div>
+
+                                                {station.status === 'Error' && (
+                                                    <div className="bg-rose-500/10 rounded-lg p-2 border border-rose-500/20 mb-3">
+                                                        <div className="flex items-center gap-1.5 mb-1">
+                                                            <AlertOctagon size={10} className="text-rose-400" />
+                                                            <span className="text-[9px] font-bold text-rose-300 uppercase tracking-wide">Error Detected</span>
+                                                        </div>
+                                                        <p className="text-[9px] text-rose-200 line-clamp-2">{station.errorDetail || 'System error'}</p>
+                                                    </div>
+                                                )}
 
                                                 <div className="bg-white/5 rounded-lg p-2.5 border border-white/5">
                                                     <div className="flex justify-between items-center mb-1.5">
@@ -999,6 +1086,7 @@ export const Stations: React.FC = () => {
                                 <option value="Online">Online</option>
                                 <option value="Maintenance">Maintenance</option>
                                 <option value="Offline">Offline</option>
+                                <option value="Error">Error</option>
                             </select>
                         </div>
                         <div>
@@ -1012,6 +1100,46 @@ export const Stations: React.FC = () => {
                             />
                         </div>
                     </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-slate-400 mb-1">First Operation Date</label>
+                            <input 
+                                type="date"
+                                name="firstOperated" 
+                                value={newStation.firstOperated} 
+                                onChange={handleInputChange} 
+                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all [color-scheme:dark]"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-400 mb-1">Last Maintenance Date</label>
+                            <input 
+                                type="date"
+                                name="lastMaintenance" 
+                                value={newStation.lastMaintenance} 
+                                onChange={handleInputChange} 
+                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all [color-scheme:dark]"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Error Detail Input - Conditional */}
+                    {newStation.status === 'Error' && (
+                        <div className="animate-in fade-in slide-in-from-top-2">
+                             <label className="block text-sm font-medium text-rose-400 mb-1 flex items-center gap-1.5">
+                                <AlertOctagon size={14} /> Error Description
+                             </label>
+                            <textarea
+                                required
+                                name="errorDetail"
+                                value={newStation.errorDetail}
+                                onChange={handleInputChange}
+                                className="w-full bg-slate-800 border border-rose-500/30 focus:border-rose-500 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-rose-500/20 outline-none transition-all placeholder-slate-500 min-h-[80px]"
+                                placeholder="Describe the error code or technical issue..."
+                            />
+                        </div>
+                    )}
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>

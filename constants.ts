@@ -1,4 +1,5 @@
 
+
 import { Station, Booking, User, ChartData, Review } from './types';
 
 // Helper for dynamic dates
@@ -14,6 +15,8 @@ export const MOCK_STATIONS: Station[] = [
         name: 'Ayala Triangle Gardens', 
         location: 'Paseo de Roxas, Makati, Metro Manila', 
         status: 'Online', 
+        firstOperated: '2023-01-15',
+        lastMaintenance: '2023-11-20',
         chargerType: 'DC Fast', 
         power: '150kW', 
         rating: 4.8, 
@@ -36,6 +39,8 @@ export const MOCK_STATIONS: Station[] = [
         name: 'BGC High Street', 
         location: 'Taguig, Metro Manila', 
         status: 'Online', 
+        firstOperated: '2023-03-22',
+        lastMaintenance: '2023-12-05',
         chargerType: 'Level 2', 
         power: '22kW', 
         rating: 4.5, 
@@ -57,6 +62,8 @@ export const MOCK_STATIONS: Station[] = [
         name: 'SLEX Shell Mamplasan', 
         location: 'South Luzon Expressway, Biñan', 
         status: 'Maintenance', 
+        firstOperated: '2022-11-05',
+        lastMaintenance: getDate(0), // Currently in maintenance
         chargerType: 'DC Fast', 
         power: '350kW', 
         rating: 4.2, 
@@ -73,6 +80,8 @@ export const MOCK_STATIONS: Station[] = [
         name: 'SM Mall of Asia', 
         location: 'Seaside Blvd, Pasay, Metro Manila', 
         status: 'Offline', 
+        firstOperated: '2023-06-18',
+        lastMaintenance: '2023-10-15',
         chargerType: 'Level 2', 
         power: '11kW', 
         rating: 3.9, 
@@ -89,6 +98,8 @@ export const MOCK_STATIONS: Station[] = [
         name: 'Intramuros Tech Hub', 
         location: 'General Luna St, Manila', 
         status: 'Online', 
+        firstOperated: '2023-08-30',
+        lastMaintenance: '2024-01-10',
         chargerType: 'DC Fast', 
         power: '150kW', 
         rating: 4.9, 
@@ -106,6 +117,25 @@ export const MOCK_STATIONS: Station[] = [
             { driverName: 'David L.', driverAvatar: 'https://i.pravatar.cc/150?img=12', carModel: 'MG ZS EV', chargeLevel: 40, timeElapsed: '25m', timeToFull: '55m', subscriptionPlan: 'Free' }
         ]
     },
+    {
+        id: '6',
+        name: 'Quezon City Circle Hub',
+        location: 'Elliptical Rd, Diliman, Quezon City',
+        status: 'Error',
+        firstOperated: '2023-09-12',
+        lastMaintenance: '2023-12-12',
+        errorDetail: 'Critical Inverter Failure: Code E-404. Manual reset required.',
+        chargerType: 'DC Fast', 
+        power: '120kW',
+        rating: 4.0,
+        totalSlots: 6,
+        availableSlots: 0,
+        solarOutput: 0,
+        energyStored: 120,
+        maxEnergyStorage: 400,
+        coordinates: { lat: 14.6516, lng: 121.0493 },
+        sessions: []
+    }
 ];
 
 export const MOCK_BOOKINGS: Booking[] = [

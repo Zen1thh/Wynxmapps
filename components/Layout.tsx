@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ViewState } from '../types';
 import { 
-    LayoutDashboard, MapPin, Calendar, Users, MessageSquare, Settings, LogOut, Bell, Search, Menu, Star, CreditCard
+    LayoutDashboard, MapPin, Calendar, Users, MessageSquare, Settings, LogOut, Bell, Search, Menu, Star, CreditCard, Bot, Route, Cog
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -52,7 +52,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
 
                 <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent my-2" />
 
-                <nav className="flex-1 py-4 space-y-1 overflow-y-auto">
+                <nav className="flex-1 py-4 space-y-1 overflow-y-auto custom-scrollbar">
                     <NavItem 
                         icon={<LayoutDashboard size={18} />} 
                         label="Dashboard" 
@@ -64,6 +64,12 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
                         label="Stations" 
                         active={currentView === ViewState.STATIONS}
                         onClick={() => { setCurrentView(ViewState.STATIONS); setSidebarOpen(false); }}
+                    />
+                    <NavItem 
+                        icon={<Route size={18} />} 
+                        label="Map Routes" 
+                        active={currentView === ViewState.MAP_ROUTES}
+                        onClick={() => { setCurrentView(ViewState.MAP_ROUTES); setSidebarOpen(false); }}
                     />
                     <NavItem 
                         icon={<Calendar size={18} />} 
@@ -83,6 +89,13 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
                         active={currentView === ViewState.SUBSCRIPTIONS}
                         onClick={() => { setCurrentView(ViewState.SUBSCRIPTIONS); setSidebarOpen(false); }}
                     />
+                    <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent my-2" />
+                    <NavItem 
+                        icon={<Bot size={18} />} 
+                        label="Wynx AI" 
+                        active={currentView === ViewState.WYNX_AI}
+                        onClick={() => { setCurrentView(ViewState.WYNX_AI); setSidebarOpen(false); }}
+                    />
                     <NavItem 
                         icon={<Star size={18} />} 
                         label="Reviews" 
@@ -94,6 +107,12 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
                         label="Support" 
                         active={currentView === ViewState.SUPPORT}
                         onClick={() => { setCurrentView(ViewState.SUPPORT); setSidebarOpen(false); }}
+                    />
+                    <NavItem 
+                        icon={<Cog size={18} />} 
+                        label="Settings" 
+                        active={currentView === ViewState.SETTINGS}
+                        onClick={() => { setCurrentView(ViewState.SETTINGS); setSidebarOpen(false); }}
                     />
                 </nav>
             </aside>
@@ -116,7 +135,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
                         <div className="hidden md:flex items-center text-slate-400 text-sm">
                             <span className="text-blue-500 font-medium">Wynxsmapp Admin</span>
                             <span className="mx-2 text-slate-600">/</span>
-                            <span className="text-white capitalize">{currentView.toLowerCase()}</span>
+                            <span className="text-white capitalize">{currentView.toLowerCase().replace('_', ' ')}</span>
                         </div>
                     </div>
 
@@ -131,7 +150,10 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
                                 <Bell size={20} />
                                 <span className="absolute top-1 right-2 w-2 h-2 bg-red-500 rounded-full border border-[#0b1121]" />
                             </button>
-                            <button className="text-slate-400 hover:text-white p-2 hover:bg-white/5 rounded-full transition-colors">
+                            <button 
+                                onClick={() => setCurrentView(ViewState.SETTINGS)}
+                                className="text-slate-400 hover:text-white p-2 hover:bg-white/5 rounded-full transition-colors"
+                            >
                                 <Settings size={20} />
                             </button>
                             <div className="flex items-center gap-3 pl-4 border-l border-white/10">

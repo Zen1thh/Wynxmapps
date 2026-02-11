@@ -7,6 +7,9 @@ import { Users } from './components/Users';
 import { Support } from './components/Support';
 import { Reviews } from './components/Reviews';
 import { Subscription } from './components/Subscription';
+import { WynxAI } from './components/WynxAI';
+import { MapRoutes } from './components/MapRoutes';
+import { Settings } from './components/Settings';
 import { ViewState } from './types';
 
 const PlaceholderView: React.FC<{ title: string }> = ({ title }) => (
@@ -31,6 +34,12 @@ function App() {
             return <Users />;
         case ViewState.SUBSCRIPTIONS:
             return <Subscription />;
+        case ViewState.WYNX_AI:
+            return <WynxAI />;
+        case ViewState.MAP_ROUTES:
+            return <MapRoutes />;
+        case ViewState.SETTINGS:
+            return <Settings />;
         case ViewState.SUPPORT:
             return <Support />;
         case ViewState.REVIEWS:

@@ -14,7 +14,10 @@ export interface Station {
     id: string;
     name: string;
     location: string;
-    status: 'Online' | 'Offline' | 'Maintenance';
+    status: 'Online' | 'Offline' | 'Maintenance' | 'Error';
+    errorDetail?: string; // Specific error message/code
+    firstOperated?: string; // Date string YYYY-MM-DD
+    lastMaintenance?: string; // Date string YYYY-MM-DD
     chargerType: string;
     power: string;
     rating: number;
@@ -82,6 +85,8 @@ export enum ViewState {
     BOOKINGS = 'BOOKINGS',
     USERS = 'USERS',
     SUBSCRIPTIONS = 'SUBSCRIPTIONS',
+    WYNX_AI = 'WYNX_AI',
+    MAP_ROUTES = 'MAP_ROUTES',
     SUPPORT = 'SUPPORT',
     REVIEWS = 'REVIEWS',
     SETTINGS = 'SETTINGS'
