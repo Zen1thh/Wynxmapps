@@ -1,5 +1,4 @@
 
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Card } from './ui/Card';
 import { Modal } from './ui/Modal';
@@ -108,22 +107,34 @@ export const Stations: React.FC = () => {
 
                 // Add Markers from current state
                 stations.forEach(station => {
-                    const statusColor = station.status === 'Online' ? 'bg-emerald-500' : 
-                                      station.status === 'Maintenance' ? 'bg-amber-500' : 
-                                      station.status === 'Error' ? 'bg-rose-600 animate-pulse' :
-                                      'bg-red-500';
-                                      
-                    const glowColor = station.status === 'Online' ? 'shadow-emerald-500/50' : 
-                                    station.status === 'Maintenance' ? 'shadow-amber-500/50' :
-                                    station.status === 'Error' ? 'shadow-rose-600/60' :
-                                    'shadow-red-500/50';
+                    let markerHtml = '';
+                    const baseClasses = "w-8 h-8 rounded-full border flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-200 backdrop-blur-sm";
+
+                    if (station.status === 'Online') {
+                        markerHtml = `<div class="${baseClasses} bg-emerald-900/80 text-emerald-400 border-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.5)] ${isPinpointMode ? 'opacity-40 grayscale' : ''}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        </div>`;
+                    } else if (station.status === 'Maintenance') {
+                        markerHtml = `<div class="${baseClasses} bg-amber-900/80 text-amber-400 border-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.5)] ${isPinpointMode ? 'opacity-40 grayscale' : ''}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                        </div>`;
+                    } else if (station.status === 'Error') {
+                        markerHtml = `<div class="${baseClasses} bg-rose-900/80 text-rose-400 border-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.5)] animate-pulse ${isPinpointMode ? 'opacity-40 grayscale' : ''}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </div>`;
+                    } else {
+                        // Offline
+                        markerHtml = `<div class="${baseClasses} bg-red-900/80 text-red-400 border-red-500 shadow-[0_0_12px_rgba(239,68,68,0.5)] ${isPinpointMode ? 'opacity-40 grayscale' : ''}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+                        </div>`;
+                    }
 
                     const icon = L.divIcon({
                         className: 'custom-marker',
-                        html: `<div class="${statusColor} w-4 h-4 rounded-full border-2 border-white shadow-lg ${glowColor} transform hover:scale-125 transition-transform duration-200 ${isPinpointMode ? 'opacity-40 grayscale' : ''}"></div>`,
-                        iconSize: [16, 16],
-                        iconAnchor: [8, 8],
-                        popupAnchor: [0, -10]
+                        html: markerHtml,
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 16],
+                        popupAnchor: [0, -20]
                     });
 
                     // SVG Strings for Popup Icons
