@@ -44,21 +44,21 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
     if (!isOpen || !mounted) return null;
 
     return createPortal(
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div 
                 ref={overlayRef} 
-                className="absolute inset-0 bg-slate-900/80 backdrop-blur-md" 
+                className="absolute inset-0 bg-slate-200/60 dark:bg-slate-900/80 backdrop-blur-md" 
                 onClick={onClose}
             />
             <div 
                 ref={contentRef} 
-                className={`relative bg-[#0f172a] border border-white/10 rounded-2xl w-full shadow-2xl flex flex-col max-h-[95vh] overflow-hidden ${className || 'max-w-lg'}`}
+                className={`relative bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-2xl w-full shadow-2xl flex flex-col max-h-[95vh] overflow-hidden transition-colors duration-300 ${className || 'max-w-lg'}`}
             >
-                <div className="flex items-center justify-between p-4 border-b border-white/5 bg-slate-900/50">
-                    <h3 className="text-lg font-bold text-white">{title}</h3>
+                <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-slate-900/50">
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h3>
                     <button 
                         onClick={onClose}
-                        className="p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                        className="p-1.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/5 rounded-lg transition-colors"
                     >
                         <X size={20} />
                     </button>

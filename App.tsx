@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from './components/Layout';
 import { Dashboard } from './components/Dashboard';
 import { Stations } from './components/Stations';
@@ -10,6 +10,7 @@ import { Subscription } from './components/Subscription';
 import { WynxAI } from './components/WynxAI';
 import { MapRoutes } from './components/MapRoutes';
 import { Settings } from './components/Settings';
+import { Auth } from './components/Auth'; // Import the new Auth component
 import { ViewState } from './types';
 
 const PlaceholderView: React.FC<{ title: string }> = ({ title }) => (
@@ -20,7 +21,26 @@ const PlaceholderView: React.FC<{ title: string }> = ({ title }) => (
 );
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentView, setCurrentView] = useState<ViewState>(ViewState.DASHBOARD);
+
+  // Check for existing session (Optional, purely for UX persistence in this demo)
+  useEffect(() => {
+      const isAuth = localStorage.getItem('isAuth');
+      if (isAuth === 'true') {
+          setIsAuthenticated(true);
+      }
+  }, []);
+
+  const handleLogin = () => {
+      setIsAuthenticated(true);
+      localStorage.setItem('isAuth', 'true');
+  };
+
+  const handleLogout = () => {
+      setIsAuthenticated(false);
+      localStorage.removeItem('isAuth');
+  };
 
   const renderContent = () => {
     switch (currentView) {
@@ -49,7 +69,12 @@ function App() {
     }
   };
 
+  if (!isAuthenticated) {
+      return <Auth onLogin={handleLogin} />;
+  }
+
   return (
+    // Pass logout handler if Layout supports it, or just use it here
     <Layout currentView={currentView} setCurrentView={setCurrentView}>
         {renderContent()}
     </Layout>

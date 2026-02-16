@@ -237,13 +237,13 @@ const Toast: React.FC<{ message: string; type: 'success' | 'loading' | 'error'; 
     return (
         <div className="fixed bottom-6 right-6 z-[100] animate-slide-up">
             <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border shadow-2xl backdrop-blur-xl ${
-                type === 'loading' ? 'bg-blue-600/10 border-blue-500/20 text-blue-200' : 
-                type === 'error' ? 'bg-red-600/10 border-red-500/20 text-red-200' :
-                'bg-emerald-600/10 border-emerald-500/20 text-emerald-200'
+                type === 'loading' ? 'bg-blue-50/90 dark:bg-blue-900/20 border-blue-200 dark:border-blue-500/20 text-primary dark:text-blue-200' : 
+                type === 'error' ? 'bg-red-50/90 dark:bg-red-900/20 border-red-200 dark:border-red-500/20 text-red-700 dark:text-red-200' :
+                'bg-emerald-50/90 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-200'
             }`}>
-                {type === 'loading' ? <Loader2 size={18} className="animate-spin text-blue-400" /> : 
-                 type === 'error' ? <AlertCircle size={14} className="text-red-400" /> :
-                 <div className="bg-emerald-500/20 p-1 rounded-full"><Check size={14} className="text-emerald-400" /></div>}
+                {type === 'loading' ? <Loader2 size={18} className="animate-spin text-primary dark:text-blue-400" /> : 
+                 type === 'error' ? <AlertCircle size={14} className="text-red-500 dark:text-red-400" /> :
+                 <div className="bg-emerald-500/20 p-1 rounded-full"><Check size={14} className="text-emerald-500 dark:text-emerald-400" /></div>}
                 <span className="text-sm font-medium">{message}</span>
             </div>
         </div>
@@ -259,24 +259,24 @@ const StatCard: React.FC<{
     icon: React.ReactNode;
     color: string;
 }> = ({ label, value, subValue, trend, trendUp, icon, color }) => (
-    <div className="glass-card p-5 rounded-2xl border border-white/5 relative overflow-hidden group hover:border-white/10 transition-colors">
-        <div className={`absolute -right-4 -top-4 w-24 h-24 rounded-full opacity-10 blur-xl ${color}`}></div>
+    <div className="glass-card p-5 rounded-2xl border border-slate-200 dark:border-white/5 relative overflow-hidden group hover:border-primary/20 dark:hover:border-white/10 transition-colors">
+        <div className={`absolute -right-4 -top-4 w-24 h-24 rounded-full opacity-5 dark:opacity-10 blur-xl ${color}`}></div>
         <div className="relative z-10">
             <div className="flex justify-between items-start mb-4">
-                <div className={`p-3 rounded-xl bg-slate-800/50 border border-white/5 text-white shadow-lg`}>
+                <div className={`p-3 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-white shadow-lg`}>
                     {icon}
                 </div>
                 {trend && (
-                    <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full bg-slate-800/50 border border-white/5 ${trendUp ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 ${trendUp ? 'text-emerald-500 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'}`}>
                         {trendUp ? '+' : ''}{trend}
                         {trendUp ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
                     </div>
                 )}
             </div>
             <div>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">{label}</p>
-                <h3 className="text-2xl font-bold text-white tracking-tight">{value}</h3>
-                {subValue && <p className="text-slate-500 text-xs mt-1">{subValue}</p>}
+                <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">{label}</p>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{value}</h3>
+                {subValue && <p className="text-slate-500 dark:text-slate-500 text-xs mt-1">{subValue}</p>}
             </div>
         </div>
     </div>
@@ -284,19 +284,19 @@ const StatCard: React.FC<{
 
 const FeatureItem: React.FC<{ text: string }> = ({ text }) => {
     // Map features to icons
-    let icon = <Check size={12} className="text-emerald-400" />;
+    let icon = <Check size={12} className="text-emerald-500 dark:text-emerald-400" />;
     
-    if (text.includes('AI')) icon = <Bot size={12} className="text-purple-400" />;
-    else if (text.includes('route')) icon = <Map size={12} className="text-blue-400" />;
-    else if (text.includes('support')) icon = <Headphones size={12} className="text-cyan-400" />;
-    else if (text.includes('Exclusive')) icon = <Lock size={12} className="text-amber-400" />;
-    else if (text.includes('valet')) icon = <Car size={12} className="text-red-400" />;
-    else if (text.includes('lounge')) icon = <Coffee size={12} className="text-orange-400" />;
-    else if (text.includes('Concierge')) icon = <Bell size={12} className="text-rose-400" />;
+    if (text.includes('AI')) icon = <Bot size={12} className="text-purple-500 dark:text-purple-400" />;
+    else if (text.includes('route')) icon = <Map size={12} className="text-primary dark:text-blue-400" />;
+    else if (text.includes('support')) icon = <Headphones size={12} className="text-cyan-500 dark:text-cyan-400" />;
+    else if (text.includes('Exclusive')) icon = <Lock size={12} className="text-amber-500 dark:text-amber-400" />;
+    else if (text.includes('valet')) icon = <Car size={12} className="text-red-500 dark:text-red-400" />;
+    else if (text.includes('lounge')) icon = <Coffee size={12} className="text-orange-500 dark:text-orange-400" />;
+    else if (text.includes('Concierge')) icon = <Bell size={12} className="text-rose-500 dark:text-rose-400" />;
 
     return (
-        <div className="flex items-start gap-2.5 text-sm text-slate-300 group-hover:text-slate-200 transition-colors">
-            <div className="mt-1 p-0.5 rounded-full bg-white/5 border border-white/5 shrink-0">
+        <div className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300 group-hover:text-slate-800 dark:group-hover:text-slate-200 transition-colors">
+            <div className="mt-1 p-0.5 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 shrink-0">
                 {icon}
             </div>
             <span className="leading-snug text-xs">{text}</span>
@@ -749,10 +749,10 @@ export const Subscription: React.FC = () => {
             
             {/* Header Section */}
             <div className="flex flex-col gap-6">
-                <div className="flex flex-col md:flex-row justify-between items-end gap-4 border-b border-white/5 pb-4">
+                <div className="flex flex-col md:flex-row justify-between items-end gap-4 border-b border-slate-200 dark:border-white/5 pb-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-white tracking-tight">Subscription Management</h1>
-                        <p className="text-slate-400 mt-2 max-w-2xl">
+                        <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Subscription Management</h1>
+                        <p className="text-slate-500 dark:text-slate-400 mt-2 max-w-2xl">
                             Manage pricing tiers, features, and subscriber benefits. Monitor revenue streams and plan performance in real-time.
                         </p>
                     </div>
@@ -761,13 +761,13 @@ export const Subscription: React.FC = () => {
                             <>
                                 <button 
                                     onClick={() => setIsSettingsModalOpen(true)}
-                                    className="bg-white/5 hover:bg-white/10 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors border border-white/10 flex items-center gap-2"
+                                    className="bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors border border-slate-200 dark:border-white/10 flex items-center gap-2"
                                 >
                                     <Settings size={16} /> Global Settings
                                 </button>
                                 <button 
                                     onClick={() => setIsCreateModalOpen(true)}
-                                    className="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 flex items-center gap-2 active:scale-95"
+                                    className="bg-primary dark:bg-blue-600 hover:bg-blue-800 dark:hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 flex items-center gap-2 active:scale-95"
                                 >
                                     <Plus size={18} /> Create New Plan
                                 </button>
@@ -778,13 +778,13 @@ export const Subscription: React.FC = () => {
 
                 {/* Tab Switcher & Filters */}
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div className="flex items-center gap-2 bg-slate-900/50 p-1.5 rounded-xl border border-white/5 w-fit">
+                    <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-900/50 p-1.5 rounded-xl border border-slate-200 dark:border-white/5 w-fit">
                         <button 
                             onClick={() => setActiveTab('overview')}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 ${
                                 activeTab === 'overview' 
-                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
-                                : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                ? 'bg-primary dark:bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
+                                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/5'
                             }`}
                         >
                             <LayoutGrid size={16} /> Overview
@@ -793,8 +793,8 @@ export const Subscription: React.FC = () => {
                             onClick={() => setActiveTab('transactions')}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 ${
                                 activeTab === 'transactions' 
-                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
-                                : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                ? 'bg-primary dark:bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
+                                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/5'
                             }`}
                         >
                             <History size={16} /> Recent Transactions
@@ -805,23 +805,23 @@ export const Subscription: React.FC = () => {
                         <div className="relative" ref={dateRangeRef}>
                             <button 
                                 onClick={() => setIsDateRangeOpen(!isDateRangeOpen)}
-                                className="flex items-center gap-2 bg-slate-800/80 text-slate-300 px-4 py-2 rounded-xl text-xs font-medium border border-white/10 hover:text-white hover:border-slate-500 transition-all w-40 justify-between"
+                                className="flex items-center gap-2 bg-white dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl text-xs font-medium border border-slate-200 dark:border-white/10 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-500 transition-all w-40 justify-between shadow-sm"
                             >
                                 <div className="flex items-center gap-2">
-                                    <CalendarDays size={14} className="text-blue-400" /> 
+                                    <CalendarDays size={14} className="text-primary dark:text-blue-400" /> 
                                     <span>{dateRangeLabel}</span>
                                 </div>
                                 <ChevronDown size={12} className={`opacity-50 transition-transform ${isDateRangeOpen ? 'rotate-180' : ''}`} />
                             </button>
                             
                             {isDateRangeOpen && (
-                                <div className="absolute top-full right-0 mt-2 w-48 bg-[#0f172a] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                                <div className="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                                     <div className="py-1">
                                         {['Today', 'Yesterday', 'Last 7 Days', 'Last 30 Days', 'This Month', 'All Time'].map((option) => (
                                             <button
                                                 key={option}
                                                 onClick={() => handleDateRangeSelect(option)}
-                                                className={`w-full text-left px-4 py-2.5 text-xs flex items-center justify-between hover:bg-white/5 transition-colors ${dateRangeLabel === option ? 'text-blue-400 bg-blue-600/10' : 'text-slate-300'}`}
+                                                className={`w-full text-left px-4 py-2.5 text-xs flex items-center justify-between hover:bg-slate-100 dark:hover:bg-white/5 transition-colors ${dateRangeLabel === option ? 'text-primary dark:text-blue-400 bg-slate-50 dark:bg-blue-600/10' : 'text-slate-700 dark:text-slate-300'}`}
                                             >
                                                 {option}
                                                 {dateRangeLabel === option && <Check size={12} />}
@@ -855,7 +855,7 @@ export const Subscription: React.FC = () => {
                             trend="5.2%" 
                             trendUp={true} 
                             icon={<Users size={20} />} 
-                            color="bg-blue-500" 
+                            color="bg-primary dark:bg-blue-500" 
                         />
                         <StatCard 
                             label="Active Plans" 
@@ -881,19 +881,20 @@ export const Subscription: React.FC = () => {
                                 <AreaChart data={displayRevenueData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                                     <defs>
                                         <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                                            <stop offset="5%" stopColor="#153385" stopOpacity={0.8}/>
+                                            <stop offset="95%" stopColor="#153385" stopOpacity={0}/>
                                         </linearGradient>
                                     </defs>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(148, 163, 184, 0.1)" className="dark:stroke-white/5" />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
                                     <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} tickFormatter={(value) => `₱${value/1000}k`} />
                                     <RechartsTooltip 
-                                        contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#fff', borderRadius: '12px' }} 
-                                        itemStyle={{ color: '#fff' }}
+                                        contentStyle={{ backgroundColor: '#fff', borderColor: '#e2e8f0', color: '#0f172a', borderRadius: '12px' }} 
+                                        itemStyle={{ color: '#0f172a' }}
+                                        wrapperClassName="dark:!bg-slate-800 dark:!border-slate-700 dark:!text-white"
                                         formatter={(value: number) => [formatCurrency(value), 'Revenue']}
                                     />
-                                    <Area type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
+                                    <Area type="monotone" dataKey="revenue" stroke="#153385" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
                                 </AreaChart>
                             </ResponsiveContainer>
                         </Card>
@@ -919,29 +920,30 @@ export const Subscription: React.FC = () => {
                                                 ))}
                                             </Pie>
                                             <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle">
-                                                <tspan x="50%" dy="-0.6em" className="fill-slate-400 text-[10px] font-bold uppercase tracking-widest">Total</tspan>
-                                                <tspan x="50%" dy="1.6em" className="fill-white text-lg font-bold font-mono">{displayTotalSubscribers.toLocaleString()}</tspan>
+                                                <tspan x="50%" dy="-0.6em" className="fill-slate-500 dark:fill-slate-400 text-[10px] font-bold uppercase tracking-widest">Total</tspan>
+                                                <tspan x="50%" dy="1.6em" className="fill-slate-900 dark:fill-white text-lg font-bold font-mono">{displayTotalSubscribers.toLocaleString()}</tspan>
                                             </text>
                                             <RechartsTooltip 
-                                                contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#fff', borderRadius: '12px' }}
-                                                itemStyle={{ color: '#fff' }}
+                                                contentStyle={{ backgroundColor: '#fff', borderColor: '#e2e8f0', color: '#0f172a', borderRadius: '12px' }}
+                                                itemStyle={{ color: '#0f172a' }}
+                                                wrapperClassName="dark:!bg-slate-800 dark:!border-slate-700 dark:!text-white"
                                             />
                                         </PieChart>
                                     </ResponsiveContainer>
                                 </div>
                                 
-                                <div className="flex flex-col gap-1 mt-4 max-h-[140px] overflow-y-auto custom-scrollbar pr-2 border-t border-white/5 pt-4">
+                                <div className="flex flex-col gap-1 mt-4 max-h-[140px] overflow-y-auto custom-scrollbar pr-2 border-t border-slate-200 dark:border-white/5 pt-4">
                                     {distributionData.map((entry, index) => {
                                         const percentage = displayTotalSubscribers > 0 ? ((entry.value / displayTotalSubscribers) * 100).toFixed(1) : '0.0';
                                         return (
-                                            <div key={`legend-${index}`} className="flex items-center justify-between p-1.5 hover:bg-white/5 rounded-lg transition-colors group">
+                                            <div key={`legend-${index}`} className="flex items-center justify-between p-1.5 hover:bg-slate-50 dark:hover:bg-white/5 rounded-lg transition-colors group">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-2.5 h-2.5 rounded-full shadow-sm ring-1 ring-white/10" style={{ backgroundColor: entry.color }} />
-                                                    <span className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors">{entry.name}</span>
+                                                    <div className="w-2.5 h-2.5 rounded-full shadow-sm ring-1 ring-slate-200 dark:ring-white/10" style={{ backgroundColor: entry.color }} />
+                                                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{entry.name}</span>
                                                 </div>
                                                 <div className="flex items-center gap-3">
-                                                    <span className="text-xs font-mono text-slate-500 group-hover:text-slate-400">{entry.value.toLocaleString()}</span>
-                                                    <span className="text-[10px] font-bold text-white bg-white/10 px-1.5 py-0.5 rounded min-w-[40px] text-center border border-white/5">
+                                                    <span className="text-xs font-mono text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-400">{entry.value.toLocaleString()}</span>
+                                                    <span className="text-[10px] font-bold text-slate-700 dark:text-white bg-slate-100 dark:bg-white/10 px-1.5 py-0.5 rounded min-w-[40px] text-center border border-slate-200 dark:border-white/5">
                                                         {percentage}%
                                                     </span>
                                                 </div>
@@ -957,18 +959,18 @@ export const Subscription: React.FC = () => {
                     <div>
                         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
                             <div className="flex items-center gap-4">
-                                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                                    Active Tiers <span className="bg-slate-700 text-xs px-2 py-0.5 rounded-full text-slate-300">{plans.length}</span>
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                    Active Tiers <span className="bg-slate-200 dark:bg-slate-700 text-xs px-2 py-0.5 rounded-full text-slate-700 dark:text-slate-300">{plans.length}</span>
                                 </h3>
                                 
                                 {/* Enhanced Billing Toggle */}
-                                <div className="bg-slate-900 p-1 rounded-xl border border-white/5 flex items-center relative shadow-inner">
+                                <div className="bg-slate-200 dark:bg-slate-900 p-1 rounded-xl border border-slate-300 dark:border-white/5 flex items-center relative shadow-inner">
                                     <button
                                         onClick={() => setBillingCycle('monthly')}
                                         className={`px-5 py-2 rounded-lg text-xs font-bold transition-all relative z-10 ${
                                             billingCycle === 'monthly' 
                                             ? 'text-white shadow-lg' 
-                                            : 'text-slate-400 hover:text-white'
+                                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                                         }`}
                                     >
                                         Monthly
@@ -978,13 +980,13 @@ export const Subscription: React.FC = () => {
                                         className={`px-5 py-2 rounded-lg text-xs font-bold transition-all relative z-10 ${
                                             billingCycle === 'yearly' 
                                             ? 'text-white shadow-lg' 
-                                            : 'text-slate-400 hover:text-white'
+                                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                                         }`}
                                     >
                                         Yearly
                                     </button>
                                     {/* Sliding Background */}
-                                    <div className={`absolute top-1 bottom-1 w-[48%] bg-blue-600 rounded-lg transition-all duration-300 ease-in-out shadow-lg ${
+                                    <div className={`absolute top-1 bottom-1 w-[48%] bg-primary dark:bg-blue-600 rounded-lg transition-all duration-300 ease-in-out shadow-lg ${
                                         billingCycle === 'yearly' ? 'left-[50%]' : 'left-1'
                                     }`}></div>
                                 </div>
@@ -995,8 +997,8 @@ export const Subscription: React.FC = () => {
                             {plans.map((plan) => (
                                 <div key={plan.id} className={`stagger-card group relative flex flex-col h-full ${plan.status === 'Archived' ? 'opacity-60 grayscale-[0.8] hover:grayscale-0 transition-all duration-300' : plan.status === 'Disabled' ? 'grayscale-[0.5]' : ''}`}>
                                     {/* Card Background & Border */}
-                                    <div className={`absolute inset-0 bg-[#0f172a] rounded-2xl border transition-all duration-300 group-hover:translate-y-[-4px] group-hover:shadow-2xl ${
-                                        plan.status === 'Disabled' ? 'border-red-500/10' : 'border-white/5 group-hover:border-white/10'
+                                    <div className={`absolute inset-0 bg-white dark:bg-[#0f172a] rounded-2xl border transition-all duration-300 group-hover:translate-y-[-4px] group-hover:shadow-xl ${
+                                        plan.status === 'Disabled' ? 'border-red-500/10' : 'border-slate-200 dark:border-white/5 group-hover:border-primary/20 dark:group-hover:border-white/10'
                                     }`}></div>
                                     
                                     {/* Content */}
@@ -1013,12 +1015,12 @@ export const Subscription: React.FC = () => {
                                                     </span>
                                                 )}
                                                 {plan.status === 'Archived' && (
-                                                    <span className="px-2 py-1 bg-slate-700 text-slate-300 text-[10px] font-bold uppercase tracking-wide rounded-full">
+                                                    <span className="px-2 py-1 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold uppercase tracking-wide rounded-full">
                                                         Archived
                                                     </span>
                                                 )}
                                                 {plan.status === 'Disabled' && (
-                                                    <span className="px-2 py-1 bg-red-500/20 text-red-400 border border-red-500/20 text-[10px] font-bold uppercase tracking-wide rounded-full">
+                                                    <span className="px-2 py-1 bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/20 text-[10px] font-bold uppercase tracking-wide rounded-full">
                                                         Disabled
                                                     </span>
                                                 )}
@@ -1027,10 +1029,10 @@ export const Subscription: React.FC = () => {
 
                                         {/* Plan Info */}
                                         <div className="mb-4">
-                                            <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors mb-2">{plan.name}</h3>
+                                            <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary dark:group-hover:text-blue-400 transition-colors mb-2">{plan.name}</h3>
                                             
                                             <div className="flex items-baseline gap-1">
-                                                <span className="text-3xl font-bold text-white tracking-tight">
+                                                <span className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
                                                     {plan.price === 0 ? 'Free' : formatCurrency(billingCycle === 'monthly' ? plan.price : plan.yearlyPrice)}
                                                 </span>
                                                 {plan.price > 0 && (
@@ -1043,7 +1045,7 @@ export const Subscription: React.FC = () => {
                                             {billingCycle === 'yearly' && plan.price > 0 && (
                                                 <div className="mt-2 inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20">
                                                     <Check size={12} className="text-emerald-500" />
-                                                    <span className="text-[10px] font-bold text-emerald-400">{plan.yearlySavingsText || 'Save 10% with yearly billing'}</span>
+                                                    <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">{plan.yearlySavingsText || 'Save 10% with yearly billing'}</span>
                                                 </div>
                                             )}
 
@@ -1055,14 +1057,14 @@ export const Subscription: React.FC = () => {
                                         </div>
 
                                         {/* Stats Divider */}
-                                        <div className="grid grid-cols-2 gap-2 mb-6 p-2 bg-white/5 rounded-lg border border-white/5">
+                                        <div className="grid grid-cols-2 gap-2 mb-6 p-2 bg-slate-50 dark:bg-white/5 rounded-lg border border-slate-200 dark:border-white/5">
                                             <div className="text-center">
-                                                <p className="text-[10px] text-slate-400 uppercase tracking-wide">Allowance</p>
-                                                <p className="text-sm font-bold text-white">{plan.kwhAllowance} kWh/mo</p>
+                                                <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wide">Allowance</p>
+                                                <p className="text-sm font-bold text-slate-900 dark:text-white">{plan.kwhAllowance} kWh/mo</p>
                                             </div>
-                                            <div className="text-center border-l border-white/5">
-                                                <p className="text-[10px] text-slate-400 uppercase tracking-wide">Users</p>
-                                                <p className="text-sm font-bold text-white">{plan.activeUsers.toLocaleString()}</p>
+                                            <div className="text-center border-l border-slate-200 dark:border-white/5">
+                                                <p className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wide">Users</p>
+                                                <p className="text-sm font-bold text-slate-900 dark:text-white">{plan.activeUsers.toLocaleString()}</p>
                                             </div>
                                         </div>
 
@@ -1074,10 +1076,10 @@ export const Subscription: React.FC = () => {
                                         </div>
 
                                         {/* Actions */}
-                                        <div className="flex gap-2 mt-auto pt-4 border-t border-white/5 relative">
+                                        <div className="flex gap-2 mt-auto pt-4 border-t border-slate-200 dark:border-white/5 relative">
                                             <button 
                                                 onClick={() => handleEditPlan(plan)}
-                                                className="flex-1 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold transition-colors border border-white/5 flex items-center justify-center gap-2"
+                                                className="flex-1 py-2 rounded-lg bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-bold transition-colors border border-slate-200 dark:border-white/5 flex items-center justify-center gap-2"
                                             >
                                                 <Edit3 size={14} /> Edit
                                             </button>
@@ -1085,7 +1087,7 @@ export const Subscription: React.FC = () => {
                                                 <button 
                                                     data-dropdown-trigger
                                                     onClick={() => setActiveDropdownId(activeDropdownId === plan.id ? null : plan.id)}
-                                                    className={`p-2 rounded-lg transition-colors border border-white/5 ${activeDropdownId === plan.id ? 'bg-white/10 text-white' : 'bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white'}`}
+                                                    className={`p-2 rounded-lg transition-colors border border-slate-200 dark:border-white/5 ${activeDropdownId === plan.id ? 'bg-slate-200 dark:bg-white/10 text-slate-900 dark:text-white' : 'bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                                                 >
                                                     <MoreHorizontal size={14} />
                                                 </button>
@@ -1094,13 +1096,13 @@ export const Subscription: React.FC = () => {
                                                 {activeDropdownId === plan.id && (
                                                     <div 
                                                         data-dropdown-menu
-                                                        className="absolute bottom-full right-0 mb-2 w-48 bg-[#0f172a] border border-white/10 rounded-xl shadow-2xl z-[50] overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+                                                        className="absolute bottom-full right-0 mb-2 w-48 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl z-[50] overflow-hidden animate-in fade-in zoom-in-95 duration-200"
                                                     >
                                                         <div className="py-1">
                                                             {plan.status !== 'Archived' && (
                                                                 <button 
                                                                     onClick={() => handleStatusClick(plan)}
-                                                                    className={`w-full text-left px-4 py-2.5 text-xs flex items-center gap-2 ${plan.status === 'Active' ? 'text-red-300 hover:bg-red-500/10 hover:text-red-200' : 'text-emerald-300 hover:bg-emerald-500/10 hover:text-emerald-200'}`}
+                                                                    className={`w-full text-left px-4 py-2.5 text-xs flex items-center gap-2 ${plan.status === 'Active' ? 'text-red-500 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10' : 'text-emerald-600 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-500/10'}`}
                                                                 >
                                                                     {plan.status === 'Active' ? <PowerOff size={14} /> : <Power size={14} />}
                                                                     {plan.status === 'Active' ? 'Disable Plan' : 'Enable Plan'}
@@ -1108,14 +1110,14 @@ export const Subscription: React.FC = () => {
                                                             )}
                                                             
                                                             <button 
-                                                                className="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-white/5 hover:text-white flex items-center gap-2"
+                                                                className="w-full text-left px-4 py-2.5 text-xs text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white flex items-center gap-2"
                                                             >
                                                                 <Eye size={14} /> View Subscribers
                                                             </button>
-                                                            <div className="h-[1px] bg-white/5 my-1"></div>
+                                                            <div className="h-[1px] bg-slate-200 dark:bg-white/5 my-1"></div>
                                                             <button 
                                                                 onClick={() => handleDeleteClick(plan)}
-                                                                className="w-full text-left px-4 py-2.5 text-xs text-red-400 hover:bg-red-500/10 flex items-center gap-2"
+                                                                className="w-full text-left px-4 py-2.5 text-xs text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 flex items-center gap-2"
                                                             >
                                                                 <Trash2 size={14} /> Delete Plan
                                                             </button>
@@ -1136,16 +1138,16 @@ export const Subscription: React.FC = () => {
             {activeTab === 'transactions' && (
                 <div ref={transactionsRef} className="space-y-6">
                     {/* Toolbar */}
-                    <div className="flex flex-col md:flex-row justify-between gap-4 p-4 rounded-xl bg-slate-900/50 border border-white/5">
+                    <div className="flex flex-col md:flex-row justify-between gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-white/5">
                         <div className="flex flex-col sm:flex-row gap-4 flex-1">
                             <div className="relative flex-1 max-w-md">
-                                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                                 <input 
                                     type="text" 
                                     placeholder="Search by ID, User, or Email..." 
                                     value={txnSearchQuery}
                                     onChange={(e) => setTxnSearchQuery(e.target.value)}
-                                    className="w-full bg-slate-800/80 border border-slate-700 rounded-lg py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 placeholder-slate-500"
+                                    className="w-full bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-10 pr-4 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 placeholder-slate-400 dark:placeholder-slate-500"
                                 />
                             </div>
                             
@@ -1153,21 +1155,21 @@ export const Subscription: React.FC = () => {
                             <div className="relative" ref={txnDateRangeRef}>
                                 <button 
                                     onClick={() => setIsTxnDateRangeOpen(!isTxnDateRangeOpen)}
-                                    className="flex items-center gap-2 bg-slate-800/80 text-slate-300 px-4 py-2 rounded-lg text-xs font-medium border border-slate-700 hover:text-white hover:border-slate-500 transition-all whitespace-nowrap"
+                                    className="flex items-center gap-2 bg-white dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg text-xs font-medium border border-slate-200 dark:border-slate-700 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-500 transition-all whitespace-nowrap shadow-sm"
                                 >
-                                    <CalendarDays size={14} className="text-blue-400" /> 
+                                    <CalendarDays size={14} className="text-primary dark:text-blue-400" /> 
                                     <span>{txnDateRangeLabel}</span>
                                     <ChevronDown size={12} className={`opacity-50 transition-transform ${isTxnDateRangeOpen ? 'rotate-180' : ''}`} />
                                 </button>
                                 
                                 {isTxnDateRangeOpen && (
-                                    <div className="absolute top-full left-0 mt-2 w-40 bg-[#0f172a] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                                    <div className="absolute top-full left-0 mt-2 w-40 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                                         <div className="py-1">
                                             {['Today', 'Yesterday', 'Last 7 Days', 'Last 30 Days', 'This Month', 'All Time'].map((option) => (
                                                 <button
                                                     key={option}
                                                     onClick={() => handleTxnDateRangeSelect(option as any)}
-                                                    className={`w-full text-left px-4 py-2.5 text-xs flex items-center justify-between hover:bg-white/5 transition-colors ${txnDateRangeLabel === option ? 'text-blue-400 bg-blue-600/10' : 'text-slate-300'}`}
+                                                    className={`w-full text-left px-4 py-2.5 text-xs flex items-center justify-between hover:bg-slate-100 dark:hover:bg-white/5 transition-colors ${txnDateRangeLabel === option ? 'text-primary dark:text-blue-400 bg-slate-50 dark:bg-blue-600/10' : 'text-slate-700 dark:text-slate-300'}`}
                                                 >
                                                     {option}
                                                     {txnDateRangeLabel === option && <Check size={12} />}
@@ -1185,8 +1187,8 @@ export const Subscription: React.FC = () => {
                                         onClick={() => setTxnStatusFilter(status)}
                                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
                                             txnStatusFilter === status 
-                                            ? 'bg-blue-600 text-white shadow-md' 
-                                            : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
+                                            ? 'bg-primary dark:bg-blue-600 text-white shadow-md' 
+                                            : 'bg-white dark:bg-white/5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/5'
                                         }`}
                                     >
                                         {status}
@@ -1197,17 +1199,17 @@ export const Subscription: React.FC = () => {
                         
                         <button 
                             onClick={handleExportTransactions}
-                            className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-white/5"
+                            className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-slate-200 dark:border-white/5"
                         >
                             <Download size={16} /> Export CSV
                         </button>
                     </div>
 
                     {/* Transaction Table */}
-                    <div className="glass-card rounded-2xl border border-white/5 overflow-hidden p-0">
+                    <div className="glass-card rounded-2xl border border-slate-200 dark:border-white/5 overflow-hidden p-0">
                         <div className="overflow-x-auto">
-                            <table className="w-full text-left text-sm text-slate-400">
-                                <thead className="text-xs uppercase bg-slate-900/80 text-slate-300 border-b border-white/5 backdrop-blur-sm">
+                            <table className="w-full text-left text-sm text-slate-500 dark:text-slate-400">
+                                <thead className="text-xs uppercase bg-slate-50 dark:bg-slate-900/80 text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-white/5 backdrop-blur-sm">
                                     <tr>
                                         <th className="px-6 py-4 font-bold tracking-wider">Transaction ID</th>
                                         <th className="px-6 py-4 font-bold tracking-wider">Customer</th>
@@ -1219,12 +1221,12 @@ export const Subscription: React.FC = () => {
                                         <th className="px-6 py-4 font-bold tracking-wider text-right">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-white/5">
+                                <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                                     {currentTransactions.length > 0 ? (
                                         currentTransactions.map((txn) => (
-                                            <tr key={txn.id} className="hover:bg-white/5 transition-colors group">
+                                            <tr key={txn.id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
                                                 <td className="px-6 py-4">
-                                                    <span className="font-mono text-white font-medium text-xs group-hover:text-blue-400 transition-colors">#{txn.id}</span>
+                                                    <span className="font-mono text-slate-900 dark:text-white font-medium text-xs group-hover:text-primary dark:group-hover:text-blue-400 transition-colors">#{txn.id}</span>
                                                     <div className="text-[10px] text-slate-500 mt-1">{txn.paymentMethod}</div>
                                                 </td>
                                                 <td className="px-6 py-4">
@@ -1232,42 +1234,42 @@ export const Subscription: React.FC = () => {
                                                         <img 
                                                             src={txn.userAvatar} 
                                                             alt="User" 
-                                                            className="w-8 h-8 rounded-full border border-white/10"
+                                                            className="w-8 h-8 rounded-full border border-slate-200 dark:border-white/10"
                                                         />
                                                         <div className="flex flex-col">
-                                                            <span className="text-slate-200 text-xs font-bold">{txn.userName}</span>
+                                                            <span className="text-slate-700 dark:text-slate-200 text-xs font-bold">{txn.userName}</span>
                                                             <span className="text-[10px] text-slate-500">{txn.userEmail}</span>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wide border ${
-                                                        txn.planName === 'Supreme' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
-                                                        txn.planName === 'Elite' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
-                                                        txn.planName === 'Premium' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
-                                                        txn.planName === 'Deluxe' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
-                                                        'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                                        txn.planName === 'Supreme' ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20' :
+                                                        txn.planName === 'Elite' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' :
+                                                        txn.planName === 'Premium' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20' :
+                                                        txn.planName === 'Deluxe' ? 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20' :
+                                                        'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20'
                                                     }`}>
                                                         {txn.planName}
                                                     </span>
                                                     <div className="text-[10px] text-slate-500 mt-1">{txn.billingCycle}</div>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-1.5 text-slate-300">
-                                                        <CalendarDays size={12} className="text-slate-500" />
+                                                    <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+                                                        <CalendarDays size={12} className="text-slate-400" />
                                                         <span>{txn.date}</span>
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <span className="text-white font-bold font-mono">
+                                                    <span className="text-slate-900 dark:text-white font-bold font-mono">
                                                         {formatCurrency(txn.amount)}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wide ${
                                                         txn.autoBilling 
-                                                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
-                                                        : 'bg-slate-500/10 text-slate-400 border border-slate-500/20'
+                                                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' 
+                                                        : 'bg-slate-200 dark:bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-500/20'
                                                     }`}>
                                                         {txn.autoBilling ? <RefreshCw size={10} /> : <Ban size={10} />}
                                                         {txn.autoBilling ? 'Auto On' : 'Manual'}
@@ -1275,13 +1277,13 @@ export const Subscription: React.FC = () => {
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-2">
-                                                        {txn.status === 'Completed' && <CheckCircle2 size={14} className="text-emerald-400" />}
-                                                        {txn.status === 'Pending' && <Loader2 size={14} className="text-amber-400 animate-spin" />}
-                                                        {txn.status === 'Failed' && <XCircle size={14} className="text-red-400" />}
+                                                        {txn.status === 'Completed' && <CheckCircle2 size={14} className="text-emerald-500 dark:text-emerald-400" />}
+                                                        {txn.status === 'Pending' && <Loader2 size={14} className="text-amber-500 dark:text-amber-400 animate-spin" />}
+                                                        {txn.status === 'Failed' && <XCircle size={14} className="text-red-500 dark:text-red-400" />}
                                                         <span className={`text-xs font-bold ${
-                                                            txn.status === 'Completed' ? 'text-emerald-400' :
-                                                            txn.status === 'Pending' ? 'text-amber-400' :
-                                                            'text-red-400'
+                                                            txn.status === 'Completed' ? 'text-emerald-600 dark:text-emerald-400' :
+                                                            txn.status === 'Pending' ? 'text-amber-600 dark:text-amber-400' :
+                                                            'text-red-600 dark:text-red-400'
                                                         }`}>
                                                             {txn.status}
                                                         </span>
@@ -1290,7 +1292,7 @@ export const Subscription: React.FC = () => {
                                                 <td className="px-6 py-4 text-right">
                                                     <button 
                                                         onClick={() => setToast({ message: `Downloading invoice for ${txn.id}...`, type: 'loading' })}
-                                                        className="p-1.5 rounded-lg hover:bg-blue-500/20 text-slate-400 hover:text-blue-400 transition-colors"
+                                                        className="p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-500/20 text-slate-400 hover:text-primary dark:hover:text-blue-400 transition-colors"
                                                         title="Download Invoice"
                                                     >
                                                         <Download size={16} />
@@ -1306,7 +1308,7 @@ export const Subscription: React.FC = () => {
                                                     <p>No transactions found matching your criteria.</p>
                                                     <button 
                                                         onClick={() => { setTxnSearchQuery(''); setTxnStatusFilter('All'); handleTxnDateRangeSelect('All Time'); }} 
-                                                        className="text-blue-500 hover:underline text-xs"
+                                                        className="text-primary dark:text-blue-500 hover:underline text-xs"
                                                     >
                                                         Clear Filters
                                                     </button>
@@ -1319,7 +1321,7 @@ export const Subscription: React.FC = () => {
                         </div>
                         
                         {/* Pagination Footer */}
-                        <div className="p-4 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-900/30">
+                        <div className="p-4 border-t border-slate-200 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50 dark:bg-slate-900/30">
                             <span className="text-xs text-slate-500">
                                 Showing {currentTransactions.length > 0 ? indexOfFirstItem + 1 : 0}-{Math.min(indexOfLastItem, filteredTransactions.length)} of {filteredTransactions.length} results
                             </span>
@@ -1328,7 +1330,7 @@ export const Subscription: React.FC = () => {
                                 <button 
                                     onClick={() => handlePageChange(currentPage - 1)}
                                     disabled={currentPage === 1}
-                                    className="p-2 rounded-lg border border-white/5 bg-slate-800/50 text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    className="p-2 rounded-lg border border-slate-200 dark:border-white/5 bg-white dark:bg-slate-800/50 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                 >
                                     <ChevronLeft size={16} />
                                 </button>
@@ -1352,8 +1354,8 @@ export const Subscription: React.FC = () => {
                                                     onClick={() => handlePageChange(i)}
                                                     className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
                                                         currentPage === i
-                                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
-                                                        : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                                                        ? 'bg-primary dark:bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                                                        : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'
                                                     }`}
                                                 >
                                                     {i}
@@ -1367,7 +1369,7 @@ export const Subscription: React.FC = () => {
                                 <button 
                                     onClick={() => handlePageChange(currentPage + 1)}
                                     disabled={currentPage === totalPages}
-                                    className="p-2 rounded-lg border border-white/5 bg-slate-800/50 text-slate-400 hover:text-white hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    className="p-2 rounded-lg border border-slate-200 dark:border-white/5 bg-white dark:bg-slate-800/50 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                 >
                                     <ChevronRight size={16} />
                                 </button>
@@ -1386,7 +1388,7 @@ export const Subscription: React.FC = () => {
                 <form onSubmit={handleCreateSubmit} className="space-y-6">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-400 uppercase">Plan Name</label>
+                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Plan Name</label>
                             <input 
                                 required
                                 type="text" 
@@ -1394,11 +1396,11 @@ export const Subscription: React.FC = () => {
                                 value={createForm.name}
                                 onChange={handleCreateInputChange}
                                 placeholder="e.g. Starter"
-                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-500" 
+                                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-400 dark:placeholder-slate-500" 
                             />
                         </div>
                         <div className="space-y-1">
-                             <label className="text-xs font-bold text-slate-400 uppercase">Monthly Price (PHP)</label>
+                             <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Monthly Price (PHP)</label>
                             <input 
                                 required
                                 type="number" 
@@ -1407,14 +1409,14 @@ export const Subscription: React.FC = () => {
                                 value={createForm.price}
                                 onChange={handleCreateInputChange}
                                 placeholder="e.g. 1500"
-                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-500 font-mono [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-400 dark:placeholder-slate-500 font-mono [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                             />
                         </div>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1">
-                             <label className="text-xs font-bold text-slate-400 uppercase">Yearly Price (PHP)</label>
+                             <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Yearly Price (PHP)</label>
                              <div className="relative">
                                 <input 
                                     type="number" 
@@ -1423,15 +1425,15 @@ export const Subscription: React.FC = () => {
                                     value={createForm.yearlyPrice}
                                     onChange={handleCreateInputChange}
                                     placeholder="e.g. 15000"
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 pr-16 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-500 font-mono [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 pr-16 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-400 dark:placeholder-slate-500 font-mono [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                                 />
-                                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500 text-[10px]">
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 dark:text-slate-500 text-[10px]">
                                     Optional
                                 </div>
                              </div>
                         </div>
                         <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-400 uppercase">kWh Allowance</label>
+                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">kWh Allowance</label>
                             <input 
                                 required
                                 type="number" 
@@ -1440,14 +1442,14 @@ export const Subscription: React.FC = () => {
                                 value={createForm.kwhAllowance}
                                 onChange={handleCreateInputChange}
                                 placeholder="e.g. 100"
-                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-500 font-mono [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-400 dark:placeholder-slate-500 font-mono [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                             />
                         </div>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-400 uppercase flex items-center gap-2">
+                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase flex items-center gap-2">
                                 <Tag size={14} /> Yearly Savings Text
                             </label>
                             <input 
@@ -1456,11 +1458,11 @@ export const Subscription: React.FC = () => {
                                 value={createForm.yearlySavingsText}
                                 onChange={handleCreateInputChange}
                                 placeholder="e.g. Save 10% with yearly billing"
-                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-500" 
+                                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-400 dark:placeholder-slate-500" 
                             />
                         </div>
                         <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-400 uppercase flex items-center gap-2">
+                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase flex items-center gap-2">
                                 <Bookmark size={14} /> Plan Tag / Badge
                             </label>
                             <input 
@@ -1469,13 +1471,13 @@ export const Subscription: React.FC = () => {
                                 value={createForm.tag}
                                 onChange={handleCreateInputChange}
                                 placeholder="e.g. Most Popular"
-                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-500" 
+                                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-400 dark:placeholder-slate-500" 
                             />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400 uppercase flex items-center gap-2">
+                        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase flex items-center gap-2">
                             <Palette size={14} /> Card Theme
                         </label>
                         <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
@@ -1485,17 +1487,17 @@ export const Subscription: React.FC = () => {
                                     type="button"
                                     onClick={() => setCreateForm(prev => ({ ...prev, themeIndex: index }))}
                                     className={`w-10 h-10 rounded-full bg-gradient-to-br ${theme.color} shrink-0 border-2 transition-all ${
-                                        createForm.themeIndex === index ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-70 hover:opacity-100'
+                                        createForm.themeIndex === index ? 'border-primary dark:border-white scale-110 shadow-lg' : 'border-transparent opacity-70 hover:opacity-100'
                                     }`}
                                     title={theme.name}
                                 />
                             ))}
                         </div>
-                        <p className="text-[10px] text-slate-500">Selected: <span className="text-white font-medium">{THEMES[createForm.themeIndex].name}</span></p>
+                        <p className="text-[10px] text-slate-500">Selected: <span className="text-slate-900 dark:text-white font-medium">{THEMES[createForm.themeIndex].name}</span></p>
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-xs font-bold text-slate-400 uppercase flex items-center gap-2">
+                        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase flex items-center gap-2">
                              <FileText size={14} /> Features List
                         </label>
                         <textarea 
@@ -1504,16 +1506,16 @@ export const Subscription: React.FC = () => {
                             onChange={handleCreateInputChange}
                             placeholder="Enter features (one per line)..."
                             rows={4}
-                            className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-500 resize-none custom-scrollbar" 
+                            className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm placeholder-slate-400 dark:placeholder-slate-500 resize-none custom-scrollbar" 
                         />
                         <p className="text-[10px] text-slate-500">Separate each feature with a new line.</p>
                     </div>
 
-                    <div className="pt-4 flex gap-3 border-t border-white/10 mt-2">
+                    <div className="pt-4 flex gap-3 border-t border-slate-200 dark:border-white/10 mt-2">
                         <button 
                             type="button"
                             onClick={() => setIsCreateModalOpen(false)}
-                            className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-300 hover:bg-white/5 hover:text-white text-sm font-medium transition-colors"
+                            className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 text-sm font-medium transition-colors"
                         >
                             Cancel
                         </button>
@@ -1522,8 +1524,8 @@ export const Subscription: React.FC = () => {
                             disabled={!isCreateFormValid}
                             className={`flex-1 py-2.5 rounded-xl text-sm font-bold shadow-lg transition-all ${
                                 isCreateFormValid 
-                                ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/20' 
-                                : 'bg-slate-800 text-slate-500 cursor-not-allowed shadow-none border border-slate-700'
+                                ? 'bg-primary dark:bg-blue-600 hover:bg-blue-800 dark:hover:bg-blue-500 text-white shadow-blue-500/20' 
+                                : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed shadow-none border border-slate-200 dark:border-slate-700'
                             }`}
                         >
                             Create Plan
@@ -1558,17 +1560,17 @@ export const Subscription: React.FC = () => {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-xs font-medium text-slate-400 uppercase mb-1">Plan Name</label>
+                                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 uppercase mb-1">Plan Name</label>
                                 <input 
                                     name="name"
                                     type="text" 
                                     defaultValue={selectedPlan.name}
                                     required
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" 
+                                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold" 
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-slate-400 uppercase mb-1 flex items-center gap-2">
+                                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 uppercase mb-1 flex items-center gap-2">
                                     <Bookmark size={12} /> Plan Tag / Badge
                                 </label>
                                 <input 
@@ -1576,64 +1578,64 @@ export const Subscription: React.FC = () => {
                                     type="text" 
                                     defaultValue={selectedPlan.tag || ''}
                                     placeholder="e.g. Most Popular"
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm" 
+                                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm" 
                                 />
                             </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-xs font-medium text-slate-400 uppercase mb-1">Monthly Price (PHP)</label>
+                                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 uppercase mb-1">Monthly Price (PHP)</label>
                                 <input 
                                     name="price"
                                     type="number" 
                                     defaultValue={selectedPlan.price}
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none font-mono" 
+                                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-mono" 
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium text-slate-400 uppercase mb-1">Yearly Price (PHP)</label>
+                                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 uppercase mb-1">Yearly Price (PHP)</label>
                                 <input 
                                     name="yearlyPrice"
                                     type="number" 
                                     defaultValue={selectedPlan.yearlyPrice}
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none font-mono" 
+                                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-mono" 
                                 />
                             </div>
                         </div>
                         
                         <div className="grid grid-cols-2 gap-4">
                              <div>
-                                 <label className="block text-xs font-medium text-slate-400 uppercase mb-1">kWh Allowance</label>
+                                 <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 uppercase mb-1">kWh Allowance</label>
                                     <input 
                                         name="kwhAllowance"
                                         type="number" 
                                         defaultValue={selectedPlan.kwhAllowance}
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none font-mono" 
+                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none font-mono" 
                                     />
                             </div>
                             <div>
-                                 <label className="block text-xs font-medium text-slate-400 uppercase mb-1">Yearly Savings Text</label>
+                                 <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 uppercase mb-1">Yearly Savings Text</label>
                                     <input 
                                         name="yearlySavingsText"
                                         type="text" 
                                         defaultValue={selectedPlan.yearlySavingsText || 'Save 10% with yearly billing'}
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm" 
+                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm" 
                                     />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-xs font-medium text-slate-400 uppercase mb-2">Features & Benefits</label>
-                            <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-2 max-h-48 overflow-y-auto custom-scrollbar space-y-1">
+                            <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 uppercase mb-2">Features & Benefits</label>
+                            <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-2 max-h-48 overflow-y-auto custom-scrollbar space-y-1">
                                 {editableFeatures.map((feature, idx) => (
-                                    <div key={idx} className="flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg group animate-in fade-in slide-in-from-left-2 duration-200">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500/50 flex-shrink-0" />
-                                        <span className="text-sm text-slate-300 group-hover:text-white transition-colors flex-1">{feature}</span>
+                                    <div key={idx} className="flex items-center gap-3 p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg group animate-in fade-in slide-in-from-left-2 duration-200">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-primary/50 dark:bg-blue-500/50 flex-shrink-0" />
+                                        <span className="text-sm text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors flex-1">{feature}</span>
                                         <button 
                                             type="button" 
                                             onClick={() => handleRemoveFeature(idx)}
-                                            className="ml-auto text-slate-500 hover:text-red-400 transition-all opacity-0 group-hover:opacity-100"
+                                            className="ml-auto text-slate-400 hover:text-red-500 transition-all opacity-0 group-hover:opacity-100"
                                         >
                                             <Trash2 size={14} />
                                         </button>
@@ -1641,7 +1643,7 @@ export const Subscription: React.FC = () => {
                                 ))}
                                 
                                 {isAddingFeature ? (
-                                    <div className="flex items-center gap-2 p-2 bg-slate-800 rounded-lg border border-blue-500/30 animate-in fade-in zoom-in-95 duration-200">
+                                    <div className="flex items-center gap-2 p-2 bg-slate-100 dark:bg-slate-800 rounded-lg border border-primary/20 dark:border-blue-500/30 animate-in fade-in zoom-in-95 duration-200">
                                         <input
                                             ref={featureInputRef}
                                             type="text"
@@ -1657,19 +1659,19 @@ export const Subscription: React.FC = () => {
                                                 }
                                             }}
                                             placeholder="Type feature..."
-                                            className="flex-1 bg-transparent border-none text-sm text-white focus:ring-0 placeholder-slate-500 p-0"
+                                            className="flex-1 bg-transparent border-none text-sm text-slate-900 dark:text-white focus:ring-0 placeholder-slate-400 dark:placeholder-slate-500 p-0"
                                         />
                                         <button 
                                             type="button"
                                             onClick={handleAddFeature}
-                                            className="p-1 hover:bg-blue-500/20 text-blue-400 rounded transition-colors"
+                                            className="p-1 hover:bg-blue-500/20 text-primary dark:text-blue-400 rounded transition-colors"
                                         >
                                             <Check size={14} />
                                         </button>
                                         <button 
                                             type="button"
                                             onClick={handleCancelAddFeature}
-                                            className="p-1 hover:bg-red-500/20 text-red-400 rounded transition-colors"
+                                            className="p-1 hover:bg-red-500/20 text-red-500 dark:text-red-400 rounded transition-colors"
                                         >
                                             <X size={14} />
                                         </button>
@@ -1678,7 +1680,7 @@ export const Subscription: React.FC = () => {
                                     <button 
                                         type="button" 
                                         onClick={() => setIsAddingFeature(true)}
-                                        className="w-full py-2 text-xs text-blue-400 hover:text-blue-300 font-medium border-t border-white/5 mt-1 flex items-center justify-center gap-1 hover:bg-white/5 transition-colors rounded-b-lg"
+                                        className="w-full py-2 text-xs text-primary dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium border-t border-slate-200 dark:border-white/5 mt-1 flex items-center justify-center gap-1 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors rounded-b-lg"
                                     >
                                         <Plus size={14} /> Add Feature
                                     </button>
@@ -1686,17 +1688,17 @@ export const Subscription: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="pt-4 flex gap-3 border-t border-white/10">
+                        <div className="pt-4 flex gap-3 border-t border-slate-200 dark:border-white/10">
                             <button 
                                 type="button"
                                 onClick={() => setIsEditModalOpen(false)}
-                                className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-300 hover:bg-white/5 hover:text-white text-sm font-medium transition-colors"
+                                className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 text-sm font-medium transition-colors"
                             >
                                 Cancel
                             </button>
                             <button 
                                 type="submit"
-                                className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold shadow-lg shadow-blue-500/20 transition-all"
+                                className="flex-1 py-2.5 rounded-xl bg-primary dark:bg-blue-600 hover:bg-blue-800 dark:hover:bg-blue-500 text-white text-sm font-bold shadow-lg shadow-blue-500/20 transition-all"
                             >
                                 Save Changes
                             </button>
@@ -1714,13 +1716,13 @@ export const Subscription: React.FC = () => {
                 <form onSubmit={handleSaveGlobalSettings} className="space-y-6">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-400 uppercase flex items-center gap-2">
+                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase flex items-center gap-2">
                                 <Globe size={14} /> Default Currency
                             </label>
                             <select 
                                 value={globalSettings.currency}
                                 onChange={(e) => setGlobalSettings({...globalSettings, currency: e.target.value})}
-                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm appearance-none"
+                                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm appearance-none"
                             >
                                 <option value="PHP">Philippine Peso (PHP)</option>
                                 <option value="USD">US Dollar (USD)</option>
@@ -1728,7 +1730,7 @@ export const Subscription: React.FC = () => {
                             </select>
                         </div>
                         <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-400 uppercase flex items-center gap-2">
+                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase flex items-center gap-2">
                                 <Percent size={14} /> VAT Rate (%)
                             </label>
                             <input 
@@ -1737,28 +1739,28 @@ export const Subscription: React.FC = () => {
                                 max="100"
                                 value={globalSettings.taxRate}
                                 onChange={(e) => setGlobalSettings({...globalSettings, taxRate: Number(e.target.value)})}
-                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono" 
+                                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono" 
                             />
                         </div>
                     </div>
 
                     <div className="space-y-4">
-                        <div className="flex items-center justify-between p-4 rounded-xl bg-slate-800/50 border border-white/5">
+                        <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5">
                             <div className="space-y-1">
-                                <span className="text-sm font-bold text-white block">Enable Yearly Billing</span>
-                                <span className="text-xs text-slate-400 block">Allow users to subscribe to yearly plans for a discount.</span>
+                                <span className="text-sm font-bold text-slate-900 dark:text-white block">Enable Yearly Billing</span>
+                                <span className="text-xs text-slate-500 dark:text-slate-400 block">Allow users to subscribe to yearly plans for a discount.</span>
                             </div>
                             <button 
                                 type="button"
                                 onClick={() => setGlobalSettings(prev => ({ ...prev, enableYearlyBilling: !prev.enableYearlyBilling }))}
-                                className={`w-12 h-6 rounded-full transition-colors relative ${globalSettings.enableYearlyBilling ? 'bg-blue-600' : 'bg-slate-700'}`}
+                                className={`w-12 h-6 rounded-full transition-colors relative ${globalSettings.enableYearlyBilling ? 'bg-primary dark:bg-blue-600' : 'bg-slate-200 dark:bg-slate-700'}`}
                             >
                                 <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${globalSettings.enableYearlyBilling ? 'translate-x-6' : 'translate-x-0'}`} />
                             </button>
                         </div>
 
                         <div className="space-y-1">
-                            <label className="text-xs font-bold text-slate-400 uppercase flex items-center gap-2">
+                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase flex items-center gap-2">
                                 <Clock size={14} /> Payment Grace Period (Days)
                             </label>
                             <input 
@@ -1766,23 +1768,23 @@ export const Subscription: React.FC = () => {
                                 min="0"
                                 value={globalSettings.gracePeriod}
                                 onChange={(e) => setGlobalSettings({...globalSettings, gracePeriod: Number(e.target.value)})}
-                                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono" 
+                                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono" 
                             />
                             <p className="text-[10px] text-slate-500">Number of days before a subscription is suspended after failed payment.</p>
                         </div>
                     </div>
 
-                    <div className="pt-4 flex gap-3 border-t border-white/10 mt-2">
+                    <div className="pt-4 flex gap-3 border-t border-slate-200 dark:border-white/10 mt-2">
                         <button 
                             type="button"
                             onClick={() => setIsSettingsModalOpen(false)}
-                            className="flex-1 py-2.5 rounded-xl border border-white/10 text-slate-300 hover:bg-white/5 hover:text-white text-sm font-medium transition-colors"
+                            className="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 text-sm font-medium transition-colors"
                         >
                             Cancel
                         </button>
                         <button 
                             type="submit"
-                            className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold shadow-lg transition-all"
+                            className="flex-1 py-2.5 rounded-xl bg-primary dark:bg-blue-600 hover:bg-blue-800 dark:hover:bg-blue-500 text-white text-sm font-bold shadow-lg transition-all"
                         >
                             Save Settings
                         </button>
@@ -1809,12 +1811,12 @@ export const Subscription: React.FC = () => {
                             }
                             <div>
                                 <h4 className={`font-bold text-sm uppercase tracking-wide ${
-                                    planToToggleStatus.status === 'Active' ? 'text-red-400' : 'text-emerald-400'
+                                    planToToggleStatus.status === 'Active' ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'
                                 }`}>
                                     {planToToggleStatus.status === 'Active' ? 'Confirm Deactivation' : 'Confirm Activation'}
                                 </h4>
                                 <p className={`text-sm mt-1 ${
-                                    planToToggleStatus.status === 'Active' ? 'text-red-200' : 'text-emerald-200'
+                                    planToToggleStatus.status === 'Active' ? 'text-red-700 dark:text-red-200' : 'text-emerald-700 dark:text-emerald-200'
                                 }`}>
                                     {planToToggleStatus.status === 'Active' 
                                         ? `Are you sure you want to disable the ${planToToggleStatus.name} plan? New users will not be able to subscribe, but existing users may continue until their cycle ends.` 
@@ -1824,10 +1826,10 @@ export const Subscription: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-4">
+                        <div className="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-white/5 mt-4">
                             <button 
                                 onClick={() => setIsStatusModalOpen(false)} 
-                                className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium"
+                                className="px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-sm font-medium"
                             >
                                 Cancel
                             </button>
@@ -1858,8 +1860,8 @@ export const Subscription: React.FC = () => {
                         <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start gap-3">
                             <AlertTriangle className="text-red-500 flex-shrink-0 mt-0.5" size={20} />
                             <div>
-                                <h4 className="text-red-400 font-bold text-sm uppercase tracking-wide">Warning: Active Subscribers</h4>
-                                <p className="text-sm text-red-200 mt-1">
+                                <h4 className="text-red-600 dark:text-red-400 font-bold text-sm uppercase tracking-wide">Warning: Active Subscribers</h4>
+                                <p className="text-sm text-red-700 dark:text-red-200 mt-1">
                                     There are currently <strong>{planToDelete.activeUsers.toLocaleString()}</strong> active users on this plan. 
                                     Deleting it will force these users to migrate or lose access.
                                 </p>
@@ -1867,15 +1869,15 @@ export const Subscription: React.FC = () => {
                         </div>
                     )}
                     
-                    <p className="text-slate-300">
-                        Are you sure you want to permanently delete the <strong className="text-white">{planToDelete?.name}</strong> plan? 
+                    <p className="text-slate-600 dark:text-slate-300">
+                        Are you sure you want to permanently delete the <strong className="text-slate-900 dark:text-white">{planToDelete?.name}</strong> plan? 
                         This action cannot be undone.
                     </p>
 
-                    <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-4">
+                    <div className="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-white/5 mt-4">
                         <button 
                             onClick={() => setIsDeleteModalOpen(false)} 
-                            className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium"
+                            className="px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-sm font-medium"
                         >
                             Cancel
                         </button>

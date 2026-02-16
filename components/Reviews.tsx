@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Card } from './ui/Card';
 import { Modal } from './ui/Modal';
@@ -145,13 +144,15 @@ const Toast: React.FC<{ message: string; type: 'success' | 'loading' | 'error'; 
     return (
         <div className="fixed bottom-6 right-6 z-[100] animate-slide-up">
             <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border shadow-2xl backdrop-blur-xl ${
-                type === 'loading' ? 'bg-blue-600/10 border-blue-500/20 text-blue-200' : 
-                type === 'error' ? 'bg-red-600/10 border-red-500/20 text-red-200' :
-                'bg-emerald-600/10 border-emerald-500/20 text-emerald-200'
+                type === 'loading' 
+                ? 'bg-blue-50/90 dark:bg-blue-900/20 border-blue-200 dark:border-blue-500/20 text-primary dark:text-blue-200' 
+                : type === 'error' 
+                ? 'bg-red-50/90 dark:bg-red-900/20 border-red-200 dark:border-red-500/20 text-red-700 dark:text-red-200'
+                : 'bg-emerald-50/90 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-200'
             }`}>
-                {type === 'loading' ? <Loader2 size={18} className="animate-spin text-blue-400" /> : 
-                 type === 'error' ? <AlertCircle size={14} className="text-red-400" /> :
-                 <div className="bg-emerald-500/20 p-1 rounded-full"><Check size={14} className="text-emerald-400" /></div>}
+                {type === 'loading' ? <Loader2 size={18} className="animate-spin text-primary dark:text-blue-400" /> : 
+                 type === 'error' ? <AlertCircle size={14} className="text-red-500 dark:text-red-400" /> :
+                 <div className="bg-emerald-500/20 p-1 rounded-full"><Check size={14} className="text-emerald-500 dark:text-emerald-400" /></div>}
                 <span className="text-sm font-medium">{message}</span>
             </div>
         </div>
@@ -159,14 +160,14 @@ const Toast: React.FC<{ message: string; type: 'success' | 'loading' | 'error'; 
 };
 
 const StatCard: React.FC<{ label: string; value: string; subtext?: React.ReactNode; icon: React.ReactNode; color: string }> = ({ label, value, subtext, icon, color }) => (
-    <div className="glass-card p-4 rounded-2xl border border-white/5 relative overflow-hidden group">
-        <div className={`absolute right-2 top-2 p-2 rounded-xl bg-slate-800/50 border border-white/5 text-white shadow-lg ${color}`}>
+    <div className="glass-card p-4 rounded-2xl border border-slate-200 dark:border-white/5 relative overflow-hidden group">
+        <div className={`absolute right-2 top-2 p-2 rounded-xl bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 shadow-lg ${color}`}>
             {icon}
         </div>
-        <div className="relative z-10 mt-1">
-            <h3 className="text-2xl font-bold text-white tracking-tight">{value}</h3>
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mt-1">{label}</p>
-            {subtext && <div className="text-slate-500 text-xs mt-2 flex items-center gap-1">{subtext}</div>}
+        <div className="relative z-10 mt-2">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{value}</h3>
+            <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mt-1">{label}</p>
+            {subtext && <div className="text-slate-500 dark:text-slate-400 text-xs mt-2 flex items-center gap-1">{subtext}</div>}
         </div>
     </div>
 );
@@ -177,7 +178,7 @@ const RatingStars: React.FC<{ rating: number; size?: number }> = ({ rating, size
             <Star 
                 key={star} 
                 size={size} 
-                className={`${star <= rating ? 'fill-yellow-400 text-yellow-400' : 'fill-slate-700 text-slate-700'}`} 
+                className={`${star <= rating ? 'fill-yellow-400 text-yellow-400' : 'fill-slate-200 dark:fill-slate-700 text-slate-200 dark:text-slate-700'}`} 
             />
         ))}
     </div>
@@ -396,15 +397,15 @@ export const Reviews: React.FC = () => {
     // Helper: Badge Styles
     const getStatusBadge = (status: ReviewStatus) => {
         switch (status) {
-            case 'Published': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-            case 'Pending': return 'bg-slate-500/20 text-slate-300 border-slate-500/20';
-            case 'Flagged': return 'bg-red-500/10 text-red-400 border-red-500/20';
+            case 'Published': return 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20';
+            case 'Pending': return 'bg-slate-500/10 text-slate-600 dark:text-slate-300 border-slate-500/20';
+            case 'Flagged': return 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20';
             case 'Hidden': return 'bg-slate-700/50 text-slate-500 border-slate-700/50 grayscale';
             
             // New Tracking Statuses
-            case 'Priority': return 'bg-orange-500/10 text-orange-400 border-orange-500/20 shadow-[0_0_8px_rgba(249,115,22,0.2)] animate-pulse-slow';
-            case 'In Progress': return 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20';
-            case 'Resolved': return 'bg-teal-500/10 text-teal-400 border-teal-500/20';
+            case 'Priority': return 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20 shadow-[0_0_8px_rgba(249,115,22,0.2)] animate-pulse-slow';
+            case 'In Progress': return 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20';
+            case 'Resolved': return 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20';
             
             default: return 'bg-slate-500/10 text-slate-400';
         }
@@ -428,15 +429,15 @@ export const Reviews: React.FC = () => {
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-end gap-4 pb-2">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">Review Moderation</h1>
-                    <p className="text-slate-400 mt-2">
+                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Review Moderation</h1>
+                    <p className="text-slate-500 dark:text-slate-400 mt-2">
                         Monitor user feedback, manage ratings, and respond to community inquiries.
                     </p>
                 </div>
                 <div className="flex gap-3">
                      <button 
                         onClick={handleExport}
-                        className="bg-white/5 hover:bg-white/10 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors border border-white/10 flex items-center gap-2"
+                        className="bg-primary dark:bg-blue-600 hover:bg-blue-800 dark:hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors shadow-lg shadow-blue-500/20 flex items-center gap-2"
                     >
                         <Download size={16} /> Export Report
                     </button>
@@ -450,12 +451,12 @@ export const Reviews: React.FC = () => {
                         label="Average Rating" 
                         value={stats.avgRating} 
                         subtext={
-                            <span className="flex items-center gap-1 text-yellow-400">
+                            <span className="flex items-center gap-1 text-yellow-500 dark:text-yellow-400 font-medium">
                                 <Star size={12} fill="currentColor" /> Out of 5.0
                             </span>
                         }
                         icon={<Star size={20} />} 
-                        color="text-yellow-400 bg-yellow-500/10" 
+                        color="text-yellow-500 dark:text-yellow-400" 
                     />
                 </div>
                 <div className="stat-card">
@@ -463,31 +464,31 @@ export const Reviews: React.FC = () => {
                         label="Net Promoter Score" 
                         value={stats.nps > 0 ? `+${stats.nps}` : stats.nps.toString()} 
                         subtext={
-                            <span className={`flex items-center gap-1 ${stats.nps > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            <span className={`flex items-center gap-1 font-medium ${stats.nps > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'}`}>
                                 <TrendingUp size={12} className={stats.nps > 0 ? '' : 'rotate-180'} />
                                 {stats.nps > 30 ? 'Excellent' : stats.nps > 0 ? 'Good' : 'Needs Work'}
                             </span>
                         }
                         icon={<ThumbsUp size={20} />} 
-                        color="text-blue-400 bg-blue-500/10" 
+                        color="text-blue-500 dark:text-blue-400" 
                     />
                 </div>
                 <div className="stat-card">
                     <StatCard 
                         label="Priority Issues" 
                         value={stats.priorityCount.toString()} 
-                        subtext={<span className="text-orange-400 font-bold">Needs Resolution</span>}
+                        subtext={<span className="text-orange-600 dark:text-orange-400 font-bold">Needs Resolution</span>}
                         icon={<AlertTriangle size={20} />} 
-                        color="text-orange-400 bg-orange-500/10" 
+                        color="text-orange-500 dark:text-orange-400" 
                     />
                 </div>
                 <div className="stat-card">
                     <StatCard 
                         label="Pending Approval" 
                         value={stats.pendingCount.toString()} 
-                        subtext={<span className="text-slate-400">Moderation Queue</span>}
+                        subtext={<span className="text-slate-500 dark:text-slate-400">Moderation Queue</span>}
                         icon={<Timer size={20} />} 
-                        color="text-slate-400 bg-slate-500/10" 
+                        color="text-slate-500 dark:text-slate-400" 
                     />
                 </div>
             </div>
@@ -495,15 +496,15 @@ export const Reviews: React.FC = () => {
             {/* Main Content Area */}
             <div className="space-y-4">
                 {/* Tabs & Toolbar - Added z-30 here to ensure it sits above the list */}
-                <div className="flex flex-col lg:flex-row justify-between gap-4 bg-slate-900/50 p-2 rounded-2xl border border-white/5 backdrop-blur-md relative z-30">
+                <div className="flex flex-col lg:flex-row justify-between gap-4 bg-white/80 dark:bg-slate-900/50 p-2 rounded-2xl border border-slate-200 dark:border-white/5 backdrop-blur-md relative z-30">
                     {/* Primary Context Tabs */}
-                    <div className="flex p-1 bg-slate-950/50 rounded-xl border border-white/5 w-fit">
+                    <div className="flex p-1 bg-slate-100 dark:bg-slate-950/50 rounded-xl border border-slate-200 dark:border-white/5 w-fit">
                         <button
                             onClick={() => { setActiveTab('App'); setViewMode('inbox'); }}
                             className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all ${
                                 activeTab === 'App' 
-                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
-                                : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                ? 'bg-primary dark:bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
+                                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/5'
                             }`}
                         >
                             <Smartphone size={16} /> App Reviews
@@ -512,8 +513,8 @@ export const Reviews: React.FC = () => {
                             onClick={() => { setActiveTab('Station'); setViewMode('inbox'); }}
                             className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all ${
                                 activeTab === 'Station' 
-                                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
-                                : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                ? 'bg-primary dark:bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
+                                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/5'
                             }`}
                         >
                             <MapPin size={16} /> Station Reviews
@@ -521,15 +522,15 @@ export const Reviews: React.FC = () => {
                     </div>
 
                     {/* Filters & Secondary View Toggle */}
-                    <div className="flex flex-1 md:flex-none gap-3 items-center">
+                    <div className="flex flex-1 md:flex-none gap-3 items-center flex-wrap">
                         {/* Inbox / Archived Toggle */}
-                        <div className="flex bg-slate-950/50 rounded-xl border border-white/5 p-1 h-full">
+                        <div className="flex bg-slate-100 dark:bg-slate-950/50 rounded-xl border border-slate-200 dark:border-white/5 p-1 h-full">
                             <button
                                 onClick={() => setViewMode('inbox')}
                                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
                                     viewMode === 'inbox' 
-                                    ? 'bg-slate-700 text-white shadow-sm' 
-                                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600' 
+                                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/5'
                                 }`}
                                 title="Inbox"
                             >
@@ -539,8 +540,8 @@ export const Reviews: React.FC = () => {
                                 onClick={() => setViewMode('archived')}
                                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
                                     viewMode === 'archived' 
-                                    ? 'bg-amber-500/20 text-amber-400 shadow-sm border border-amber-500/20' 
-                                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                    ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 shadow-sm border border-amber-500/20' 
+                                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-white/5'
                                 }`}
                                 title="Archived"
                             >
@@ -548,16 +549,16 @@ export const Reviews: React.FC = () => {
                             </button>
                         </div>
 
-                        <div className="w-[1px] h-8 bg-white/10 mx-1 hidden md:block"></div>
+                        <div className="w-[1px] h-8 bg-slate-200 dark:bg-white/10 mx-1 hidden md:block"></div>
 
                         <div className="relative flex-1 md:w-64">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                             <input 
                                 type="text" 
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search comments, users..." 
-                                className="w-full h-full bg-slate-800/50 border border-slate-700 rounded-xl pl-10 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder-slate-500"
+                                className="w-full h-full bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-4 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder-slate-400 dark:placeholder-slate-500"
                             />
                         </div>
 
@@ -565,10 +566,10 @@ export const Reviews: React.FC = () => {
                         <div className="relative" ref={dateFilterRef}>
                             <button 
                                 onClick={() => setIsDateFilterOpen(!isDateFilterOpen)}
-                                className={`h-full px-4 rounded-xl border flex items-center gap-2 text-sm font-medium transition-colors ${
+                                className={`h-full px-4 py-2 rounded-xl border flex items-center gap-2 text-sm font-medium transition-colors ${
                                     isDateFilterOpen || selectedDate 
-                                    ? 'bg-blue-600/10 border-blue-500 text-blue-400' 
-                                    : 'bg-slate-800/50 border-slate-700 text-slate-300 hover:text-white hover:border-slate-500'
+                                    ? 'bg-blue-50 dark:bg-blue-600/10 border-blue-500 text-primary dark:text-blue-400' 
+                                    : 'bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-500'
                                 }`}
                             >
                                 <Calendar size={16} />
@@ -579,8 +580,8 @@ export const Reviews: React.FC = () => {
                             </button>
 
                             {isDateFilterOpen && (
-                                <div className="absolute top-full right-0 mt-2 w-64 bg-[#0f172a] border border-white/10 rounded-xl shadow-2xl z-50 p-4 animate-in fade-in zoom-in-95">
-                                    <h4 className="text-xs font-bold text-slate-400 uppercase mb-3">Select Date</h4>
+                                <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl z-50 p-4 animate-in fade-in zoom-in-95">
+                                    <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-3">Select Date</h4>
                                     <input 
                                         type="date" 
                                         value={selectedDate}
@@ -588,7 +589,7 @@ export const Reviews: React.FC = () => {
                                             setSelectedDate(e.target.value);
                                             setIsDateFilterOpen(false);
                                         }}
-                                        className="w-full bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500 outline-none [color-scheme:dark]"
+                                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none [color-scheme:light] dark:[color-scheme:dark]"
                                     />
                                     {selectedDate && (
                                         <button 
@@ -596,7 +597,7 @@ export const Reviews: React.FC = () => {
                                                 setSelectedDate('');
                                                 setIsDateFilterOpen(false);
                                             }}
-                                            className="w-full mt-3 py-2 text-xs text-slate-400 hover:text-white font-medium border-t border-white/5"
+                                            className="w-full mt-3 py-2 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium border-t border-slate-200 dark:border-white/5"
                                         >
                                             Clear Filter
                                         </button>
@@ -609,10 +610,10 @@ export const Reviews: React.FC = () => {
                         <div className="relative" ref={filterRef}>
                             <button 
                                 onClick={() => setIsFilterOpen(!isFilterOpen)}
-                                className={`h-full px-4 rounded-xl border flex items-center gap-2 text-sm font-medium transition-colors ${
+                                className={`h-full px-4 py-2 rounded-xl border flex items-center gap-2 text-sm font-medium transition-colors ${
                                     isFilterOpen || statusFilter !== 'All' || ratingFilter !== 'All'
-                                    ? 'bg-blue-600/10 border-blue-500 text-blue-400'
-                                    : 'bg-slate-800/50 border-slate-700 text-slate-300 hover:text-white hover:border-slate-500'
+                                    ? 'bg-blue-50 dark:bg-blue-600/10 border-blue-500 text-primary dark:text-blue-400'
+                                    : 'bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-500'
                                 }`}
                             >
                                 <Filter size={16} /> Filters
@@ -622,10 +623,10 @@ export const Reviews: React.FC = () => {
                             </button>
 
                             {isFilterOpen && (
-                                <div className="absolute top-full right-0 mt-2 w-64 bg-[#0f172a] border border-white/10 rounded-xl shadow-2xl z-50 p-4 animate-in fade-in zoom-in-95">
+                                <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl z-50 p-4 animate-in fade-in zoom-in-95">
                                     <div className="space-y-4">
                                         <div>
-                                            <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Status</label>
+                                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2 block">Status</label>
                                             <div className="grid grid-cols-2 gap-2">
                                                 {['All', 'Published', 'Pending', 'Priority', 'In Progress', 'Resolved', 'Flagged'].map(s => (
                                                     <button
@@ -633,8 +634,8 @@ export const Reviews: React.FC = () => {
                                                         onClick={() => setStatusFilter(s as any)}
                                                         className={`px-2 py-1.5 rounded-lg text-[10px] font-bold border transition-colors ${
                                                             statusFilter === s 
-                                                            ? 'bg-blue-600 text-white border-blue-500' 
-                                                            : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700'
+                                                            ? 'bg-primary dark:bg-blue-600 text-white border-primary dark:border-blue-500' 
+                                                            : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700'
                                                         }`}
                                                     >
                                                         {s}
@@ -643,11 +644,11 @@ export const Reviews: React.FC = () => {
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Rating</label>
-                                            <div className="flex gap-1 bg-slate-800 p-1 rounded-lg border border-slate-700">
+                                            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2 block">Rating</label>
+                                            <div className="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
                                                 <button 
                                                     onClick={() => setRatingFilter('All')}
-                                                    className={`flex-1 py-1 text-xs rounded font-bold ${ratingFilter === 'All' ? 'bg-slate-600 text-white' : 'text-slate-400 hover:text-white'}`}
+                                                    className={`flex-1 py-1 text-xs rounded font-bold ${ratingFilter === 'All' ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                                                 >
                                                     All
                                                 </button>
@@ -657,8 +658,8 @@ export const Reviews: React.FC = () => {
                                                         onClick={() => setRatingFilter(r)}
                                                         className={`w-8 py-1 text-xs rounded font-bold flex items-center justify-center ${
                                                             ratingFilter === r 
-                                                            ? 'bg-yellow-500 text-slate-900' 
-                                                            : 'text-slate-400 hover:bg-white/5'
+                                                            ? 'bg-yellow-500 text-slate-900 shadow-sm' 
+                                                            : 'text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-white/5'
                                                         }`}
                                                     >
                                                         {r} <Star size={8} fill="currentColor" className="ml-0.5" />
@@ -666,14 +667,14 @@ export const Reviews: React.FC = () => {
                                                 ))}
                                             </div>
                                         </div>
-                                        <div className="pt-2 border-t border-white/10">
+                                        <div className="pt-2 border-t border-slate-200 dark:border-white/10">
                                             <button 
                                                 onClick={() => {
                                                     setStatusFilter('All');
                                                     setRatingFilter('All');
                                                     setIsFilterOpen(false);
                                                 }}
-                                                className="w-full py-2 text-xs text-slate-400 hover:text-white font-medium"
+                                                className="w-full py-2 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
                                             >
                                                 Reset Filters
                                             </button>
@@ -687,8 +688,8 @@ export const Reviews: React.FC = () => {
 
                 {/* Reviews Grid - Removed AnimatePresence and Framer Motion for list items */}
                 {isLoading ? (
-                    <div className="flex flex-col items-center justify-center h-64 text-slate-500">
-                        <Loader2 size={32} className="animate-spin mb-4 text-blue-500" />
+                    <div className="flex flex-col items-center justify-center h-64 text-slate-500 dark:text-slate-400">
+                        <Loader2 size={32} className="animate-spin mb-4 text-primary dark:text-blue-500" />
                         <p>Loading reviews...</p>
                     </div>
                 ) : filteredReviews.length > 0 ? (
@@ -696,7 +697,7 @@ export const Reviews: React.FC = () => {
                         {filteredReviews.map((review) => (
                             <div
                                 key={review.id}
-                                className="glass-card p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-all group"
+                                className="glass-card p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/10 transition-all group shadow-sm"
                             >
                                 <div className="flex flex-col md:flex-row gap-4">
                                     {/* Review Content */}
@@ -706,13 +707,13 @@ export const Reviews: React.FC = () => {
                                                 <img 
                                                     src={review.userAvatar} 
                                                     alt={review.userName} 
-                                                    className="w-10 h-10 rounded-full border border-white/10 object-cover" 
+                                                    className="w-10 h-10 rounded-full border border-slate-200 dark:border-white/10 object-cover" 
                                                 />
                                                 <div>
                                                     <div className="flex items-center gap-2">
-                                                        <h3 className="text-sm font-bold text-white">{review.userName}</h3>
+                                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white">{review.userName}</h3>
                                                         {review.type === 'App' && review.platform && (
-                                                            <span className="text-[10px] px-1.5 py-0.5 bg-slate-800 rounded text-slate-400 border border-slate-700">
+                                                            <span className="text-[10px] px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                                                                 {review.platform}
                                                             </span>
                                                         )}
@@ -721,7 +722,7 @@ export const Reviews: React.FC = () => {
                                                     <div className="flex items-center gap-2 mt-0.5">
                                                         <RatingStars rating={review.rating} />
                                                         {review.type === 'Station' ? (
-                                                            <span className="text-xs text-blue-400 flex items-center gap-1 truncate max-w-[200px]">
+                                                            <span className="text-xs text-blue-600 dark:text-blue-400 flex items-center gap-1 truncate max-w-[200px]">
                                                                 <MapPin size={10} /> {review.stationName}
                                                             </span>
                                                         ) : (
@@ -735,7 +736,7 @@ export const Reviews: React.FC = () => {
                                             
                                             <div className="flex items-center gap-3">
                                                 {review.isArchived && (
-                                                    <span className="px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center gap-1">
+                                                    <span className="px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 flex items-center gap-1">
                                                         <Archive size={10} /> Archived
                                                     </span>
                                                 )}
@@ -749,7 +750,7 @@ export const Reviews: React.FC = () => {
                                                     <button 
                                                         data-dropdown-trigger
                                                         onClick={(e) => toggleDropdown(e, review.id)}
-                                                        className={`p-1.5 rounded-lg transition-colors ${activeDropdownId === review.id ? 'bg-white/10 text-white' : 'text-slate-400 hover:text-white hover:bg-white/10'}`}
+                                                        className={`p-1.5 rounded-lg transition-colors ${activeDropdownId === review.id ? 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10'}`}
                                                     >
                                                         <MoreHorizontal size={16} />
                                                     </button>
@@ -758,33 +759,33 @@ export const Reviews: React.FC = () => {
                                         </div>
 
                                         <div className="mt-3">
-                                            <p className="text-sm text-slate-300 leading-relaxed line-clamp-2">{review.comment}</p>
+                                            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed line-clamp-2">{review.comment}</p>
                                         </div>
 
                                         {review.reply && (
-                                            <div className="mt-3 ml-4 pl-3 border-l-2 border-blue-500/30 bg-blue-500/5 p-2 rounded-r-lg">
+                                            <div className="mt-3 ml-4 pl-3 border-l-2 border-blue-500/30 bg-blue-50 dark:bg-blue-500/5 p-2 rounded-r-lg">
                                                 <div className="flex items-center gap-2 mb-1">
-                                                    <span className="text-[10px] font-bold text-blue-400 uppercase">Support Team</span>
+                                                    <span className="text-[10px] font-bold text-primary dark:text-blue-400 uppercase">Support Team</span>
                                                     <span className="text-[10px] text-slate-500">Replied</span>
                                                 </div>
-                                                <p className="text-xs text-slate-300 italic">"{review.reply}"</p>
+                                                <p className="text-xs text-slate-600 dark:text-slate-300 italic">"{review.reply}"</p>
                                             </div>
                                         )}
                                     </div>
 
                                     {/* Quick Action Buttons (Visible on desktop) */}
-                                    <div className="hidden md:flex flex-col gap-2 justify-center border-l border-white/5 pl-4 min-w-[120px]">
+                                    <div className="hidden md:flex flex-col gap-2 justify-center border-l border-slate-200 dark:border-white/5 pl-4 min-w-[120px]">
                                         {!review.isArchived ? (
                                             <>
                                                 <button 
                                                     onClick={() => setSelectedReview(review)}
-                                                    className="w-full py-1.5 rounded-lg bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+                                                    className="w-full py-1.5 rounded-lg bg-blue-50 dark:bg-blue-600/10 hover:bg-blue-100 dark:hover:bg-blue-600/20 text-primary dark:text-blue-400 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
                                                 >
                                                     <Reply size={12} /> Reply
                                                 </button>
                                                 <button 
                                                     onClick={() => handleArchiveClick(review)}
-                                                    className="w-full py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+                                                    className="w-full py-1.5 rounded-lg bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
                                                 >
                                                     <Archive size={12} /> Archive
                                                 </button>
@@ -792,7 +793,7 @@ export const Reviews: React.FC = () => {
                                         ) : (
                                             <button 
                                                 onClick={() => handleRestoreClick(review)}
-                                                className="w-full py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+                                                className="w-full py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
                                             >
                                                 <RotateCcw size={12} /> Restore
                                             </button>
@@ -803,14 +804,14 @@ export const Reviews: React.FC = () => {
                                             <div className="grid grid-cols-2 gap-2 mt-1">
                                                 <button 
                                                     onClick={() => handleStatusUpdate(review.id, 'Published')}
-                                                    className="py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-colors flex justify-center"
+                                                    className="py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 transition-colors flex justify-center"
                                                     title="Approve"
                                                 >
                                                     <Check size={14} />
                                                 </button>
                                                 <button 
                                                     onClick={() => handleStatusUpdate(review.id, 'Hidden')}
-                                                    className="py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors flex justify-center"
+                                                    className="py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 transition-colors flex justify-center"
                                                     title="Reject"
                                                 >
                                                     <X size={14} />
@@ -823,9 +824,9 @@ export const Reviews: React.FC = () => {
                         ))}
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center py-20 text-slate-500 border border-dashed border-slate-700 rounded-2xl bg-slate-900/30">
+                    <div className="flex flex-col items-center justify-center py-20 text-slate-500 dark:text-slate-400 border border-dashed border-slate-300 dark:border-slate-700 rounded-2xl bg-slate-50 dark:bg-slate-900/30">
                         {viewMode === 'archived' ? <Archive size={48} className="opacity-20 mb-4" /> : <MessageSquare size={48} className="opacity-20 mb-4" />}
-                        <h3 className="text-lg font-bold text-slate-400">No {viewMode === 'archived' ? 'archived ' : ''}reviews found</h3>
+                        <h3 className="text-lg font-bold text-slate-600 dark:text-slate-300">No {viewMode === 'archived' ? 'archived ' : ''}reviews found</h3>
                         <p className="text-sm">Try adjusting your search or filters.</p>
                         <button 
                             onClick={() => { 
@@ -834,7 +835,7 @@ export const Reviews: React.FC = () => {
                                 setRatingFilter('All');
                                 setSelectedDate('');
                             }}
-                            className="mt-4 text-blue-400 text-sm hover:underline"
+                            className="mt-4 text-primary dark:text-blue-400 text-sm hover:underline"
                         >
                             Clear all filters
                         </button>
@@ -849,54 +850,54 @@ export const Reviews: React.FC = () => {
                 return (
                     <div 
                         ref={dropdownRef}
-                        className="fixed bg-[#0f172a] border border-white/10 rounded-xl shadow-xl z-[70] overflow-hidden animate-in fade-in zoom-in-95 w-56"
+                        className="fixed bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-xl shadow-xl z-[70] overflow-hidden animate-in fade-in zoom-in-95 w-56"
                         style={{ 
                             top: `${dropdownPos.top}px`, 
                             right: `${dropdownPos.right}px` 
                         }}
                     >
                         <div className="py-1">
-                            <button onClick={() => { setSelectedReview(review); setActiveDropdownId(null); }} className="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-white/5 hover:text-white flex items-center gap-2">
+                            <button onClick={() => { setSelectedReview(review); setActiveDropdownId(null); }} className="w-full text-left px-4 py-2.5 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white flex items-center gap-2">
                                 <Eye size={14}/> View Details
                             </button>
                             
                             {!review.isArchived ? (
-                                <button onClick={() => handleArchiveClick(review)} className="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-white/5 hover:text-white flex items-center gap-2">
+                                <button onClick={() => handleArchiveClick(review)} className="w-full text-left px-4 py-2.5 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white flex items-center gap-2">
                                     <Archive size={14}/> Archive Review
                                 </button>
                             ) : (
-                                <button onClick={() => handleRestoreClick(review)} className="w-full text-left px-4 py-2.5 text-xs text-emerald-400 hover:bg-emerald-500/10 flex items-center gap-2">
+                                <button onClick={() => handleRestoreClick(review)} className="w-full text-left px-4 py-2.5 text-xs text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 flex items-center gap-2">
                                     <RotateCcw size={14}/> Restore to Inbox
                                 </button>
                             )}
 
                             {/* Moderation Section */}
-                            <div className="px-4 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider bg-slate-900/50 mt-1">Moderation</div>
+                            <div className="px-4 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider bg-slate-50 dark:bg-slate-900/50 mt-1">Moderation</div>
                             {review.status === 'Pending' && (
-                                <button onClick={() => handleStatusUpdate(review.id, 'Published')} className="w-full text-left px-4 py-2.5 text-xs text-emerald-400 hover:bg-emerald-500/10 flex items-center gap-2">
+                                <button onClick={() => handleStatusUpdate(review.id, 'Published')} className="w-full text-left px-4 py-2.5 text-xs text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 flex items-center gap-2">
                                     <CheckCircle2 size={14}/> Approve & Publish
                                 </button>
                             )}
                             {review.status !== 'Flagged' && (
-                                <button onClick={() => handleStatusUpdate(review.id, 'Flagged')} className="w-full text-left px-4 py-2.5 text-xs text-amber-400 hover:bg-amber-500/10 flex items-center gap-2">
+                                <button onClick={() => handleStatusUpdate(review.id, 'Flagged')} className="w-full text-left px-4 py-2.5 text-xs text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 flex items-center gap-2">
                                     <Flag size={14}/> Flag Content
                                 </button>
                             )}
 
                             {/* Issue Tracking Section */}
-                            <div className="px-4 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider bg-slate-900/50 mt-1">Issue Tracking</div>
-                            <button onClick={() => handleStatusUpdate(review.id, 'Priority')} className="w-full text-left px-4 py-2.5 text-xs text-orange-400 hover:bg-orange-500/10 flex items-center gap-2">
+                            <div className="px-4 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider bg-slate-50 dark:bg-slate-900/50 mt-1">Issue Tracking</div>
+                            <button onClick={() => handleStatusUpdate(review.id, 'Priority')} className="w-full text-left px-4 py-2.5 text-xs text-orange-600 dark:text-orange-400 hover:bg-orange-500/10 flex items-center gap-2">
                                 <AlertTriangle size={14}/> Mark as Priority
                             </button>
-                            <button onClick={() => handleStatusUpdate(review.id, 'In Progress')} className="w-full text-left px-4 py-2.5 text-xs text-indigo-400 hover:bg-indigo-500/10 flex items-center gap-2">
+                            <button onClick={() => handleStatusUpdate(review.id, 'In Progress')} className="w-full text-left px-4 py-2.5 text-xs text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/10 flex items-center gap-2">
                                 <Hammer size={14}/> Mark In Progress
                             </button>
-                            <button onClick={() => handleStatusUpdate(review.id, 'Resolved')} className="w-full text-left px-4 py-2.5 text-xs text-teal-400 hover:bg-teal-500/10 flex items-center gap-2">
+                            <button onClick={() => handleStatusUpdate(review.id, 'Resolved')} className="w-full text-left px-4 py-2.5 text-xs text-teal-600 dark:text-teal-400 hover:bg-teal-500/10 flex items-center gap-2">
                                 <CheckCheck size={14}/> Mark Resolved
                             </button>
 
-                            <div className="h-[1px] bg-white/5 my-1"></div>
-                            <button onClick={() => handleDeleteClick(review)} className="w-full text-left px-4 py-2.5 text-xs text-red-400 hover:bg-red-500/10 flex items-center gap-2">
+                            <div className="h-[1px] bg-slate-200 dark:bg-white/5 my-1"></div>
+                            <button onClick={() => handleDeleteClick(review)} className="w-full text-left px-4 py-2.5 text-xs text-red-600 dark:text-red-400 hover:bg-red-500/10 flex items-center gap-2">
                                 <Trash2 size={14}/> Delete
                             </button>
                         </div>
@@ -914,14 +915,14 @@ export const Reviews: React.FC = () => {
                 {selectedReview && (
                     <div className="space-y-6">
                         {/* User Header */}
-                        <div className="flex items-center gap-4 p-4 rounded-xl bg-slate-800/50 border border-white/5">
-                            <img src={selectedReview.userAvatar} className="w-14 h-14 rounded-full border-2 border-white/10" alt="" />
+                        <div className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5">
+                            <img src={selectedReview.userAvatar} className="w-14 h-14 rounded-full border-2 border-slate-200 dark:border-white/10" alt="" />
                             <div className="flex-1">
-                                <h3 className="text-lg font-bold text-white">{selectedReview.userName}</h3>
-                                <p className="text-xs text-slate-400">User ID: {selectedReview.userId}</p>
+                                <h3 className="text-lg font-bold text-slate-900 dark:text-white">{selectedReview.userName}</h3>
+                                <p className="text-xs text-slate-500">User ID: {selectedReview.userId}</p>
                                 <div className="flex items-center gap-2 mt-1">
                                     <RatingStars rating={selectedReview.rating} size={16} />
-                                    <span className="text-sm text-slate-300 font-medium">({selectedReview.rating}.0)</span>
+                                    <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">({selectedReview.rating}.0)</span>
                                 </div>
                             </div>
                             <div className="text-right">
@@ -936,24 +937,24 @@ export const Reviews: React.FC = () => {
                         {/* Content Body */}
                         <div className="space-y-4">
                             <div>
-                                <h4 className="text-xs font-bold text-slate-400 uppercase mb-2">Review Content</h4>
-                                <div className="p-4 rounded-xl bg-white/5 border border-white/5 text-slate-200 text-sm leading-relaxed">
+                                <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Review Content</h4>
+                                <div className="p-4 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 text-sm leading-relaxed">
                                     "{selectedReview.comment}"
                                 </div>
                             </div>
 
                             {/* Metadata Grid */}
                             <div className="grid grid-cols-2 gap-4">
-                                <div className="p-3 rounded-lg bg-slate-900 border border-white/5">
+                                <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5">
                                     <p className="text-[10px] text-slate-500 uppercase font-bold mb-1">Context</p>
-                                    <p className="text-sm text-white font-medium flex items-center gap-2">
-                                        {selectedReview.type === 'App' ? <Smartphone size={14} className="text-blue-400"/> : <MapPin size={14} className="text-emerald-400"/>}
+                                    <p className="text-sm text-slate-900 dark:text-white font-medium flex items-center gap-2">
+                                        {selectedReview.type === 'App' ? <Smartphone size={14} className="text-blue-600 dark:text-blue-400"/> : <MapPin size={14} className="text-emerald-600 dark:text-emerald-400"/>}
                                         {selectedReview.type} Review
                                     </p>
                                 </div>
-                                <div className="p-3 rounded-lg bg-slate-900 border border-white/5">
+                                <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/5">
                                     <p className="text-[10px] text-slate-500 uppercase font-bold mb-1">Target</p>
-                                    <p className="text-sm text-white font-medium truncate">
+                                    <p className="text-sm text-slate-900 dark:text-white font-medium truncate">
                                         {selectedReview.type === 'App' 
                                             ? `${selectedReview.platform} ${selectedReview.appVersion}` 
                                             : selectedReview.stationName}
@@ -962,24 +963,24 @@ export const Reviews: React.FC = () => {
                             </div>
 
                             {/* Issue Tracking Actions (Visible in Modal) */}
-                            <div className="p-4 rounded-xl bg-slate-800/30 border border-white/5">
-                                <h4 className="text-xs font-bold text-slate-400 uppercase mb-3">Triage Issue</h4>
+                            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/30 border border-slate-200 dark:border-white/5">
+                                <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-3">Triage Issue</h4>
                                 <div className="flex gap-3">
                                     <button 
                                         onClick={() => handleStatusUpdate(selectedReview.id, 'Priority')}
-                                        className={`flex-1 py-2 rounded-lg border flex items-center justify-center gap-2 text-xs font-bold transition-all ${selectedReview.status === 'Priority' ? 'bg-orange-500 text-slate-900 border-orange-500' : 'bg-transparent border-white/10 text-slate-400 hover:text-white hover:bg-white/5'}`}
+                                        className={`flex-1 py-2 rounded-lg border flex items-center justify-center gap-2 text-xs font-bold transition-all ${selectedReview.status === 'Priority' ? 'bg-orange-500 text-white border-orange-500' : 'bg-transparent border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'}`}
                                     >
                                         <AlertTriangle size={14} /> High Priority
                                     </button>
                                     <button 
                                         onClick={() => handleStatusUpdate(selectedReview.id, 'In Progress')}
-                                        className={`flex-1 py-2 rounded-lg border flex items-center justify-center gap-2 text-xs font-bold transition-all ${selectedReview.status === 'In Progress' ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-transparent border-white/10 text-slate-400 hover:text-white hover:bg-white/5'}`}
+                                        className={`flex-1 py-2 rounded-lg border flex items-center justify-center gap-2 text-xs font-bold transition-all ${selectedReview.status === 'In Progress' ? 'bg-indigo-500 text-white border-indigo-500' : 'bg-transparent border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'}`}
                                     >
                                         <Hammer size={14} /> In Progress
                                     </button>
                                     <button 
                                         onClick={() => handleStatusUpdate(selectedReview.id, 'Resolved')}
-                                        className={`flex-1 py-2 rounded-lg border flex items-center justify-center gap-2 text-xs font-bold transition-all ${selectedReview.status === 'Resolved' ? 'bg-teal-500 text-slate-900 border-teal-500' : 'bg-transparent border-white/10 text-slate-400 hover:text-white hover:bg-white/5'}`}
+                                        className={`flex-1 py-2 rounded-lg border flex items-center justify-center gap-2 text-xs font-bold transition-all ${selectedReview.status === 'Resolved' ? 'bg-teal-500 text-white border-teal-500' : 'bg-transparent border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'}`}
                                     >
                                         <CheckCheck size={14} /> Resolved
                                     </button>
@@ -988,16 +989,16 @@ export const Reviews: React.FC = () => {
 
                             {/* Reply Section */}
                             <div>
-                                <h4 className="text-xs font-bold text-slate-400 uppercase mb-2 flex items-center gap-2">
+                                <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2 flex items-center gap-2">
                                     <CornerDownRight size={14} /> 
                                     {selectedReview.reply ? 'Your Response' : 'Reply to User'}
                                 </h4>
                                 {selectedReview.reply ? (
-                                    <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
-                                        <p className="text-sm text-blue-100">{selectedReview.reply}</p>
+                                    <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20">
+                                        <p className="text-sm text-blue-800 dark:text-blue-100">{selectedReview.reply}</p>
                                         <button 
                                             onClick={() => setAllReviews(prev => prev.map(r => r.id === selectedReview.id ? { ...r, reply: undefined } : r))}
-                                            className="text-xs text-blue-400 hover:text-blue-300 mt-2 font-medium"
+                                            className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mt-2 font-medium"
                                         >
                                             Edit Reply
                                         </button>
@@ -1008,14 +1009,14 @@ export const Reviews: React.FC = () => {
                                             value={replyText}
                                             onChange={(e) => setReplyText(e.target.value)}
                                             placeholder={`Write a reply to ${selectedReview.userName}...`}
-                                            className="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-blue-500 outline-none resize-none h-24 placeholder-slate-500"
+                                            className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none resize-none h-24 placeholder-slate-400 dark:placeholder-slate-500"
                                         />
                                         <div className="flex justify-end mt-2 gap-2">
                                             {selectedReview.status === 'Pending' && (
                                                 <button 
                                                     type="button"
                                                     onClick={() => handleStatusUpdate(selectedReview.id, 'Published')}
-                                                    className="px-4 py-2 rounded-lg text-xs font-bold bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 transition-colors"
+                                                    className="px-4 py-2 rounded-lg text-xs font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 transition-colors"
                                                 >
                                                     Approve & Close
                                                 </button>
@@ -1023,7 +1024,7 @@ export const Reviews: React.FC = () => {
                                             <button 
                                                 type="submit"
                                                 disabled={!replyText.trim()}
-                                                className="px-4 py-2 rounded-lg text-xs font-bold bg-blue-600 text-white hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="px-4 py-2 rounded-lg text-xs font-bold bg-primary dark:bg-blue-600 text-white hover:bg-blue-800 dark:hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/20"
                                             >
                                                 Send Reply
                                             </button>
@@ -1043,27 +1044,27 @@ export const Reviews: React.FC = () => {
                 title="Archive Review"
             >
                 <div className="space-y-4">
-                    <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 flex items-start gap-3">
+                    <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-lg p-4 flex items-start gap-3">
                         <Archive className="text-amber-500 flex-shrink-0 mt-0.5" size={20} />
                         <div>
-                            <h4 className="text-amber-400 font-bold text-sm uppercase tracking-wide">Confirm Archive</h4>
-                            <p className="text-sm text-amber-200 mt-1">
-                                Are you sure you want to archive this review by <strong className="text-white">{reviewToArchive?.userName}</strong>?
+                            <h4 className="text-amber-600 dark:text-amber-400 font-bold text-sm uppercase tracking-wide">Confirm Archive</h4>
+                            <p className="text-sm text-amber-700 dark:text-amber-200 mt-1">
+                                Are you sure you want to archive this review by <strong className="text-slate-900 dark:text-white">{reviewToArchive?.userName}</strong>?
                                 It will be moved to the Archived tab and hidden from the main inbox.
                             </p>
                         </div>
                     </div>
                     
                     {reviewToArchive && (
-                        <div className="p-3 bg-slate-900/50 rounded-lg border border-white/5 text-sm text-slate-400 italic">
+                        <div className="p-3 bg-slate-100 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-white/5 text-sm text-slate-600 dark:text-slate-400 italic">
                             "{reviewToArchive.comment.length > 100 ? reviewToArchive.comment.substring(0, 100) + '...' : reviewToArchive.comment}"
                         </div>
                     )}
 
-                    <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-4">
+                    <div className="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-white/5 mt-4">
                         <button 
                             onClick={() => setIsArchiveModalOpen(false)} 
-                            className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium"
+                            className="px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-sm font-medium"
                         >
                             Cancel
                         </button>
@@ -1084,27 +1085,27 @@ export const Reviews: React.FC = () => {
                 title="Restore Review"
             >
                 <div className="space-y-4">
-                    <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4 flex items-start gap-3">
+                    <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 rounded-lg p-4 flex items-start gap-3">
                         <RotateCcw className="text-emerald-500 flex-shrink-0 mt-0.5" size={20} />
                         <div>
-                            <h4 className="text-emerald-400 font-bold text-sm uppercase tracking-wide">Confirm Restore</h4>
-                            <p className="text-sm text-emerald-200 mt-1">
-                                Are you sure you want to restore this review by <strong className="text-white">{reviewToRestore?.userName}</strong>?
+                            <h4 className="text-emerald-600 dark:text-emerald-400 font-bold text-sm uppercase tracking-wide">Confirm Restore</h4>
+                            <p className="text-sm text-emerald-700 dark:text-emerald-200 mt-1">
+                                Are you sure you want to restore this review by <strong className="text-slate-900 dark:text-white">{reviewToRestore?.userName}</strong>?
                                 It will be moved back to the main Inbox.
                             </p>
                         </div>
                     </div>
                     
                     {reviewToRestore && (
-                        <div className="p-3 bg-slate-900/50 rounded-lg border border-white/5 text-sm text-slate-400 italic">
+                        <div className="p-3 bg-slate-100 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-white/5 text-sm text-slate-600 dark:text-slate-400 italic">
                             "{reviewToRestore.comment.length > 100 ? reviewToRestore.comment.substring(0, 100) + '...' : reviewToRestore.comment}"
                         </div>
                     )}
 
-                    <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-4">
+                    <div className="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-white/5 mt-4">
                         <button 
                             onClick={() => setIsRestoreModalOpen(false)} 
-                            className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium"
+                            className="px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-sm font-medium"
                         >
                             Cancel
                         </button>
@@ -1125,27 +1126,27 @@ export const Reviews: React.FC = () => {
                 title="Delete Review"
             >
                 <div className="space-y-4">
-                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start gap-3">
+                    <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg p-4 flex items-start gap-3">
                         <AlertTriangle className="text-red-500 flex-shrink-0 mt-0.5" size={20} />
                         <div>
-                            <h4 className="text-red-400 font-bold text-sm uppercase tracking-wide">Warning</h4>
-                            <p className="text-sm text-red-200 mt-1">
-                                You are about to permanently delete a review by <strong className="text-white">{reviewToDelete?.userName}</strong>.
+                            <h4 className="text-red-600 dark:text-red-400 font-bold text-sm uppercase tracking-wide">Warning</h4>
+                            <p className="text-sm text-red-700 dark:text-red-200 mt-1">
+                                You are about to permanently delete a review by <strong className="text-slate-900 dark:text-white">{reviewToDelete?.userName}</strong>.
                                 This action cannot be undone.
                             </p>
                         </div>
                     </div>
                     
                     {reviewToDelete && (
-                        <div className="p-3 bg-slate-900/50 rounded-lg border border-white/5 text-sm text-slate-400 italic">
+                        <div className="p-3 bg-slate-100 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-white/5 text-sm text-slate-600 dark:text-slate-400 italic">
                             "{reviewToDelete.comment.length > 100 ? reviewToDelete.comment.substring(0, 100) + '...' : reviewToDelete.comment}"
                         </div>
                     )}
 
-                    <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-4">
+                    <div className="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-white/5 mt-4">
                         <button 
                             onClick={() => setIsDeleteModalOpen(false)} 
-                            className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium"
+                            className="px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-sm font-medium"
                         >
                             Cancel
                         </button>

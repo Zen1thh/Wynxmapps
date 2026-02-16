@@ -130,10 +130,10 @@ const MOCK_TICKETS: SupportTicket[] = [
 
 const StatusBadge: React.FC<{ status: TicketStatus }> = ({ status }) => {
     const styles = {
-        'Open': 'bg-red-500/10 text-red-400 border-red-500/20 animate-pulse-slow',
-        'In Progress': 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-        'Resolved': 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-        'Escalated': 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+        'Open': 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20 animate-pulse-slow',
+        'In Progress': 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
+        'Resolved': 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+        'Escalated': 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
     };
     return (
         <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide border ${styles[status]}`}>
@@ -144,10 +144,10 @@ const StatusBadge: React.FC<{ status: TicketStatus }> = ({ status }) => {
 
 const PriorityBadge: React.FC<{ priority: TicketPriority }> = ({ priority }) => {
     const colors = {
-        'Critical': 'text-red-500',
-        'High': 'text-orange-500',
-        'Medium': 'text-yellow-500',
-        'Low': 'text-slate-400'
+        'Critical': 'text-red-600 dark:text-red-500',
+        'High': 'text-orange-600 dark:text-orange-500',
+        'Medium': 'text-amber-600 dark:text-yellow-500',
+        'Low': 'text-slate-500 dark:text-slate-400'
     };
     return (
         <div className="flex items-center gap-1">
@@ -158,23 +158,23 @@ const PriorityBadge: React.FC<{ priority: TicketPriority }> = ({ priority }) => 
 };
 
 const UserTypeBadge: React.FC<{ type: string }> = ({ type }) => {
-    let styles = 'bg-slate-500/10 text-slate-400 border-slate-500/20'; // Default
+    let styles = 'bg-slate-100 dark:bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-500/20'; // Default
     let icon = null;
     const lower = type.toLowerCase();
 
     if (lower.includes('supreme')) {
-        styles = 'bg-rose-500/10 text-rose-400 border-rose-500/20 shadow-[0_0_8px_rgba(244,63,94,0.15)]';
+        styles = 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20 shadow-[0_0_8px_rgba(244,63,94,0.15)]';
         icon = <Crown size={10} />;
     } else if (lower.includes('elite')) {
-        styles = 'bg-amber-500/10 text-amber-400 border-amber-500/20 shadow-[0_0_8px_rgba(245,158,11,0.15)]';
+        styles = 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 shadow-[0_0_8px_rgba(245,158,11,0.15)]';
         icon = <Crown size={10} />;
     } else if (lower.includes('premium')) {
-        styles = 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+        styles = 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20';
         icon = <Shield size={10} />;
     } else if (lower.includes('deluxe')) {
-        styles = 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20';
+        styles = 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20';
     } else if (lower.includes('standard')) {
-        styles = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+        styles = 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20';
     }
 
     return (
@@ -368,17 +368,19 @@ export const Support: React.FC = () => {
     return (
         <div ref={containerRef} className="h-[calc(100vh-140px)] flex gap-4 overflow-hidden relative">
             {/* Left Pane: Ticket List */}
-            <Card className="w-full md:w-80 lg:w-96 flex flex-col p-0 overflow-hidden border-r border-white/5 bg-slate-900/50 backdrop-blur-sm shrink-0">
+            <Card className="w-full md:w-80 lg:w-96 flex flex-col p-0 overflow-hidden border-r border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900/50 backdrop-blur-sm shrink-0">
                 {/* Header & Filter */}
-                <div className="p-4 border-b border-white/5 space-y-3">
+                <div className="p-4 border-b border-slate-200 dark:border-white/5 space-y-3 bg-slate-50 dark:bg-slate-900/50">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <h3 className="font-bold text-white text-lg">Support Inbox</h3>
-                            <span className="bg-blue-600 text-xs px-2 py-0.5 rounded-full text-white font-bold">{tickets.filter(t => t.status !== 'Resolved' && !t.isArchived).length}</span>
+                            <h3 className="font-bold text-slate-900 dark:text-white text-lg">Support Inbox</h3>
+                            <span className="bg-primary dark:bg-blue-600 text-xs px-2 py-0.5 rounded-full text-white font-bold shadow-lg shadow-blue-500/20">
+                                {tickets.filter(t => t.status !== 'Resolved' && !t.isArchived).length}
+                            </span>
                         </div>
                         <button 
                             onClick={() => setShowArchived(!showArchived)}
-                            className={`p-2 rounded-lg transition-colors ${showArchived ? 'bg-amber-600/20 text-amber-400' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                            className={`p-2 rounded-lg transition-colors ${showArchived ? 'bg-amber-100 dark:bg-amber-600/20 text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'}`}
                             title={showArchived ? "Show Inbox" : "Show Archived"}
                         >
                             <Archive size={18} />
@@ -387,13 +389,13 @@ export const Support: React.FC = () => {
                     
                     <div className="flex gap-2">
                         <div className="relative flex-1">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={14} />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
                             <input 
                                 type="text" 
                                 placeholder="Search tickets..." 
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full bg-slate-800 border border-slate-700 rounded-lg py-2 pl-9 pr-4 text-xs text-white focus:outline-none focus:border-blue-500 placeholder-slate-500"
+                                className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg py-2 pl-9 pr-4 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 placeholder-slate-400 dark:placeholder-slate-500"
                             />
                         </div>
                         
@@ -403,8 +405,8 @@ export const Support: React.FC = () => {
                                 onClick={() => setIsDateFilterOpen(!isDateFilterOpen)}
                                 className={`h-full px-2.5 rounded-lg border flex items-center justify-center gap-1.5 transition-colors ${
                                     isDateFilterOpen || selectedDate 
-                                    ? 'bg-blue-600/10 border-blue-500 text-blue-400' 
-                                    : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-white hover:border-slate-500'
+                                    ? 'bg-blue-50 dark:bg-blue-600/10 border-blue-500 text-primary dark:text-blue-400' 
+                                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-500'
                                 }`}
                                 title="Filter by Date"
                             >
@@ -413,8 +415,8 @@ export const Support: React.FC = () => {
                             </button>
 
                             {isDateFilterOpen && (
-                                <div className="absolute top-full right-0 mt-2 w-64 bg-[#0f172a] border border-white/10 rounded-xl shadow-2xl z-50 p-3 animate-in fade-in zoom-in-95">
-                                    <h4 className="text-xs font-bold text-slate-400 uppercase mb-2">Filter by Date</h4>
+                                <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl z-50 p-3 animate-in fade-in zoom-in-95">
+                                    <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Filter by Date</h4>
                                     <input 
                                         type="date" 
                                         value={selectedDate}
@@ -422,7 +424,7 @@ export const Support: React.FC = () => {
                                             setSelectedDate(e.target.value);
                                             setIsDateFilterOpen(false);
                                         }}
-                                        className="w-full bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500 outline-none [color-scheme:dark]"
+                                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 outline-none [color-scheme:light] dark:[color-scheme:dark]"
                                     />
                                     {selectedDate && (
                                         <button 
@@ -430,7 +432,7 @@ export const Support: React.FC = () => {
                                                 setSelectedDate('');
                                                 setIsDateFilterOpen(false);
                                             }}
-                                            className="w-full mt-2 py-1.5 text-xs text-slate-400 hover:text-white font-medium border-t border-white/5"
+                                            className="w-full mt-2 py-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium border-t border-slate-200 dark:border-white/5"
                                         >
                                             Clear Filter
                                         </button>
@@ -440,12 +442,12 @@ export const Support: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="flex bg-slate-800 rounded-lg p-1">
+                    <div className="flex bg-slate-200 dark:bg-slate-800 rounded-lg p-1">
                         {['All', 'Station', 'App'].map((f) => (
                             <button
                                 key={f}
                                 onClick={() => setFilter(f as any)}
-                                className={`flex-1 py-1.5 text-[10px] font-bold rounded-md transition-all ${filter === f ? 'bg-blue-600 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+                                className={`flex-1 py-1.5 text-[10px] font-bold rounded-md transition-all ${filter === f ? 'bg-white dark:bg-blue-600 text-primary dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                             >
                                 {f}
                             </button>
@@ -454,29 +456,29 @@ export const Support: React.FC = () => {
                 </div>
 
                 {/* List */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar">
+                <div className="flex-1 overflow-y-auto custom-scrollbar bg-white dark:bg-[#0b1121]">
                     {filteredTickets.length > 0 ? (
                         filteredTickets.map(ticket => (
                             <div 
                                 key={ticket.id} 
                                 onClick={() => setSelectedTicketId(ticket.id)}
-                                className={`p-4 border-b border-white/5 cursor-pointer transition-all hover:bg-white/5 relative group ${selectedTicketId === ticket.id ? 'bg-blue-900/10 border-l-2 border-l-blue-500' : 'border-l-2 border-l-transparent'}`}
+                                className={`p-4 border-b border-slate-100 dark:border-white/5 cursor-pointer transition-all hover:bg-slate-50 dark:hover:bg-white/5 relative group ${selectedTicketId === ticket.id ? 'bg-blue-50 dark:bg-blue-900/10 border-l-2 border-l-primary dark:border-l-blue-500' : 'border-l-2 border-l-transparent'}`}
                             >
                                 <div className="flex justify-between items-start mb-1">
                                     <div className="flex items-center gap-2">
-                                        {ticket.type === 'Station' ? <Zap size={12} className="text-yellow-400" /> : ticket.type === 'App' ? <Smartphone size={12} className="text-purple-400" /> : <User size={12} className="text-slate-400" />}
+                                        {ticket.type === 'Station' ? <Zap size={12} className="text-accent" /> : ticket.type === 'App' ? <Smartphone size={12} className="text-purple-500 dark:text-purple-400" /> : <User size={12} className="text-slate-400" />}
                                         <span className="text-[10px] font-mono text-slate-500 uppercase">{ticket.id}</span>
                                     </div>
                                     <span className="text-[10px] text-slate-500">{ticket.createdAt}</span>
                                 </div>
                                 
-                                <h4 className={`text-sm font-bold mb-1 truncate ${selectedTicketId === ticket.id ? 'text-blue-400' : 'text-white'}`}>{ticket.subject}</h4>
-                                <p className="text-xs text-slate-400 truncate mb-2">{ticket.preview}</p>
+                                <h4 className={`text-sm font-bold mb-1 truncate ${selectedTicketId === ticket.id ? 'text-primary dark:text-blue-400' : 'text-slate-900 dark:text-white'}`}>{ticket.subject}</h4>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 truncate mb-2">{ticket.preview}</p>
                                 
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
-                                        <img src={ticket.userAvatar} className="w-5 h-5 rounded-full border border-white/10" alt="" />
-                                        <span className="text-xs text-slate-300">{ticket.userName}</span>
+                                        <img src={ticket.userAvatar} className="w-5 h-5 rounded-full border border-slate-200 dark:border-white/10" alt="" />
+                                        <span className="text-xs text-slate-600 dark:text-slate-300">{ticket.userName}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         {ticket.isArchived && <Archive size={12} className="text-amber-500" />}
@@ -496,18 +498,18 @@ export const Support: React.FC = () => {
             </Card>
 
             {/* Middle Pane: Chat Area */}
-            <Card className="flex-1 flex flex-col p-0 overflow-hidden relative shadow-2xl">
+            <Card className="flex-1 flex flex-col p-0 overflow-hidden relative shadow-xl border border-slate-200 dark:border-white/5">
                 {selectedTicket ? (
                     <>
                         {/* Chat Header */}
-                        <div className="p-4 border-b border-white/5 bg-slate-900/80 backdrop-blur-md flex justify-between items-center z-10">
+                        <div className="p-4 border-b border-slate-200 dark:border-white/5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md flex justify-between items-center z-10">
                             <div className="flex items-center gap-4">
                                 <div className="relative">
-                                    <img src={selectedTicket.userAvatar} className="w-10 h-10 rounded-full border border-white/10" alt="" />
-                                    <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-slate-900 ${selectedTicket.userId === 'usr_1' ? 'bg-emerald-500' : 'bg-slate-500'}`}></div>
+                                    <img src={selectedTicket.userAvatar} className="w-10 h-10 rounded-full border border-slate-200 dark:border-white/10" alt="" />
+                                    <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${selectedTicket.userId === 'usr_1' ? 'bg-emerald-500' : 'bg-slate-500'}`}></div>
                                 </div>
                                 <div>
-                                    <h2 className="font-bold text-white text-base flex items-center gap-2">
+                                    <h2 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
                                         {selectedTicket.userName} 
                                         <UserTypeBadge type={selectedTicket.userType} />
                                     </h2>
@@ -518,8 +520,8 @@ export const Support: React.FC = () => {
                                 </div>
                             </div>
                             <div className="flex items-center gap-2">
-                                <button className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors" title="Call User"><Phone size={18} /></button>
-                                <button className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors" title="Start Video"><Video size={18} /></button>
+                                <button className="p-2 text-slate-400 hover:text-primary dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-colors" title="Call User"><Phone size={18} /></button>
+                                <button className="p-2 text-slate-400 hover:text-primary dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg transition-colors" title="Start Video"><Video size={18} /></button>
                                 
                                 <button 
                                     ref={headerMenuBtnRef}
@@ -531,7 +533,7 @@ export const Support: React.FC = () => {
                                         });
                                         setIsHeaderMenuOpen(!isHeaderMenuOpen);
                                     }}
-                                    className={`p-2 rounded-lg transition-colors ${isHeaderMenuOpen ? 'bg-white/10 text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                                    className={`p-2 rounded-lg transition-colors ${isHeaderMenuOpen ? 'bg-slate-100 dark:bg-white/10 text-primary dark:text-white' : 'text-slate-400 hover:text-primary dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'}`}
                                 >
                                     <MoreVertical size={18} />
                                 </button>
@@ -539,7 +541,7 @@ export const Support: React.FC = () => {
                                 {isHeaderMenuOpen && createPortal(
                                     <div 
                                         ref={headerMenuDropdownRef}
-                                        className="fixed bg-[#0f172a] border border-white/10 rounded-xl shadow-2xl z-[9999] overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top-right w-48"
+                                        className="fixed bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-xl shadow-2xl z-[9999] overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top-right w-48"
                                         style={{ top: headerMenuPos.top, right: headerMenuPos.right }}
                                     >
                                         <div className="py-1">
@@ -549,7 +551,7 @@ export const Support: React.FC = () => {
                                                         setIsHeaderMenuOpen(false);
                                                         setIsResolveModalOpen(true);
                                                     }}
-                                                    className="w-full text-left px-4 py-2.5 text-xs text-emerald-400 hover:bg-emerald-500/10 flex items-center gap-2 font-bold"
+                                                    className="w-full text-left px-4 py-2.5 text-xs text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 flex items-center gap-2 font-bold"
                                                 >
                                                     <CheckCircle2 size={14} /> Resolve Ticket
                                                 </button>
@@ -561,7 +563,7 @@ export const Support: React.FC = () => {
                                                         setIsHeaderMenuOpen(false);
                                                         setIsArchiveModalOpen(true);
                                                     }}
-                                                    className="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-white/5 hover:text-white flex items-center gap-2"
+                                                    className="w-full text-left px-4 py-2.5 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white flex items-center gap-2"
                                                 >
                                                     <Archive size={14} /> Archive Ticket
                                                 </button>
@@ -571,7 +573,7 @@ export const Support: React.FC = () => {
                                                         setIsHeaderMenuOpen(false);
                                                         confirmRestoreTicket();
                                                     }}
-                                                    className="w-full text-left px-4 py-2.5 text-xs text-amber-400 hover:bg-amber-500/10 flex items-center gap-2"
+                                                    className="w-full text-left px-4 py-2.5 text-xs text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 flex items-center gap-2"
                                                 >
                                                     <RotateCcw size={14} /> Restore Ticket
                                                 </button>
@@ -582,19 +584,19 @@ export const Support: React.FC = () => {
                                                     setIsHeaderMenuOpen(false);
                                                     setIsReportModalOpen(true);
                                                 }}
-                                                className="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-white/5 hover:text-white flex items-center gap-2"
+                                                className="w-full text-left px-4 py-2.5 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white flex items-center gap-2"
                                             >
                                                 <Shield size={14} /> Report User
                                             </button>
 
-                                            <div className="h-[1px] bg-white/5 my-1"></div>
+                                            <div className="h-[1px] bg-slate-200 dark:bg-white/5 my-1"></div>
 
                                             <button 
                                                 onClick={() => {
                                                     setIsHeaderMenuOpen(false);
                                                     setIsDeleteModalOpen(true);
                                                 }}
-                                                className="w-full text-left px-4 py-2.5 text-xs text-red-400 hover:bg-red-500/10 flex items-center gap-2"
+                                                className="w-full text-left px-4 py-2.5 text-xs text-red-600 dark:text-red-400 hover:bg-red-500/10 flex items-center gap-2"
                                             >
                                                 <Trash2 size={14} /> Delete Ticket
                                             </button>
@@ -606,14 +608,14 @@ export const Support: React.FC = () => {
                         </div>
 
                         {/* Messages Area */}
-                        <div className="flex-1 p-6 overflow-y-auto space-y-6 bg-gradient-to-b from-[#0b1121] to-[#0f172a] relative">
+                        <div className="flex-1 p-6 overflow-y-auto space-y-6 bg-slate-50/50 dark:bg-gradient-to-b dark:from-[#0b1121] dark:to-[#0f172a] relative">
                             {/* Watermark/Background decoration */}
                             <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none">
-                                <Bot size={200} />
+                                <Bot size={200} className="text-slate-900 dark:text-white" />
                             </div>
 
                             <div className="flex justify-center mb-6">
-                                <div className="bg-slate-800/50 border border-white/5 px-3 py-1 rounded-full text-[10px] text-slate-400 flex items-center gap-2">
+                                <div className="bg-slate-200 dark:bg-slate-800/50 border border-slate-300 dark:border-white/5 px-3 py-1 rounded-full text-[10px] text-slate-600 dark:text-slate-400 flex items-center gap-2">
                                     <Clock size={10} /> Ticket Created: {selectedTicket.createdAt} <span className="opacity-50">|</span> {selectedTicket.date}
                                 </div>
                             </div>
@@ -622,26 +624,26 @@ export const Support: React.FC = () => {
                                 <div key={msg.id} className={`flex ${msg.sender === 'agent' ? 'justify-end' : 'justify-start'} ${msg.sender === 'system' ? 'justify-center' : ''}`}>
                                     {msg.sender === 'system' ? (
                                         <div className="flex items-center gap-2 text-xs text-slate-500 my-2">
-                                            <div className="h-[1px] w-8 bg-slate-700"></div>
+                                            <div className="h-[1px] w-8 bg-slate-300 dark:bg-slate-700"></div>
                                             <span>{msg.text}</span>
-                                            <div className="h-[1px] w-8 bg-slate-700"></div>
+                                            <div className="h-[1px] w-8 bg-slate-300 dark:bg-slate-700"></div>
                                         </div>
                                     ) : (
                                         <div className={`flex gap-3 max-w-[85%] ${msg.sender === 'agent' ? 'flex-row-reverse' : ''}`}>
-                                            <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold mt-1 shadow-lg ${msg.sender === 'agent' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-200'}`}>
+                                            <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold mt-1 shadow-lg ${msg.sender === 'agent' ? 'bg-primary dark:bg-blue-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-200'}`}>
                                                 {msg.sender === 'agent' ? 'Me' : selectedTicket.userName.charAt(0)}
                                             </div>
                                             <div>
                                                 <div className={`p-3.5 shadow-md text-sm leading-relaxed ${
                                                     msg.sender === 'agent' 
-                                                    ? 'bg-blue-600 text-white rounded-2xl rounded-tr-none' 
-                                                    : 'bg-slate-800 border border-white/5 text-slate-200 rounded-2xl rounded-tl-none'
+                                                    ? 'bg-primary dark:bg-blue-600 text-white rounded-2xl rounded-tr-none' 
+                                                    : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-200 rounded-2xl rounded-tl-none'
                                                 }`}>
                                                     {msg.text}
                                                     {msg.attachments && msg.attachments.length > 0 && (
-                                                        <div className="mt-3 pt-3 border-t border-white/10 space-y-2">
+                                                        <div className="mt-3 pt-3 border-t border-white/20 dark:border-white/10 space-y-2">
                                                             {msg.attachments.map((att, idx) => (
-                                                                <div key={idx} className="flex items-center gap-2 bg-black/20 p-2 rounded-lg text-xs font-mono">
+                                                                <div key={idx} className="flex items-center gap-2 bg-black/10 dark:bg-black/20 p-2 rounded-lg text-xs font-mono">
                                                                     <Paperclip size={12} className="opacity-50" />
                                                                     <span>{att}</span>
                                                                 </div>
@@ -661,15 +663,15 @@ export const Support: React.FC = () => {
                         </div>
 
                         {/* Input Area */}
-                        <div className="p-4 border-t border-white/5 bg-slate-900/50 backdrop-blur-md">
+                        <div className="p-4 border-t border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900/50 backdrop-blur-md">
                             {/* Pending Attachments Preview */}
                             {pendingAttachments.length > 0 && (
                                 <div className="flex gap-2 mb-3 flex-wrap animate-in slide-in-from-bottom-2 fade-in">
                                     {pendingAttachments.map((file, idx) => (
-                                        <div key={idx} className="flex items-center gap-2 bg-blue-600/20 border border-blue-500/30 px-3 py-1.5 rounded-lg text-xs text-blue-200 font-medium">
+                                        <div key={idx} className="flex items-center gap-2 bg-blue-50 dark:bg-blue-600/20 border border-blue-200 dark:border-blue-500/30 px-3 py-1.5 rounded-lg text-xs text-blue-700 dark:text-blue-200 font-medium">
                                             <Paperclip size={12} />
                                             <span className="max-w-[150px] truncate">{file.name}</span>
-                                            <button onClick={() => removeAttachment(idx)} className="hover:text-white transition-colors bg-white/10 rounded-full p-0.5"><X size={10}/></button>
+                                            <button onClick={() => removeAttachment(idx)} className="hover:text-red-500 transition-colors bg-white/50 dark:bg-white/10 rounded-full p-0.5"><X size={10}/></button>
                                         </div>
                                     ))}
                                 </div>
@@ -679,25 +681,25 @@ export const Support: React.FC = () => {
                             <div className="flex gap-2 mb-3 overflow-x-auto pb-1 no-scrollbar">
                                 <button 
                                     onClick={() => setMessageInput("Can you please provide a screenshot of the error?")}
-                                    className="px-3 py-1.5 bg-slate-800/50 border border-white/5 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-slate-700 whitespace-nowrap transition-colors"
+                                    className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-lg text-xs text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 whitespace-nowrap transition-colors"
                                 >
                                     Request Screenshot
                                 </button>
                                 <button 
                                     onClick={() => setMessageInput("I've reset the station remotely. Please try again in 2 minutes.")}
-                                    className="px-3 py-1.5 bg-slate-800/50 border border-white/5 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-slate-700 whitespace-nowrap transition-colors"
+                                    className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-lg text-xs text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 whitespace-nowrap transition-colors"
                                 >
                                     Remote Reset
                                 </button>
                                 <button 
                                     onClick={() => setMessageInput("We are investigating this issue with our engineering team.")}
-                                    className="px-3 py-1.5 bg-slate-800/50 border border-white/5 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-slate-700 whitespace-nowrap transition-colors"
+                                    className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-white/5 rounded-lg text-xs text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 whitespace-nowrap transition-colors"
                                 >
                                     Escalate to Eng
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSendMessage} className="flex gap-2 items-end bg-slate-800/50 p-2 rounded-2xl border border-white/10 focus-within:border-blue-500/50 focus-within:ring-1 focus-within:ring-blue-500/20 transition-all shadow-lg">
+                            <form onSubmit={handleSendMessage} className="flex gap-2 items-end bg-slate-50 dark:bg-slate-800/50 p-2 rounded-2xl border border-slate-200 dark:border-white/10 focus-within:border-primary/50 dark:focus-within:border-blue-500/50 focus-within:ring-1 focus-within:ring-primary/20 dark:focus-within:ring-blue-500/20 transition-all shadow-sm">
                                 {/* Hidden File Input */}
                                 <input
                                     type="file"
@@ -709,7 +711,7 @@ export const Support: React.FC = () => {
                                 <button 
                                     type="button"
                                     onClick={() => fileInputRef.current?.click()}
-                                    className={`p-2 transition-colors rounded-xl hover:bg-white/5 ${pendingAttachments.length > 0 ? 'text-blue-400 bg-blue-500/10' : 'text-slate-400 hover:text-white'}`}
+                                    className={`p-2 transition-colors rounded-xl hover:bg-slate-200 dark:hover:bg-white/5 ${pendingAttachments.length > 0 ? 'text-primary dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10' : 'text-slate-400 dark:text-slate-400 hover:text-primary dark:hover:text-white'}`}
                                     title="Attach File"
                                 >
                                     <Paperclip size={20} />
@@ -724,13 +726,13 @@ export const Support: React.FC = () => {
                                         }
                                     }}
                                     placeholder="Type your response..." 
-                                    className="flex-1 bg-transparent border-none focus:outline-none text-sm text-white resize-none py-2.5 max-h-32 placeholder-slate-500 custom-scrollbar"
+                                    className="flex-1 bg-transparent border-none focus:outline-none text-sm text-slate-900 dark:text-white resize-none py-2.5 max-h-32 placeholder-slate-400 dark:placeholder-slate-500 custom-scrollbar"
                                     rows={1}
                                 />
                                 <button 
                                     type="submit" 
                                     disabled={!messageInput.trim() && pendingAttachments.length === 0}
-                                    className="bg-blue-600 hover:bg-blue-500 text-white p-2.5 rounded-xl transition-colors shadow-lg shadow-blue-600/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="bg-primary dark:bg-blue-600 hover:bg-blue-800 dark:hover:bg-blue-500 text-white p-2.5 rounded-xl transition-colors shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <Send size={18} />
                                 </button>
@@ -745,12 +747,12 @@ export const Support: React.FC = () => {
                 )}
             </Card>
 
-            {/* Right Pane: Context Intelligence (Collapsible on smaller screens could be added, hidden on tablet for now to fit) */}
+            {/* Right Pane: Context Intelligence */}
             {selectedTicket && (
-                <Card className="hidden xl:flex w-80 flex-col p-0 overflow-hidden border-l border-white/5 bg-slate-900/50 backdrop-blur-sm shrink-0">
-                    <div className="p-4 border-b border-white/5">
-                        <h3 className="font-bold text-white text-sm uppercase tracking-wider flex items-center gap-2">
-                            <Bot size={16} className="text-blue-400" /> Context Intelligence
+                <Card className="hidden xl:flex w-80 flex-col p-0 overflow-hidden border-l border-slate-200 dark:border-white/5 bg-white dark:bg-slate-900/50 backdrop-blur-sm shrink-0">
+                    <div className="p-4 border-b border-slate-200 dark:border-white/5">
+                        <h3 className="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wider flex items-center gap-2">
+                            <Bot size={16} className="text-primary dark:text-blue-400" /> Context Intelligence
                         </h3>
                     </div>
                     
@@ -758,47 +760,47 @@ export const Support: React.FC = () => {
                         {/* Dynamic Context based on Ticket Type */}
                         {selectedTicket.type === 'Station' && (
                             <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
-                                <div className="bg-slate-800/50 rounded-xl p-3 border border-white/5">
+                                <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3 border border-slate-200 dark:border-white/5">
                                     <div className="flex items-start gap-3 mb-3">
-                                        <div className="w-10 h-10 rounded-lg bg-blue-900/30 flex items-center justify-center text-blue-400 border border-blue-500/30">
+                                        <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-primary dark:text-blue-400 border border-blue-200 dark:border-blue-500/30">
                                             <Zap size={20} />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-slate-400 font-bold uppercase">Reported Station</p>
-                                            <p className="text-sm font-bold text-white leading-tight">{selectedTicket.stationName}</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">Reported Station</p>
+                                            <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{selectedTicket.stationName}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-1 text-xs text-slate-400 mb-3">
+                                    <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 mb-3">
                                         <MapPin size={12} /> {selectedTicket.stationLocation}
                                     </div>
                                     
                                     <div className="grid grid-cols-2 gap-2 mb-2">
-                                        <div className="bg-slate-900 p-2 rounded border border-white/5 text-center">
+                                        <div className="bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-white/5 text-center">
                                             <p className="text-[10px] text-slate-500 uppercase">Status</p>
-                                            <p className="text-xs font-bold text-emerald-400">Online</p>
+                                            <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">Online</p>
                                         </div>
-                                        <div className="bg-slate-900 p-2 rounded border border-white/5 text-center">
+                                        <div className="bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-white/5 text-center">
                                             <p className="text-[10px] text-slate-500 uppercase">Load</p>
-                                            <p className="text-xs font-bold text-white">85%</p>
+                                            <p className="text-xs font-bold text-slate-900 dark:text-white">85%</p>
                                         </div>
                                     </div>
                                     
-                                    <button className="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/5 rounded-lg text-xs font-bold text-slate-300 transition-colors flex items-center justify-center gap-2">
+                                    <button className="w-full py-2 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-200 dark:border-white/5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 transition-colors flex items-center justify-center gap-2">
                                         <Terminal size={12} /> View Station Logs
                                     </button>
                                 </div>
 
                                 <div className="space-y-2">
                                     <h4 className="text-xs font-bold text-slate-500 uppercase">Recent Events</h4>
-                                    <div className="relative pl-4 border-l border-white/10 space-y-3">
+                                    <div className="relative pl-4 border-l border-slate-200 dark:border-white/10 space-y-3">
                                         <div className="relative">
                                             <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-red-500"></div>
-                                            <p className="text-xs text-white">Connector Error (Port 2)</p>
+                                            <p className="text-xs text-slate-700 dark:text-white">Connector Error (Port 2)</p>
                                             <p className="text-[10px] text-slate-500">15 mins ago</p>
                                         </div>
                                         <div className="relative">
                                             <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-                                            <p className="text-xs text-white">Session Started (Port 1)</p>
+                                            <p className="text-xs text-slate-700 dark:text-white">Session Started (Port 1)</p>
                                             <p className="text-[10px] text-slate-500">22 mins ago</p>
                                         </div>
                                     </div>
@@ -808,52 +810,52 @@ export const Support: React.FC = () => {
 
                         {selectedTicket.type === 'App' && (
                             <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
-                                <div className="bg-slate-800/50 rounded-xl p-3 border border-white/5">
+                                <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3 border border-slate-200 dark:border-white/5">
                                     <div className="flex items-start gap-3 mb-3">
-                                        <div className="w-10 h-10 rounded-lg bg-purple-900/30 flex items-center justify-center text-purple-400 border border-purple-500/30">
+                                        <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-500/30">
                                             <Smartphone size={20} />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-slate-400 font-bold uppercase">Device Info</p>
-                                            <p className="text-sm font-bold text-white leading-tight">{selectedTicket.deviceInfo}</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">Device Info</p>
+                                            <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{selectedTicket.deviceInfo}</p>
                                         </div>
                                     </div>
                                     
                                     <div className="space-y-2 mb-3">
                                         <div className="flex justify-between text-xs">
                                             <span className="text-slate-500">App Version</span>
-                                            <span className="text-white font-mono">{selectedTicket.appVersion}</span>
+                                            <span className="text-slate-900 dark:text-white font-mono">{selectedTicket.appVersion}</span>
                                         </div>
                                         <div className="flex justify-between text-xs">
                                             <span className="text-slate-500">OS Version</span>
-                                            <span className="text-white font-mono">Android 14</span>
+                                            <span className="text-slate-900 dark:text-white font-mono">Android 14</span>
                                         </div>
                                         <div className="flex justify-between text-xs">
                                             <span className="text-slate-500">Last Login</span>
-                                            <span className="text-white">Today, 08:15 AM</span>
+                                            <span className="text-slate-900 dark:text-white">Today, 08:15 AM</span>
                                         </div>
                                     </div>
 
                                     <div className="flex gap-2">
-                                        <div className="flex-1 bg-slate-900 p-2 rounded border border-white/5 flex items-center gap-2">
-                                            <Battery size={14} className="text-emerald-400" />
-                                            <span className="text-xs text-white font-bold">82%</span>
+                                        <div className="flex-1 bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-white/5 flex items-center gap-2">
+                                            <Battery size={14} className="text-emerald-500 dark:text-emerald-400" />
+                                            <span className="text-xs text-slate-900 dark:text-white font-bold">82%</span>
                                         </div>
-                                        <div className="flex-1 bg-slate-900 p-2 rounded border border-white/5 flex items-center gap-2">
-                                            <Signal size={14} className="text-blue-400" />
-                                            <span className="text-xs text-white font-bold">5G</span>
+                                        <div className="flex-1 bg-white dark:bg-slate-900 p-2 rounded border border-slate-200 dark:border-white/5 flex items-center gap-2">
+                                            <Signal size={14} className="text-blue-500 dark:text-blue-400" />
+                                            <span className="text-xs text-slate-900 dark:text-white font-bold">5G</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="space-y-2">
                                     <h4 className="text-xs font-bold text-slate-500 uppercase">Crash Logs</h4>
-                                    <div className="bg-black/30 rounded-lg p-2 font-mono text-[10px] text-red-300 border border-red-500/20 overflow-hidden">
+                                    <div className="bg-slate-100 dark:bg-black/30 rounded-lg p-2 font-mono text-[10px] text-red-600 dark:text-red-300 border border-red-200 dark:border-red-500/20 overflow-hidden">
                                         <p>NullPointerException: PaymentGateway</p>
                                         <p className="opacity-50">at com.wynx.app.checkout (Line 402)</p>
                                         <p className="opacity-50">at android.os.Handler (Line 92)</p>
                                     </div>
-                                    <button className="text-xs text-blue-400 hover:text-white flex items-center gap-1">
+                                    <button className="text-xs text-primary dark:text-blue-400 hover:underline flex items-center gap-1">
                                         <CornerUpLeft size={10} /> View Full Stack Trace
                                     </button>
                                 </div>
@@ -861,32 +863,32 @@ export const Support: React.FC = () => {
                         )}
 
                         {/* Common User Profile */}
-                        <div className="pt-4 border-t border-white/5">
+                        <div className="pt-4 border-t border-slate-200 dark:border-white/5">
                             <h4 className="text-xs font-bold text-slate-500 uppercase mb-3">User Profile</h4>
                             <div className="flex items-center gap-3 mb-4">
-                                <img src={selectedTicket.userAvatar} className="w-12 h-12 rounded-full border border-white/10" alt="" />
+                                <img src={selectedTicket.userAvatar} className="w-12 h-12 rounded-full border border-slate-200 dark:border-white/10" alt="" />
                                 <div>
-                                    <p className="text-sm font-bold text-white">{selectedTicket.userName}</p>
+                                    <p className="text-sm font-bold text-slate-900 dark:text-white">{selectedTicket.userName}</p>
                                     <div className="flex items-center gap-2 mt-1">
                                         <UserTypeBadge type={selectedTicket.userType.replace(' Subscriber', '')} />
                                     </div>
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-2">
-                                <div className="p-2 rounded bg-white/5 border border-white/5">
+                                <div className="p-2 rounded bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5">
                                     <p className="text-[10px] text-slate-500">Total Spent</p>
-                                    <p className="text-sm font-bold text-white">₱12,450</p>
+                                    <p className="text-sm font-bold text-slate-900 dark:text-white">₱12,450</p>
                                 </div>
-                                <div className="p-2 rounded bg-white/5 border border-white/5">
+                                <div className="p-2 rounded bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5">
                                     <p className="text-[10px] text-slate-500">Charges</p>
-                                    <p className="text-sm font-bold text-white">42</p>
+                                    <p className="text-sm font-bold text-slate-900 dark:text-white">42</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div className="p-4 border-t border-white/5 bg-slate-900/80">
-                        <button className="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl text-xs font-bold text-slate-300 hover:text-white transition-colors flex items-center justify-center gap-2">
+                    <div className="p-4 border-t border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-slate-900/80">
+                        <button className="w-full py-2.5 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center justify-center gap-2">
                             <Archive size={14} /> View Past Tickets
                         </button>
                     </div>
@@ -902,18 +904,18 @@ export const Support: React.FC = () => {
                 title="Resolve Ticket"
             >
                 <div className="space-y-4">
-                    <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4 flex items-start gap-3">
+                    <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 rounded-lg p-4 flex items-start gap-3">
                         <CheckCircle2 className="text-emerald-500 flex-shrink-0 mt-0.5" size={20} />
                         <div>
-                            <h4 className="text-emerald-400 font-bold text-sm uppercase tracking-wide">Confirm Resolution</h4>
-                            <p className="text-sm text-emerald-200 mt-1">
-                                Are you sure you want to resolve ticket <strong className="text-white">{selectedTicket?.id}</strong>? 
+                            <h4 className="text-emerald-600 dark:text-emerald-400 font-bold text-sm uppercase tracking-wide">Confirm Resolution</h4>
+                            <p className="text-sm text-emerald-700 dark:text-emerald-200 mt-1">
+                                Are you sure you want to resolve ticket <strong className="text-slate-900 dark:text-white">{selectedTicket?.id}</strong>? 
                                 This will close the conversation and notify the user.
                             </p>
                         </div>
                     </div>
-                    <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-4">
-                        <button onClick={() => setIsResolveModalOpen(false)} className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium">Cancel</button>
+                    <div className="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-white/5 mt-4">
+                        <button onClick={() => setIsResolveModalOpen(false)} className="px-4 py-2 rounded-lg text-slate-500 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-sm font-medium">Cancel</button>
                         <button onClick={confirmResolveTicket} className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-emerald-500/20 flex items-center gap-2">
                             <CheckCircle2 size={16} /> Mark Resolved
                         </button>
@@ -928,18 +930,18 @@ export const Support: React.FC = () => {
                 title="Archive Ticket"
             >
                 <div className="space-y-4">
-                    <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 flex items-start gap-3">
+                    <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-lg p-4 flex items-start gap-3">
                         <Archive className="text-amber-500 flex-shrink-0 mt-0.5" size={20} />
                         <div>
-                            <h4 className="text-amber-400 font-bold text-sm uppercase tracking-wide">Confirm Archive</h4>
-                            <p className="text-sm text-amber-200 mt-1">
-                                Archive ticket <strong className="text-white">{selectedTicket?.id}</strong>? 
+                            <h4 className="text-amber-600 dark:text-amber-400 font-bold text-sm uppercase tracking-wide">Confirm Archive</h4>
+                            <p className="text-sm text-amber-700 dark:text-amber-200 mt-1">
+                                Archive ticket <strong className="text-slate-900 dark:text-white">{selectedTicket?.id}</strong>? 
                                 It will be moved to the Archived tab and hidden from the main inbox.
                             </p>
                         </div>
                     </div>
-                    <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-4">
-                        <button onClick={() => setIsArchiveModalOpen(false)} className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium">Cancel</button>
+                    <div className="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-white/5 mt-4">
+                        <button onClick={() => setIsArchiveModalOpen(false)} className="px-4 py-2 rounded-lg text-slate-500 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-sm font-medium">Cancel</button>
                         <button onClick={confirmArchiveTicket} className="bg-amber-600 hover:bg-amber-500 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-amber-500/20 flex items-center gap-2">
                             <Archive size={16} /> Archive Ticket
                         </button>
@@ -954,26 +956,26 @@ export const Support: React.FC = () => {
                 title="Report User"
             >
                 <div className="space-y-4">
-                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start gap-3">
+                    <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg p-4 flex items-start gap-3">
                         <Shield className="text-red-500 flex-shrink-0 mt-0.5" size={20} />
                         <div>
-                            <h4 className="text-red-400 font-bold text-sm uppercase tracking-wide">Report User</h4>
-                            <p className="text-sm text-red-200 mt-1">
-                                Reporting <strong className="text-white">{selectedTicket?.userName}</strong> will flag their account for review by the Trust & Safety team.
+                            <h4 className="text-red-600 dark:text-red-400 font-bold text-sm uppercase tracking-wide">Report User</h4>
+                            <p className="text-sm text-red-700 dark:text-red-200 mt-1">
+                                Reporting <strong className="text-slate-900 dark:text-white">{selectedTicket?.userName}</strong> will flag their account for review by the Trust & Safety team.
                             </p>
                         </div>
                     </div>
                     <div>
-                        <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Reason for Report</label>
-                        <select className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-red-500">
+                        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-1">Reason for Report</label>
+                        <select className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-red-500">
                             <option>Abusive Language</option>
                             <option>Spam / Solicitation</option>
                             <option>Fake Account</option>
                             <option>Other</option>
                         </select>
                     </div>
-                    <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-4">
-                        <button onClick={() => setIsReportModalOpen(false)} className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium">Cancel</button>
+                    <div className="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-white/5 mt-4">
+                        <button onClick={() => setIsReportModalOpen(false)} className="px-4 py-2 rounded-lg text-slate-500 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-sm font-medium">Cancel</button>
                         <button onClick={confirmReportUser} className="bg-red-600 hover:bg-red-500 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-red-500/20 flex items-center gap-2">
                             <Shield size={16} /> Report User
                         </button>
@@ -988,18 +990,18 @@ export const Support: React.FC = () => {
                 title="Delete Ticket"
             >
                 <div className="space-y-4">
-                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 flex items-start gap-3">
+                    <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg p-4 flex items-start gap-3">
                         <AlertTriangle className="text-red-500 flex-shrink-0 mt-0.5" size={20} />
                         <div>
-                            <h4 className="text-red-400 font-bold text-sm uppercase tracking-wide">Permanent Deletion</h4>
-                            <p className="text-sm text-red-200 mt-1">
-                                Are you sure you want to permanently delete ticket <strong className="text-white">{selectedTicket?.id}</strong>? 
+                            <h4 className="text-red-600 dark:text-red-400 font-bold text-sm uppercase tracking-wide">Permanent Deletion</h4>
+                            <p className="text-sm text-red-700 dark:text-red-200 mt-1">
+                                Are you sure you want to permanently delete ticket <strong className="text-slate-900 dark:text-white">{selectedTicket?.id}</strong>? 
                                 This action cannot be undone.
                             </p>
                         </div>
                     </div>
-                    <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-4">
-                        <button onClick={() => setIsDeleteModalOpen(false)} className="px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors text-sm font-medium">Cancel</button>
+                    <div className="pt-4 flex justify-end gap-3 border-t border-slate-200 dark:border-white/5 mt-4">
+                        <button onClick={() => setIsDeleteModalOpen(false)} className="px-4 py-2 rounded-lg text-slate-500 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors text-sm font-medium">Cancel</button>
                         <button onClick={confirmDeleteTicket} className="bg-red-600 hover:bg-red-500 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-red-500/20 flex items-center gap-2">
                             <Trash2 size={16} /> Delete Ticket
                         </button>

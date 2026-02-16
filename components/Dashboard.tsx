@@ -28,10 +28,10 @@ const StatCard: React.FC<{
     return (
         <div ref={cardRef} className="glass-card rounded-2xl p-4 flex justify-between items-center relative overflow-hidden group">
             <div className="z-10">
-                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">{title}</p>
+                <p className="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">{title}</p>
                 <div className="flex items-baseline gap-2">
-                    <h3 className="text-2xl font-bold text-white">{value}</h3>
-                    <span className="text-emerald-400 text-xs font-bold flex items-center">
+                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{value}</h3>
+                    <span className="text-emerald-500 dark:text-emerald-400 text-xs font-bold flex items-center">
                         {change} <ArrowUpRight size={10} className="ml-0.5" />
                     </span>
                 </div>
@@ -62,8 +62,8 @@ export const Dashboard: React.FC = () => {
         <div className="space-y-6">
             <div ref={headerRef} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Wynxsmapp Admin Dashboard</h1>
-                    <p className="text-slate-400 text-sm">Welcome back, Admin. Here is the latest solar charging data.</p>
+                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Wynxsmapp Admin Dashboard</h1>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">Welcome back, Admin. Here is the latest solar charging data.</p>
                 </div>
             </div>
 
@@ -71,7 +71,7 @@ export const Dashboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard 
                     title="Total Revenue" 
-                    value="$53,000" 
+                    value="₱53,000" 
                     change="+55%" 
                     icon={<DollarSign size={20} />} 
                     colorClass="bg-blue-600"
@@ -107,7 +107,7 @@ export const Dashboard: React.FC = () => {
             <div ref={chartsRef} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="lg:col-span-2 h-[400px]" title="Revenue & Energy Overview" subtitle="Comparing energy output vs revenue over time">
                     <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={REVENUE_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                        <AreaChart data={REVENUE_DATA} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                             <defs>
                                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
@@ -118,12 +118,22 @@ export const Dashboard: React.FC = () => {
                                     <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
                                 </linearGradient>
                             </defs>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(148, 163, 184, 0.2)" className="dark:stroke-white/5" />
                             <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
-                            <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
+                            <YAxis 
+                                axisLine={false} 
+                                tickLine={false} 
+                                tick={{fill: '#94a3b8', fontSize: 12}} 
+                                tickFormatter={(value) => value >= 1000 ? `₱${(value / 1000).toFixed(0)}k` : `₱${value}`}
+                            />
                             <Tooltip 
-                                contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155', color: '#fff' }} 
-                                itemStyle={{ color: '#fff' }}
+                                contentStyle={{ backgroundColor: '#fff', borderColor: '#e2e8f0', color: '#0f172a' }} 
+                                itemStyle={{ color: '#0f172a' }}
+                                wrapperClassName="dark:!bg-slate-800 dark:!border-slate-700 dark:!text-white"
+                                formatter={(value: number, name: string) => [
+                                    name === 'Revenue' ? `₱${value.toLocaleString()}` : `${value.toLocaleString()}`, 
+                                    name
+                                ]}
                             />
                             <Area type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" name="Revenue" />
                             <Area type="monotone" dataKey="value2" stroke="#06b6d4" strokeWidth={3} fillOpacity={1} fill="url(#colorValue2)" name="Energy (kWh)" />
@@ -137,7 +147,10 @@ export const Dashboard: React.FC = () => {
                             <BarChart data={STATION_USAGE_DATA}>
                                 <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={12} />
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 10}} />
-                                <Tooltip cursor={{fill: 'rgba(255,255,255,0.05)'}} contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px' }} />
+                                <Tooltip 
+                                    cursor={{fill: 'rgba(148, 163, 184, 0.1)'}} 
+                                    contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', color: '#0f172a' }}
+                                />
                             </BarChart>
                         </ResponsiveContainer>
                     </Card>
@@ -164,20 +177,20 @@ export const Dashboard: React.FC = () => {
                 <Card title="Nearby Active Stations" subtitle="Stations with highest availability">
                     <div className="space-y-4 mt-2">
                         {MOCK_STATIONS.slice(0, 3).map((station) => (
-                            <div key={station.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-white/5">
+                            <div key={station.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-white/5">
                                 <div className="flex items-center gap-4">
                                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                                        station.status === 'Online' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
+                                        station.status === 'Online' ? 'bg-emerald-500/20 text-emerald-500 dark:text-emerald-400' : 'bg-red-500/20 text-red-500 dark:text-red-400'
                                     }`}>
                                         <MapPin size={20} />
                                     </div>
                                     <div>
-                                        <h4 className="font-medium text-white">{station.name}</h4>
-                                        <p className="text-xs text-slate-400">{station.location} • {station.power}</p>
+                                        <h4 className="font-medium text-slate-900 dark:text-white">{station.name}</h4>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400">{station.location} • {station.power}</p>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <span className="text-sm font-bold text-white">{station.availableSlots}/{station.totalSlots}</span>
+                                    <span className="text-sm font-bold text-slate-900 dark:text-white">{station.availableSlots}/{station.totalSlots}</span>
                                     <p className="text-xs text-slate-500">Slots Open</p>
                                 </div>
                             </div>
@@ -186,20 +199,20 @@ export const Dashboard: React.FC = () => {
                 </Card>
 
                 <Card title="Recent Activity" subtitle="Real-time system events">
-                    <div className="space-y-6 mt-4 relative pl-4 border-l border-slate-700 ml-2">
+                    <div className="space-y-6 mt-4 relative pl-4 border-l border-slate-200 dark:border-slate-700 ml-2">
                          <div className="relative">
-                            <div className="absolute -left-[25px] top-1 w-4 h-4 rounded-full bg-blue-500 border-2 border-slate-900"></div>
-                            <p className="text-sm text-slate-300">New station <span className="text-white font-medium">EcoPark Plaza</span> approved by Admin.</p>
+                            <div className="absolute -left-[25px] top-1 w-4 h-4 rounded-full bg-blue-500 border-2 border-white dark:border-slate-900"></div>
+                            <p className="text-sm text-slate-600 dark:text-slate-300">New station <span className="text-slate-900 dark:text-white font-medium">EcoPark Plaza</span> approved by Admin.</p>
                             <span className="text-xs text-slate-500 block mt-1">20 minutes ago</span>
                          </div>
                          <div className="relative">
-                            <div className="absolute -left-[25px] top-1 w-4 h-4 rounded-full bg-indigo-500 border-2 border-slate-900"></div>
-                            <p className="text-sm text-slate-300">User <span className="text-white font-medium">Alex Johnson</span> subscribed to SolarElite plan.</p>
+                            <div className="absolute -left-[25px] top-1 w-4 h-4 rounded-full bg-indigo-500 border-2 border-white dark:border-slate-900"></div>
+                            <p className="text-sm text-slate-600 dark:text-slate-300">User <span className="text-slate-900 dark:text-white font-medium">Alex Johnson</span> subscribed to SolarElite plan.</p>
                             <span className="text-xs text-slate-500 block mt-1">2 hours ago</span>
                          </div>
                          <div className="relative">
-                            <div className="absolute -left-[25px] top-1 w-4 h-4 rounded-full bg-red-500 border-2 border-slate-900"></div>
-                            <p className="text-sm text-slate-300">Station <span className="text-white font-medium">GreenLife Mall</span> reported offline.</p>
+                            <div className="absolute -left-[25px] top-1 w-4 h-4 rounded-full bg-red-500 border-2 border-white dark:border-slate-900"></div>
+                            <p className="text-sm text-slate-600 dark:text-slate-300">Station <span className="text-slate-900 dark:text-white font-medium">GreenLife Mall</span> reported offline.</p>
                             <span className="text-xs text-slate-500 block mt-1">5 hours ago</span>
                          </div>
                     </div>
