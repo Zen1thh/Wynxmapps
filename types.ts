@@ -61,6 +61,25 @@ export interface User {
     phoneNumber?: string;
 }
 
+export interface Vehicle {
+    id: string;
+    ownerId: string;
+    ownerName: string;
+    ownerAvatar?: string;
+    make: string;
+    model: string;
+    year: number;
+    color: string;
+    licensePlate: string;
+    vin: string;
+    batteryLevel: number; // %
+    batteryCapacity: number; // kWh
+    range: number; // estimated km
+    status: 'Active' | 'Charging' | 'Maintenance' | 'Offline';
+    lastSync: string;
+    imageUrl?: string;
+}
+
 export interface Review {
     id: string;
     userId: string;
@@ -84,10 +103,12 @@ export enum ViewState {
     STATIONS = 'STATIONS',
     BOOKINGS = 'BOOKINGS',
     USERS = 'USERS',
+    VEHICLES = 'VEHICLES',
     SUBSCRIPTIONS = 'SUBSCRIPTIONS',
     WYNX_AI = 'WYNX_AI',
     MAP_ROUTES = 'MAP_ROUTES',
     SUPPORT = 'SUPPORT',
     REVIEWS = 'REVIEWS',
+    LOGS = 'LOGS',
     SETTINGS = 'SETTINGS'
 }

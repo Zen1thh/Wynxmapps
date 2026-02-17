@@ -1,10 +1,50 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface AuthProps {
     onLogin: () => void;
 }
+
+const InputField = ({ 
+    icon: Icon, 
+    type, 
+    placeholder, 
+    value, 
+    onChange,
+    isPassword = false,
+    showPassword = false,
+    setShowPassword
+}: any) => (
+    <div className="space-y-1.5">
+        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide ml-1">
+            {placeholder}
+        </label>
+        <div className="relative group">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary dark:group-focus-within:text-blue-400 transition-colors">
+                <Icon size={18} />
+            </div>
+            <input
+                type={isPassword ? (showPassword ? 'text' : 'password') : type}
+                value={value}
+                onChange={onChange}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-10 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 dark:focus:ring-blue-500/20 focus:border-primary dark:focus:border-blue-500 transition-all placeholder-slate-400"
+                placeholder={`Enter your ${placeholder.toLowerCase()}`}
+                required
+            />
+            {isPassword && setShowPassword && (
+                <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+            )}
+        </div>
+    </div>
+);
 
 export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
     const [isLogin, setIsLogin] = useState(true);
@@ -23,6 +63,10 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
         // Simulate API call
         setTimeout(() => {
             setIsLoading(false);
+            toast.success(isLogin ? "Welcome back, Admin!" : "Account created successfully!", {
+                description: "You have successfully signed in to Wynxsmapp Admin.",
+                duration: 3000,
+            });
             onLogin();
         }, 1500);
     };
@@ -34,43 +78,6 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
         setPassword('');
         setName('');
     };
-
-    const InputField = ({ 
-        icon: Icon, 
-        type, 
-        placeholder, 
-        value, 
-        onChange,
-        isPassword = false 
-    }: any) => (
-        <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide ml-1">
-                {placeholder}
-            </label>
-            <div className="relative group">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary dark:group-focus-within:text-blue-400 transition-colors">
-                    <Icon size={18} />
-                </div>
-                <input
-                    type={isPassword ? (showPassword ? 'text' : 'password') : type}
-                    value={value}
-                    onChange={onChange}
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl py-3 pl-10 pr-10 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 dark:focus:ring-blue-500/20 focus:border-primary dark:focus:border-blue-500 transition-all placeholder-slate-400"
-                    placeholder={`Enter your ${placeholder.toLowerCase()}`}
-                    required
-                />
-                {isPassword && (
-                    <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
-                    >
-                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
-                )}
-            </div>
-        </div>
-    );
 
     return (
         <div className="min-h-screen flex bg-slate-50 dark:bg-[#0b1121] transition-colors duration-300">
@@ -153,7 +160,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
                             
                             <InputField 
                                 icon={Mail} 
-                                type="email" 
+                                type="text" 
                                 placeholder="Email Address" 
                                 value={email}
                                 onChange={(e: any) => setEmail(e.target.value)}
@@ -166,6 +173,8 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
                                     placeholder="Password" 
                                     value={password}
                                     onChange={(e: any) => setPassword(e.target.value)}
+                                    showPassword={showPassword}
+                                    setShowPassword={setShowPassword}
                                 />
                                 {isLogin && (
                                     <div className="flex justify-end">

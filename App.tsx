@@ -10,8 +10,10 @@ import { Subscription } from './components/Subscription';
 import { WynxAI } from './components/WynxAI';
 import { MapRoutes } from './components/MapRoutes';
 import { Settings } from './components/Settings';
-import { Auth } from './components/Auth'; // Import the new Auth component
+import { Vehicles } from './components/Vehicles'; // Import Vehicles component
+import { Auth } from './components/Auth';
 import { ViewState } from './types';
+import { Toaster } from 'sonner';
 
 const PlaceholderView: React.FC<{ title: string }> = ({ title }) => (
     <div className="flex flex-col items-center justify-center h-full text-slate-400 py-20 animate-fade-in">
@@ -52,6 +54,8 @@ function App() {
             return <Bookings />;
         case ViewState.USERS:
             return <Users />;
+        case ViewState.VEHICLES:
+            return <Vehicles />; // Use the new component
         case ViewState.SUBSCRIPTIONS:
             return <Subscription />;
         case ViewState.WYNX_AI:
@@ -64,20 +68,24 @@ function App() {
             return <Support />;
         case ViewState.REVIEWS:
             return <Reviews />;
+        case ViewState.LOGS:
+            return <PlaceholderView title="System Audit Logs" />;
         default:
             return <PlaceholderView title={currentView} />;
     }
   };
 
-  if (!isAuthenticated) {
-      return <Auth onLogin={handleLogin} />;
-  }
-
   return (
-    // Pass logout handler if Layout supports it, or just use it here
-    <Layout currentView={currentView} setCurrentView={setCurrentView}>
-        {renderContent()}
-    </Layout>
+    <>
+      <Toaster position="top-center" richColors closeButton />
+      {!isAuthenticated ? (
+          <Auth onLogin={handleLogin} />
+      ) : (
+          <Layout currentView={currentView} setCurrentView={setCurrentView}>
+              {renderContent()}
+          </Layout>
+      )}
+    </>
   );
 }
 

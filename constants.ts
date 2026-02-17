@@ -1,6 +1,6 @@
 
 
-import { Station, Booking, User, ChartData, Review } from './types';
+import { Station, Booking, User, ChartData, Review, Vehicle } from './types';
 
 // Helper for dynamic dates
 const getDate = (daysAgo: number) => {
@@ -255,13 +255,118 @@ export const MOCK_USERS: User[] = [
         id: 'usr_7',
         name: 'Harvey Specter',
         email: 'h.specter@law.com',
-        role: 'Admin',
+        role: 'Admin', 
         status: 'Active',
         subscriptionPlan: 'Elite',
         avatar: 'https://i.pravatar.cc/150?u=harvey',
         lastLogin: getDate(0),
         joinDate: '2023-02-15',
         phoneNumber: '+63 917 777 6666'
+    }
+];
+
+export const MOCK_VEHICLES: Vehicle[] = [
+    {
+        id: 'vh_001',
+        ownerId: 'usr_1',
+        ownerName: 'Alex Johnson',
+        ownerAvatar: 'https://i.pravatar.cc/150?u=alex',
+        make: 'Tesla',
+        model: 'Model 3 Performance',
+        year: 2023,
+        color: 'Pearl White',
+        licensePlate: 'ABC 1234',
+        vin: '5YJ3E1EB4LF123456',
+        batteryLevel: 78,
+        batteryCapacity: 82,
+        range: 450,
+        status: 'Active',
+        lastSync: getDate(0) + 'T14:30:00'
+    },
+    {
+        id: 'vh_002',
+        ownerId: 'usr_2',
+        ownerName: 'Sarah Connor',
+        ownerAvatar: 'https://i.pravatar.cc/150?u=sarah',
+        make: 'Hyundai',
+        model: 'Ioniq 5',
+        year: 2022,
+        color: 'Gravity Gold',
+        licensePlate: 'XYZ 9876',
+        vin: 'KM8K1234567890123',
+        batteryLevel: 45,
+        batteryCapacity: 77.4,
+        range: 320,
+        status: 'Charging',
+        lastSync: getDate(0) + 'T10:15:00'
+    },
+    {
+        id: 'vh_003',
+        ownerId: 'usr_3',
+        ownerName: 'Michael Chen',
+        ownerAvatar: 'https://i.pravatar.cc/150?u=mike',
+        make: 'BYD',
+        model: 'Atto 3',
+        year: 2023,
+        color: 'Surf Blue',
+        licensePlate: 'NAA 5566',
+        vin: 'LC0CE123456789012',
+        batteryLevel: 12,
+        batteryCapacity: 60.4,
+        range: 50,
+        status: 'Offline',
+        lastSync: getDate(1) + 'T18:45:00'
+    },
+    {
+        id: 'vh_004',
+        ownerId: 'usr_5',
+        ownerName: 'David Kim',
+        ownerAvatar: 'https://i.pravatar.cc/150?u=david',
+        make: 'Kia',
+        model: 'EV6 GT-Line',
+        year: 2024,
+        color: 'Moonscape Matte',
+        licensePlate: 'DK 8888',
+        vin: 'KNACT123456789012',
+        batteryLevel: 92,
+        batteryCapacity: 77.4,
+        range: 480,
+        status: 'Active',
+        lastSync: getDate(0) + 'T09:00:00'
+    },
+    {
+        id: 'vh_005',
+        ownerId: 'usr_7',
+        ownerName: 'Harvey Specter',
+        ownerAvatar: 'https://i.pravatar.cc/150?u=harvey',
+        make: 'Porsche',
+        model: 'Taycan Turbo S',
+        year: 2023,
+        color: 'Jet Black Metallic',
+        licensePlate: 'LAW 1',
+        vin: 'WP0AA123456789012',
+        batteryLevel: 65,
+        batteryCapacity: 93.4,
+        range: 380,
+        status: 'Maintenance',
+        lastSync: getDate(2) + 'T11:20:00'
+    },
+    {
+        id: 'vh_006',
+        ownerId: 'usr_4',
+        ownerName: 'Emily Blunt',
+        ownerAvatar: 'https://i.pravatar.cc/150?u=emily',
+        make: 'Nissan',
+        model: 'Leaf',
+        year: 2021,
+        color: 'Silver',
+        licensePlate: 'NLE 2233',
+        vin: '1N4AZ123456789012',
+        batteryLevel: 25,
+        batteryCapacity: 40,
+        range: 150,
+        status: 'Offline',
+        lastSync: getDate(5) + 'T16:00:00'
     }
 ];
 

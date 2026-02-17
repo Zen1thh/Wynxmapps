@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ViewState } from '../types';
 import { 
-    LayoutDashboard, MapPin, Calendar, Users, MessageSquare, Settings, LogOut, Bell, Search, Menu, Star, CreditCard, Bot, Route, Cog
+    LayoutDashboard, MapPin, Calendar, Users, MessageSquare, Settings, LogOut, Bell, Search, Menu, Star, CreditCard, Bot, Route, Cog, Car, ScrollText
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -93,6 +93,12 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
                         active={currentView === ViewState.USERS}
                         onClick={() => { setCurrentView(ViewState.USERS); setSidebarOpen(false); }}
                     />
+                    <NavItem 
+                        icon={<Car size={18} />} 
+                        label="Vehicles" 
+                        active={currentView === ViewState.VEHICLES}
+                        onClick={() => { setCurrentView(ViewState.VEHICLES); setSidebarOpen(false); }}
+                    />
                      <NavItem 
                         icon={<CreditCard size={18} />} 
                         label="Subscription" 
@@ -117,6 +123,12 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
                         label="Support" 
                         active={currentView === ViewState.SUPPORT}
                         onClick={() => { setCurrentView(ViewState.SUPPORT); setSidebarOpen(false); }}
+                    />
+                    <NavItem 
+                        icon={<ScrollText size={18} />} 
+                        label="Logs" 
+                        active={currentView === ViewState.LOGS}
+                        onClick={() => { setCurrentView(ViewState.LOGS); setSidebarOpen(false); }}
                     />
                     <NavItem 
                         icon={<Cog size={18} />} 
