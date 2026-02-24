@@ -179,6 +179,30 @@ export const MOCK_USERS: User[] = [
         joinDate: '2023-01-15',
         phoneNumber: '+63 917 123 4567'
     },
+    {
+        id: 'usr_finance_1',
+        name: 'Louis Litt',
+        email: 'l.litt@finance.wynx.com',
+        role: 'Finance Admin',
+        status: 'Active',
+        subscriptionPlan: 'Free',
+        avatar: 'https://i.pravatar.cc/150?u=louis',
+        lastLogin: getDate(0),
+        joinDate: '2023-04-01',
+        phoneNumber: '+63 917 111 2222'
+    },
+    {
+        id: 'usr_cs_1',
+        name: 'Rachel Zane',
+        email: 'r.zane@support.wynx.com',
+        role: 'Customer Support',
+        status: 'Active',
+        subscriptionPlan: 'Free',
+        avatar: 'https://i.pravatar.cc/150?u=rachel',
+        lastLogin: getDate(0),
+        joinDate: '2023-06-10',
+        phoneNumber: '+63 917 333 4444'
+    },
     { 
         id: 'usr_1', 
         name: 'Alex Johnson', 

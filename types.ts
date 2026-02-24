@@ -52,7 +52,7 @@ export interface User {
     id: string;
     name: string;
     email: string;
-    role: 'Super Admin' | 'Admin' | 'Subscriber' | 'User';
+    role: 'Super Admin' | 'Admin' | 'Finance Admin' | 'Customer Support' | 'Subscriber' | 'User';
     status: 'Active' | 'Inactive' | 'Suspended';
     subscriptionPlan?: 'Free' | 'Basic' | 'Standard' | 'Deluxe' | 'Premium' | 'Elite' | 'Supreme';
     avatar?: string;

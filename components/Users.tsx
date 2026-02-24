@@ -11,7 +11,7 @@ import {
     User as UserIcon, Check, X, Mail, Phone, Calendar, Clock, 
     Loader2, Trash2, Edit2, AlertTriangle, ChevronRight, CheckCircle2,
     XCircle, Ban, History, CreditCard, ChevronLeft, ChevronRight as ChevronRightIcon,
-    Zap, Layers, ChevronDown, Power, PowerOff, Lock
+    Zap, Layers, ChevronDown, Power, PowerOff, Lock, Briefcase, Headphones
 } from 'lucide-react';
 
 // --- Components ---
@@ -215,6 +215,8 @@ export const Users: React.FC = () => {
         // Specific Counts for Tabs
         countSuperAdmin: users.filter(u => u.role === 'Super Admin').length,
         countAdmin: users.filter(u => u.role === 'Admin').length,
+        countFinanceAdmin: users.filter(u => u.role === 'Finance Admin').length,
+        countCustomerSupport: users.filter(u => u.role === 'Customer Support').length,
         countSubscriber: users.filter(u => u.role === 'Subscriber').length,
         countUser: users.filter(u => u.role === 'User').length
     }), [users]);
@@ -224,6 +226,8 @@ export const Users: React.FC = () => {
         { id: 'All', label: 'All Users', count: stats.total, icon: <Layers size={14} /> },
         { id: 'Super Admin', label: 'Super Admins', count: stats.countSuperAdmin, icon: <ShieldAlert size={14} /> },
         { id: 'Admin', label: 'Admins', count: stats.countAdmin, icon: <Shield size={14} /> },
+        { id: 'Finance Admin', label: 'Finance Admins', count: stats.countFinanceAdmin, icon: <Briefcase size={14} /> },
+        { id: 'Customer Support', label: 'Customer Support', count: stats.countCustomerSupport, icon: <Headphones size={14} /> },
         { id: 'Subscriber', label: 'Subscribers', count: stats.countSubscriber, icon: <Zap size={14} /> },
         { id: 'User', label: 'Regular Users', count: stats.countUser, icon: <UserIcon size={14} /> },
     ];
@@ -307,6 +311,18 @@ export const Users: React.FC = () => {
                 return (
                     <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
                         <Shield size={12} /> Admin
+                    </span>
+                );
+            case 'Finance Admin': 
+                return (
+                    <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+                        <Briefcase size={12} /> Finance Admin
+                    </span>
+                );
+            case 'Customer Support':
+                return (
+                    <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-pink-500/10 text-pink-600 dark:text-pink-400 border border-pink-500/20">
+                        <Headphones size={12} /> Customer Support
                     </span>
                 );
             case 'Subscriber': 
@@ -838,6 +854,8 @@ export const Users: React.FC = () => {
                                 <option value="User">User</option>
                                 <option value="Subscriber">Subscriber</option>
                                 <option value="Admin">Admin</option>
+                                <option value="Finance Admin">Finance Admin</option>
+                                <option value="Customer Support">Customer Support</option>
                                 <option value="Super Admin">Super Admin</option>
                             </select>
                         </div>
@@ -879,6 +897,8 @@ export const Users: React.FC = () => {
                                 <option value="User">User</option>
                                 <option value="Subscriber">Subscriber</option>
                                 <option value="Admin">Admin</option>
+                                <option value="Finance Admin">Finance Admin</option>
+                                <option value="Customer Support">Customer Support</option>
                                 <option value="Super Admin">Super Admin</option>
                             </select>
                         </div>
