@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Card } from './ui/Card';
 import { Modal } from './ui/Modal';
-import { MOCK_USERS } from '../constants';
+import { MOCK_USERS, SUBSCRIPTION_PLANS } from '../constants';
+import { SubscriptionPlan, PlanTier, PlanStatus } from '../types';
 import { 
     PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip,
     AreaChart, Area, XAxis, YAxis, CartesianGrid
@@ -20,27 +21,7 @@ import gsap from 'gsap';
 
 // --- Types ---
 
-type PlanTier = 'Free' | 'Basic' | 'Standard' | 'Deluxe' | 'Premium' | 'Elite' | 'Supreme' | string;
-type PlanStatus = 'Active' | 'Disabled' | 'Archived';
 type TransactionStatus = 'Completed' | 'Pending' | 'Failed' | 'Refunded';
-
-interface SubscriptionPlan {
-    id: string;
-    name: PlanTier;
-    price: number;      // Monthly price
-    yearlyPrice: number; // Yearly price
-    yearlySavingsText?: string; // Custom text for savings badge
-    kwhAllowance: number;
-    period: string;
-    activeUsers: number;
-    features: string[];
-    color: string;
-    accentColor: string;
-    icon: React.ReactNode;
-    isPopular?: boolean;
-    tag?: string; // Custom tag text (e.g. "Most Popular", "Best Value")
-    status: PlanStatus; 
-}
 
 interface SubscriptionTransaction {
     id: string;
@@ -67,116 +48,6 @@ interface GlobalSettings {
 
 // --- Mock Data ---
 
-const INITIAL_PLANS: SubscriptionPlan[] = [
-    {
-        id: 'free',
-        name: 'Free',
-        price: 0,
-        yearlyPrice: 0,
-        kwhAllowance: 0,
-        period: 'month',
-        activeUsers: 5420,
-        features: ['Browse all charging stations', 'View real-time availability', 'Basic route planning', 'Limited AI assistance'],
-        color: 'from-slate-700 to-slate-600',
-        accentColor: 'text-slate-200',
-        icon: <Zap size={20} />,
-        status: 'Active'
-    },
-    {
-        id: 'basic',
-        name: 'Basic',
-        price: 1300,
-        yearlyPrice: 14040,
-        yearlySavingsText: 'Save 10% with yearly billing',
-        kwhAllowance: 50,
-        period: 'month',
-        activeUsers: 2100,
-        features: ['50 kWh monthly allowance', 'Priority booking access', 'Advanced route planning', 'Full Wynx AI assistance', '24/7 customer support'],
-        color: 'from-blue-600 to-indigo-600',
-        accentColor: 'text-blue-100',
-        icon: <Zap size={20} />,
-        isPopular: true,
-        tag: 'Most Popular',
-        status: 'Active'
-    },
-    {
-        id: 'standard',
-        name: 'Standard',
-        price: 2500,
-        yearlyPrice: 27000,
-        yearlySavingsText: 'Save 10% with yearly billing',
-        kwhAllowance: 100,
-        period: 'month',
-        activeUsers: 1250,
-        features: ['100 kWh monthly allowance', 'Priority booking access', 'Advanced route planning', 'Full Wynx AI assistance', '24/7 customer support', 'Exclusive station access'],
-        color: 'from-cyan-600 to-blue-600',
-        accentColor: 'text-cyan-100',
-        icon: <Shield size={20} />,
-        status: 'Active'
-    },
-    {
-        id: 'deluxe',
-        name: 'Deluxe',
-        price: 3600,
-        yearlyPrice: 38880,
-        yearlySavingsText: 'Save 10% with yearly billing',
-        kwhAllowance: 150,
-        period: 'month',
-        activeUsers: 840,
-        features: ['150 kWh monthly allowance', 'Priority booking access', 'Advanced route planning', 'Full Wynx AI assistance', '24/7 customer support', 'Exclusive station access'],
-        color: 'from-indigo-600 to-purple-600',
-        accentColor: 'text-indigo-100',
-        icon: <Shield size={20} />,
-        tag: 'Best Value',
-        status: 'Active'
-    },
-    {
-        id: 'premium',
-        name: 'Premium',
-        price: 4600,
-        yearlyPrice: 49680,
-        yearlySavingsText: 'Save 10% with yearly billing',
-        kwhAllowance: 200,
-        period: 'month',
-        activeUsers: 620,
-        features: ['200 kWh monthly allowance', 'Priority booking access', 'Advanced route planning', 'Full Wynx AI assistance', '24/7 customer support', 'Exclusive station access', 'Free valet charging', 'Premium lounge access'],
-        color: 'from-purple-600 to-fuchsia-600',
-        accentColor: 'text-purple-100',
-        icon: <Crown size={20} />,
-        status: 'Active'
-    },
-    {
-        id: 'elite',
-        name: 'Elite',
-        price: 5500,
-        yearlyPrice: 59400,
-        yearlySavingsText: 'Save 10% with yearly billing',
-        kwhAllowance: 250,
-        period: 'month',
-        activeUsers: 310,
-        features: ['250 kWh monthly allowance', 'Priority booking access', 'Advanced route planning', 'Full Wynx AI assistance', '24/7 customer support', 'Exclusive station access', 'Free valet charging', 'Premium lounge access'],
-        color: 'from-amber-500 to-orange-600',
-        accentColor: 'text-amber-100',
-        icon: <Crown size={20} />,
-        status: 'Active'
-    },
-    {
-        id: 'supreme',
-        name: 'Supreme',
-        price: 6300,
-        yearlyPrice: 68040,
-        yearlySavingsText: 'Save 10% with yearly billing',
-        kwhAllowance: 300,
-        period: 'month',
-        activeUsers: 150,
-        features: ['300 kWh monthly allowance', 'Priority booking access', 'Advanced route planning', 'Full Wynx AI assistance', '24/7 customer support', 'Exclusive station access', 'Free valet charging', 'Premium lounge access', 'Concierge service', 'Vehicle maintenance perks'],
-        color: 'from-rose-500 to-pink-600',
-        accentColor: 'text-rose-100',
-        icon: <Crown size={20} />,
-        status: 'Active'
-    }
-];
-
 const REVENUE_DATA = [
     { name: 'Mon', revenue: 125000 },
     { name: 'Tue', revenue: 145000 },
@@ -201,7 +72,7 @@ const THEMES = [
 const generateMockTransactions = (): SubscriptionTransaction[] => {
     return Array.from({ length: 350 }).map((_, i) => { // Increased to 350 for better pagination demo
         const user = MOCK_USERS[i % MOCK_USERS.length];
-        const plan = INITIAL_PLANS[Math.floor(Math.random() * INITIAL_PLANS.length)];
+        const plan = SUBSCRIPTION_PLANS[Math.floor(Math.random() * SUBSCRIPTION_PLANS.length)];
         const isYearly = Math.random() > 0.8;
         const statusPool: TransactionStatus[] = ['Completed', 'Completed', 'Completed', 'Pending', 'Failed'];
         
@@ -310,7 +181,7 @@ export const Subscription: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'overview' | 'transactions'>('overview');
     
     // Data State
-    const [plans, setPlans] = useState<SubscriptionPlan[]>(INITIAL_PLANS);
+    const [plans, setPlans] = useState<SubscriptionPlan[]>(SUBSCRIPTION_PLANS);
     const [transactions, setTransactions] = useState<SubscriptionTransaction[]>(MOCK_TRANSACTIONS);
     
     // Modal State

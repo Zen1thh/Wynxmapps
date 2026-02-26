@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Card } from './ui/Card';
-import { REVENUE_DATA, STATION_USAGE_DATA, MOCK_STATIONS } from '../constants';
+import { REVENUE_DATA, STATION_USAGE_DATA, MOCK_STATIONS, MOCK_USERS, SUBSCRIPTION_PLANS } from '../constants';
 import { 
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
-    BarChart, Bar
+    BarChart, Bar, Legend
 } from 'recharts';
-import { Zap, Users, BatteryCharging, DollarSign, ArrowUpRight, Sun, MapPin } from 'lucide-react';
+import { Zap, Users, BatteryCharging, DollarSign, ArrowUpRight, Sun, MapPin, Wrench, AlertOctagon, Download, Crown } from 'lucide-react';
 import gsap from 'gsap';
 
 const StatCard: React.FC<{
@@ -135,6 +135,7 @@ export const Dashboard: React.FC = () => {
                                     name
                                 ]}
                             />
+                            <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
                             <Area type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" name="Revenue" />
                             <Area type="monotone" dataKey="value2" stroke="#06b6d4" strokeWidth={3} fillOpacity={1} fill="url(#colorValue2)" name="Energy (kWh)" />
                         </AreaChart>
@@ -174,47 +175,119 @@ export const Dashboard: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
-                <Card title="Nearby Active Stations" subtitle="Stations with highest availability">
-                    <div className="space-y-4 mt-2">
-                        {MOCK_STATIONS.slice(0, 3).map((station) => (
-                            <div key={station.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-white/5">
-                                <div className="flex items-center gap-4">
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                                        station.status === 'Online' ? 'bg-emerald-500/20 text-emerald-500 dark:text-emerald-400' : 'bg-red-500/20 text-red-500 dark:text-red-400'
-                                    }`}>
-                                        <MapPin size={20} />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-medium text-slate-900 dark:text-white">{station.name}</h4>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400">{station.location} • {station.power}</p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <span className="text-sm font-bold text-slate-900 dark:text-white">{station.availableSlots}/{station.totalSlots}</span>
-                                    <p className="text-xs text-slate-500">Slots Open</p>
-                                </div>
+                <Card title="Total Active Stations" subtitle="Overview of all station statuses">
+                    <div className="grid grid-cols-3 gap-4 mt-4">
+                        <div className="bg-emerald-50 dark:bg-emerald-500/10 p-4 rounded-xl border border-emerald-100 dark:border-emerald-500/20 flex flex-col items-center justify-center text-center">
+                            <div className="p-2 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 mb-2">
+                                <Zap size={20} />
                             </div>
-                        ))}
+                            <span className="text-2xl font-bold text-slate-900 dark:text-white">
+                                {MOCK_STATIONS.filter(s => s.status === 'Online').length}
+                            </span>
+                            <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">Active</span>
+                        </div>
+
+                        <div className="bg-amber-50 dark:bg-amber-500/10 p-4 rounded-xl border border-amber-100 dark:border-amber-500/20 flex flex-col items-center justify-center text-center">
+                            <div className="p-2 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 mb-2">
+                                <Wrench size={20} />
+                            </div>
+                            <span className="text-2xl font-bold text-slate-900 dark:text-white">
+                                {MOCK_STATIONS.filter(s => s.status === 'Maintenance').length}
+                            </span>
+                            <span className="text-xs font-medium text-amber-600 dark:text-amber-400 uppercase tracking-wide">Maintenance</span>
+                        </div>
+
+                        <div className="bg-rose-50 dark:bg-rose-500/10 p-4 rounded-xl border border-rose-100 dark:border-rose-500/20 flex flex-col items-center justify-center text-center">
+                            <div className="p-2 rounded-full bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 mb-2">
+                                <AlertOctagon size={20} />
+                            </div>
+                            <span className="text-2xl font-bold text-slate-900 dark:text-white">
+                                {MOCK_STATIONS.filter(s => s.status === 'Offline' || s.status === 'Error').length}
+                            </span>
+                            <span className="text-xs font-medium text-rose-600 dark:text-rose-400 uppercase tracking-wide">Inactive</span>
+                        </div>
+                    </div>
+                    
+                    <div className="mt-6 space-y-3">
+                        <div className="flex justify-between items-center text-sm">
+                            <span className="text-slate-500 dark:text-slate-400">Total Stations</span>
+                            <span className="font-bold text-slate-900 dark:text-white">{MOCK_STATIONS.length}</span>
+                        </div>
+                        <div className="w-full bg-slate-100 dark:bg-slate-700/50 rounded-full h-2 overflow-hidden flex">
+                            <div 
+                                className="bg-emerald-500 h-full" 
+                                style={{ width: `${(MOCK_STATIONS.filter(s => s.status === 'Online').length / MOCK_STATIONS.length) * 100}%` }}
+                            ></div>
+                            <div 
+                                className="bg-amber-500 h-full" 
+                                style={{ width: `${(MOCK_STATIONS.filter(s => s.status === 'Maintenance').length / MOCK_STATIONS.length) * 100}%` }}
+                            ></div>
+                            <div 
+                                className="bg-rose-500 h-full" 
+                                style={{ width: `${(MOCK_STATIONS.filter(s => s.status === 'Offline' || s.status === 'Error').length / MOCK_STATIONS.length) * 100}%` }}
+                            ></div>
+                        </div>
+                        <div className="flex justify-between text-xs text-slate-400">
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-2 h-2 rounded-full bg-emerald-500"></div> Active
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-2 h-2 rounded-full bg-amber-500"></div> Maint.
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-2 h-2 rounded-full bg-rose-500"></div> Inactive
+                            </div>
+                        </div>
                     </div>
                 </Card>
 
-                <Card title="Recent Activity" subtitle="Real-time system events">
-                    <div className="space-y-6 mt-4 relative pl-4 border-l border-slate-200 dark:border-slate-700 ml-2">
-                         <div className="relative">
-                            <div className="absolute -left-[25px] top-1 w-4 h-4 rounded-full bg-blue-500 border-2 border-white dark:border-slate-900"></div>
-                            <p className="text-sm text-slate-600 dark:text-slate-300">New station <span className="text-slate-900 dark:text-white font-medium">EcoPark Plaza</span> approved by Admin.</p>
-                            <span className="text-xs text-slate-500 block mt-1">20 minutes ago</span>
-                         </div>
-                         <div className="relative">
-                            <div className="absolute -left-[25px] top-1 w-4 h-4 rounded-full bg-indigo-500 border-2 border-white dark:border-slate-900"></div>
-                            <p className="text-sm text-slate-600 dark:text-slate-300">User <span className="text-slate-900 dark:text-white font-medium">Alex Johnson</span> subscribed to SolarElite plan.</p>
-                            <span className="text-xs text-slate-500 block mt-1">2 hours ago</span>
-                         </div>
-                         <div className="relative">
-                            <div className="absolute -left-[25px] top-1 w-4 h-4 rounded-full bg-red-500 border-2 border-white dark:border-slate-900"></div>
-                            <p className="text-sm text-slate-600 dark:text-slate-300">Station <span className="text-slate-900 dark:text-white font-medium">GreenLife Mall</span> reported offline.</p>
-                            <span className="text-xs text-slate-500 block mt-1">5 hours ago</span>
-                         </div>
+                <Card title="Total Downloads & Subscriptions" subtitle="User growth and plan adoption">
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                        <div className="flex flex-col items-center justify-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-500/20 text-center">
+                            <div className="p-3 bg-blue-500 text-white rounded-full shadow-lg shadow-blue-500/30 mb-3">
+                                <Download size={24} />
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">12,450</h3>
+                            <p className="text-xs text-blue-600 dark:text-blue-400 font-medium uppercase tracking-wide">App Downloads</p>
+                        </div>
+                        <div className="flex flex-col items-center justify-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-100 dark:border-purple-500/20 text-center">
+                            <div className="p-3 bg-purple-500 text-white rounded-full shadow-lg shadow-purple-500/30 mb-3">
+                                <Crown size={24} />
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+                                {SUBSCRIPTION_PLANS.reduce((acc, plan) => acc + plan.activeUsers, 0).toLocaleString()}
+                            </h3>
+                            <p className="text-xs text-purple-600 dark:text-purple-400 font-medium uppercase tracking-wide">Total Subscribers</p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <h4 className="text-sm font-semibold text-slate-900 dark:text-white uppercase tracking-wider">Recent Subscribers</h4>
+                        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                            {MOCK_USERS.slice(0, 5).map((user) => (
+                                <div key={user.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5 hover:border-blue-200 dark:hover:border-blue-500/30 transition-colors">
+                                    <div className="flex items-center gap-3">
+                                        <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-slate-700" />
+                                        <div>
+                                            <p className="font-semibold text-slate-900 dark:text-white text-sm">{user.name}</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400">{user.email}</p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-bold ${
+                                            user.subscriptionPlan === 'Free' ? 'bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300' :
+                                            user.subscriptionPlan === 'Basic' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' :
+                                            user.subscriptionPlan === 'Standard' ? 'bg-cyan-100 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400' :
+                                            user.subscriptionPlan === 'Premium' ? 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400' :
+                                            'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400'
+                                        }`}>
+                                            {user.subscriptionPlan}
+                                        </span>
+                                        <p className="text-[10px] text-slate-400 mt-1">{user.joinDate}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </Card>
             </div>

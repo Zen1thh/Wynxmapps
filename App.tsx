@@ -11,6 +11,7 @@ import { WynxAI } from './components/WynxAI';
 import { MapRoutes } from './components/MapRoutes';
 import { Settings } from './components/Settings';
 import { Vehicles } from './components/Vehicles'; // Import Vehicles component
+import { Logs } from './components/Logs'; // Import Logs component
 import { Auth } from './components/Auth';
 import { ViewState } from './types';
 import { Toaster } from 'sonner';
@@ -69,7 +70,7 @@ function App() {
         case ViewState.REVIEWS:
             return <Reviews />;
         case ViewState.LOGS:
-            return <PlaceholderView title="System Audit Logs" />;
+            return <Logs />;
         default:
             return <PlaceholderView title={currentView} />;
     }

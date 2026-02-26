@@ -112,3 +112,24 @@ export enum ViewState {
     LOGS = 'LOGS',
     SETTINGS = 'SETTINGS'
 }
+
+export type PlanTier = 'Free' | 'Basic' | 'Standard' | 'Deluxe' | 'Premium' | 'Elite' | 'Supreme' | string;
+export type PlanStatus = 'Active' | 'Disabled' | 'Archived';
+
+export interface SubscriptionPlan {
+    id: string;
+    name: PlanTier;
+    price: number;      // Monthly price
+    yearlyPrice: number; // Yearly price
+    yearlySavingsText?: string; // Custom text for savings badge
+    kwhAllowance: number;
+    period: string;
+    activeUsers: number;
+    features: string[];
+    color: string;
+    accentColor: string;
+    icon: any; // React.ReactNode
+    isPopular?: boolean;
+    tag?: string; // Custom tag text (e.g. "Most Popular", "Best Value")
+    status: PlanStatus; 
+}

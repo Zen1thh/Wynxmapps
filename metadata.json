@@ -1,5 +1,5 @@
 {
-  "name": "Wynxsmapp Admin",
+  "name": "Remix: Wynxsmapp Admin",
   "description": "Admin dashboard for Wynxsmapp EV charging management system featuring solar station monitoring, booking management, and support.",
   "requestFramePermissions": [
     "geolocation"
