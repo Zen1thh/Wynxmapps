@@ -54,6 +54,7 @@ export interface User {
     email: string;
     role: 'Super Admin' | 'Admin' | 'Finance Admin' | 'Customer Support' | 'Subscriber' | 'User';
     status: 'Active' | 'Inactive' | 'Suspended';
+    isOnline?: boolean;
     subscriptionPlan?: 'Free' | 'Basic' | 'Standard' | 'Deluxe' | 'Premium' | 'Elite' | 'Supreme';
     avatar?: string;
     lastLogin: string;

@@ -3,7 +3,7 @@ import { Card } from './ui/Card';
 import { Modal } from './ui/Modal';
 import { MOCK_STATIONS } from '../constants';
 import { Station } from '../types';
-import { Battery, Zap, Edit, Trash2, Search, Map as MapIcon, LayoutGrid, Layers, Sun, Moon, Satellite, MapPin, Navigation, Crosshair, Check, X, AlertCircle, AlertTriangle, Star, AlertOctagon, Calendar, Wrench } from 'lucide-react';
+import { Battery, Zap, Edit, Trash2, Search, Map as MapIcon, LayoutGrid, Layers, Sun, Moon, Satellite, MapPin, Navigation, Crosshair, Check, X, AlertCircle, AlertTriangle, Star, AlertOctagon, Calendar, Wrench, PowerOff } from 'lucide-react';
 import gsap from 'gsap';
 import L from 'leaflet';
 
@@ -777,7 +777,41 @@ export const Stations: React.FC = () => {
                         ))}
                     </div>
                 ) : (
-                    <div className="w-full h-[600px] rounded-2xl overflow-hidden glass-panel border border-slate-200 dark:border-white/10 flex flex-col md:flex-row relative">
+                    <>
+                        <Card className="mb-6 !p-0 overflow-hidden border-none shadow-lg">
+                             <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-white/5">
+                                <div className="p-6 flex items-center justify-between bg-emerald-50/50 dark:bg-emerald-900/10">
+                                    <div>
+                                        <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400 mb-1">Online Stations</p>
+                                        <h3 className="text-3xl font-bold text-emerald-700 dark:text-emerald-300">{stations.filter(s => s.status === 'Online').length}</h3>
+                                    </div>
+                                    <div className="p-3 bg-emerald-100 dark:bg-emerald-500/20 rounded-xl text-emerald-600 dark:text-emerald-400">
+                                        <Zap size={24} />
+                                    </div>
+                                </div>
+
+                                <div className="p-6 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/10">
+                                    <div>
+                                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Offline Stations</p>
+                                        <h3 className="text-3xl font-bold text-slate-700 dark:text-slate-200">{stations.filter(s => s.status === 'Offline').length}</h3>
+                                    </div>
+                                    <div className="p-3 bg-slate-100 dark:bg-slate-700/50 rounded-xl text-slate-500 dark:text-slate-400">
+                                        <PowerOff size={24} />
+                                    </div>
+                                </div>
+
+                                <div className="p-6 flex items-center justify-between bg-blue-50/50 dark:bg-blue-900/10">
+                                    <div>
+                                        <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-1">Available Stations</p>
+                                        <h3 className="text-3xl font-bold text-blue-700 dark:text-blue-300">{stations.filter(s => s.status === 'Online' && s.availableSlots > 0).length}</h3>
+                                    </div>
+                                    <div className="p-3 bg-blue-100 dark:bg-blue-500/20 rounded-xl text-blue-600 dark:text-blue-400">
+                                        <MapPin size={24} />
+                                    </div>
+                                </div>
+                             </div>
+                        </Card>
+                        <div className="w-full h-[600px] rounded-2xl overflow-hidden glass-panel border border-slate-200 dark:border-white/10 flex flex-col md:flex-row relative">
                         {/* Map Area */}
                         <div className="relative flex-1 h-full order-2 md:order-1 group">
                             <div ref={mapRef} className="w-full h-full z-0 bg-slate-100 dark:bg-[#0f172a]"></div>
@@ -957,6 +991,7 @@ export const Stations: React.FC = () => {
                             </div>
                         </div>
                     </div>
+                    </>
                 )}
             </div>
 

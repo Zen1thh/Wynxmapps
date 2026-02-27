@@ -211,6 +211,7 @@ export const Users: React.FC = () => {
         active: users.filter(u => u.status === 'Active').length,
         admins: users.filter(u => u.role.includes('Admin')).length,
         subscribers: users.filter(u => u.role === 'Subscriber').length,
+        onlineUsers: users.filter(u => u.isOnline && (u.role === 'Subscriber' || u.role === 'User')).length,
         
         // Specific Counts for Tabs
         countSuperAdmin: users.filter(u => u.role === 'Super Admin').length,
@@ -242,6 +243,7 @@ export const Users: React.FC = () => {
             email: newUserForm.email,
             role: newUserForm.role as any,
             status: 'Active',
+            isOnline: false,
             subscriptionPlan: newUserForm.plan as any,
             avatar: `https://i.pravatar.cc/150?u=${Date.now()}`,
             lastLogin: 'Never',
@@ -361,12 +363,15 @@ export const Users: React.FC = () => {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                 <div className="stat-card">
                     <StatCard label="Total Users" value={stats.total.toLocaleString()} trend="12%" trendUp={true} icon={<UserIcon size={20} />} color="text-primary dark:text-blue-400" />
                 </div>
                 <div className="stat-card">
                     <StatCard label="Active Subscribers" value={stats.subscribers.toLocaleString()} trend="5.4%" trendUp={true} icon={<CreditCard size={20} />} color="text-emerald-500 dark:text-emerald-400" />
+                </div>
+                <div className="stat-card">
+                    <StatCard label="Online Users" value={stats.onlineUsers.toLocaleString()} trend="Now" trendUp={true} icon={<Zap size={20} />} color="text-yellow-500 dark:text-yellow-400" />
                 </div>
                 <div className="stat-card">
                     <StatCard label="Admins" value={stats.admins.toLocaleString()} trend="0%" trendUp={true} icon={<Shield size={20} />} color="text-indigo-500 dark:text-indigo-400" />
@@ -527,7 +532,7 @@ export const Users: React.FC = () => {
                                                             {user.name.charAt(0)}
                                                         </div>
                                                     )}
-                                                    <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-[#0f172a] ${user.status === 'Active' ? 'bg-emerald-500' : 'bg-slate-500'}`}></div>
+                                                    <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-[#0f172a] ${user.isOnline ? 'bg-emerald-500' : 'bg-slate-400'}`}></div>
                                                 </div>
                                                 <div>
                                                     <div className="text-slate-900 dark:text-white font-bold text-sm group-hover:text-primary dark:group-hover:text-blue-400 transition-colors">{user.name}</div>
@@ -538,11 +543,21 @@ export const Users: React.FC = () => {
                                         <td className="px-6 py-4">
                                             <div className="flex flex-col items-start gap-1.5">
                                                 {getRoleBadge(user.role)}
-                                                {user.status === 'Inactive' && (
-                                                     <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wide flex items-center gap-1 border border-slate-200 dark:border-slate-600 px-1.5 rounded bg-slate-100 dark:bg-slate-800">
-                                                        <PowerOff size={10} /> Deactivated
-                                                     </span>
-                                                )}
+                                                <div className="flex flex-wrap gap-1.5">
+                                                    <span className={`text-[10px] font-bold uppercase tracking-wide flex items-center gap-1 border px-1.5 py-0.5 rounded ${
+                                                        user.isOnline 
+                                                        ? 'text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10' 
+                                                        : 'text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-600 bg-slate-100 dark:bg-slate-800'
+                                                    }`}>
+                                                        <div className={`w-1.5 h-1.5 rounded-full ${user.isOnline ? 'bg-emerald-500' : 'bg-slate-400'}`}></div>
+                                                        {user.isOnline ? 'Online' : 'Offline'}
+                                                    </span>
+                                                    {user.status === 'Inactive' && (
+                                                         <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wide flex items-center gap-1 border border-slate-200 dark:border-slate-600 px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
+                                                            <PowerOff size={10} /> Deactivated
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
