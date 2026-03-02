@@ -5,7 +5,7 @@ import { MOCK_USERS, SUBSCRIPTION_PLANS } from '../constants';
 import { SubscriptionPlan, PlanTier, PlanStatus } from '../types';
 import { 
     PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip,
-    AreaChart, Area, XAxis, YAxis, CartesianGrid
+    AreaChart, Area, XAxis, YAxis, CartesianGrid, Legend
 } from 'recharts';
 import { 
     Check, Crown, Zap, Plus, CreditCard, Shield, Users, 
@@ -49,13 +49,13 @@ interface GlobalSettings {
 // --- Mock Data ---
 
 const REVENUE_DATA = [
-    { name: 'Mon', revenue: 125000 },
-    { name: 'Tue', revenue: 145000 },
-    { name: 'Wed', revenue: 135000 },
-    { name: 'Thu', revenue: 180000 },
-    { name: 'Fri', revenue: 210000 },
-    { name: 'Sat', revenue: 250000 },
-    { name: 'Sun', revenue: 230000 },
+    { name: 'Mon', revenue: 125000, prepaidUsers: 450, subscriptionUsers: 320 },
+    { name: 'Tue', revenue: 145000, prepaidUsers: 520, subscriptionUsers: 340 },
+    { name: 'Wed', revenue: 135000, prepaidUsers: 480, subscriptionUsers: 330 },
+    { name: 'Thu', revenue: 180000, prepaidUsers: 600, subscriptionUsers: 380 },
+    { name: 'Fri', revenue: 210000, prepaidUsers: 750, subscriptionUsers: 420 },
+    { name: 'Sat', revenue: 250000, prepaidUsers: 890, subscriptionUsers: 450 },
+    { name: 'Sun', revenue: 230000, prepaidUsers: 820, subscriptionUsers: 440 },
 ];
 
 const THEMES = [
@@ -346,7 +346,7 @@ export const Subscription: React.FC = () => {
 
     // Calculate Distribution Data with Dynamic Variance per Date Filter
     const distributionData = useMemo(() => {
-        return plans.map((plan, index) => {
+        const data = plans.map((plan, index) => {
             let variance = 1.0;
             if (dateRangeLabel === 'Today') {
                 variance = index < 2 ? 1.4 : 0.7; 
@@ -371,9 +371,21 @@ export const Subscription: React.FC = () => {
                        plan.color.includes('rose') ? '#f43f5e' : '#94a3b8'
             };
         });
+
+        const totalPlanUsers = data.reduce((sum, d) => sum + d.value, 0);
+        const prepaidValue = Math.floor(totalPlanUsers * 1.8);
+        
+        data.push({
+            name: 'Prepaid Users',
+            value: prepaidValue,
+            color: '#10b981'
+        });
+
+        return data;
     }, [plans, statsMultiplier, dateRangeLabel]);
 
-    const displayTotalSubscribers = useMemo(() => distributionData.reduce((sum, d) => sum + d.value, 0), [distributionData]);
+    const displayTotalUsers = useMemo(() => distributionData.reduce((sum, d) => sum + d.value, 0), [distributionData]);
+    const displayTotalSubscribers = useMemo(() => distributionData.filter(d => d.name !== 'Prepaid Users').reduce((sum, d) => sum + d.value, 0), [distributionData]);
     const displayRevenue = useMemo(() => totalMRR * statsMultiplier, [totalMRR, statsMultiplier]);
 
     // Initial Animation
@@ -755,22 +767,39 @@ export const Subscription: React.FC = () => {
                                             <stop offset="5%" stopColor="#153385" stopOpacity={0.8}/>
                                             <stop offset="95%" stopColor="#153385" stopOpacity={0}/>
                                         </linearGradient>
+                                        <linearGradient id="colorPrepaid" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
+                                            <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                                        </linearGradient>
+                                        <linearGradient id="colorSub" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8}/>
+                                            <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+                                        </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(148, 163, 184, 0.1)" className="dark:stroke-white/5" />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
-                                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} tickFormatter={(value) => `₱${value/1000}k`} />
+                                    <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} tickFormatter={(value) => `₱${value/1000}k`} />
+                                    <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
                                     <RechartsTooltip 
                                         contentStyle={{ backgroundColor: '#fff', borderColor: '#e2e8f0', color: '#0f172a', borderRadius: '12px' }} 
                                         itemStyle={{ color: '#0f172a' }}
                                         wrapperClassName="dark:!bg-slate-800 dark:!border-slate-700 dark:!text-white"
-                                        formatter={(value: number) => [formatCurrency(value), 'Revenue']}
+                                        formatter={(value: number, name: string) => {
+                                            if (name === 'revenue') return [formatCurrency(value), 'Revenue'];
+                                            if (name === 'prepaidUsers') return [value, 'Prepaid Users'];
+                                            if (name === 'subscriptionUsers') return [value, 'Subscription Users'];
+                                            return [value, name];
+                                        }}
                                     />
-                                    <Area type="monotone" dataKey="revenue" stroke="#153385" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
+                                    <Legend verticalAlign="top" height={36} iconType="circle" />
+                                    <Area yAxisId="left" type="monotone" dataKey="revenue" name="Revenue" stroke="#153385" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
+                                    <Area yAxisId="right" type="monotone" dataKey="prepaidUsers" name="Prepaid Users" stroke="#10b981" strokeWidth={3} fillOpacity={0.6} fill="url(#colorPrepaid)" />
+                                    <Area yAxisId="right" type="monotone" dataKey="subscriptionUsers" name="Subscription Users" stroke="#f59e0b" strokeWidth={3} fillOpacity={0.6} fill="url(#colorSub)" />
                                 </AreaChart>
                             </ResponsiveContainer>
                         </Card>
 
-                        <Card className="h-[400px]" title="Distribution" subtitle="Subscribers by plan tier">
+                        <Card className="h-[400px]" title="Distribution" subtitle="Users by plan tier and prepaid">
                             <div className="flex flex-col h-full">
                                 <div className="flex-1 min-h-0 relative">
                                     <ResponsiveContainer width="100%" height="100%">
@@ -779,8 +808,8 @@ export const Subscription: React.FC = () => {
                                                 data={distributionData}
                                                 cx="50%"
                                                 cy="50%"
-                                                innerRadius={50}
-                                                outerRadius={70}
+                                                innerRadius={45}
+                                                outerRadius={65}
                                                 paddingAngle={5}
                                                 dataKey="value"
                                                 animationDuration={800} 
@@ -792,7 +821,7 @@ export const Subscription: React.FC = () => {
                                             </Pie>
                                             <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle">
                                                 <tspan x="50%" dy="-0.6em" className="fill-slate-500 dark:fill-slate-400 text-[10px] font-bold uppercase tracking-widest">Total</tspan>
-                                                <tspan x="50%" dy="1.6em" className="fill-slate-900 dark:fill-white text-lg font-bold font-mono">{displayTotalSubscribers.toLocaleString()}</tspan>
+                                                <tspan x="50%" dy="1.6em" className="fill-slate-900 dark:fill-white text-lg font-bold font-mono">{displayTotalUsers.toLocaleString()}</tspan>
                                             </text>
                                             <RechartsTooltip 
                                                 contentStyle={{ backgroundColor: '#fff', borderColor: '#e2e8f0', color: '#0f172a', borderRadius: '12px' }}
@@ -805,7 +834,7 @@ export const Subscription: React.FC = () => {
                                 
                                 <div className="flex flex-col gap-1 mt-4 max-h-[140px] overflow-y-auto custom-scrollbar pr-2 border-t border-slate-200 dark:border-white/5 pt-4">
                                     {distributionData.map((entry, index) => {
-                                        const percentage = displayTotalSubscribers > 0 ? ((entry.value / displayTotalSubscribers) * 100).toFixed(1) : '0.0';
+                                        const percentage = displayTotalUsers > 0 ? ((entry.value / displayTotalUsers) * 100).toFixed(1) : '0.0';
                                         return (
                                             <div key={`legend-${index}`} className="flex items-center justify-between p-1.5 hover:bg-slate-50 dark:hover:bg-white/5 rounded-lg transition-colors group">
                                                 <div className="flex items-center gap-2">
