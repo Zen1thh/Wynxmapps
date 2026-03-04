@@ -47,14 +47,12 @@ const InputField = ({
 );
 
 export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
-    const [isLogin, setIsLogin] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     // Form States
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -63,20 +61,12 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
         // Simulate API call
         setTimeout(() => {
             setIsLoading(false);
-            toast.success(isLogin ? "Welcome back, Admin!" : "Account created successfully!", {
+            toast.success("Welcome back, Admin!", {
                 description: "You have successfully signed in to Wynxsmapp Admin.",
                 duration: 3000,
             });
             onLogin();
         }, 1500);
-    };
-
-    const toggleMode = () => {
-        setIsLogin(!isLogin);
-        // Reset form
-        setEmail('');
-        setPassword('');
-        setName('');
     };
 
     return (
@@ -131,16 +121,16 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
 
                     <div className="space-y-2">
                         <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-                            {isLogin ? 'Welcome back' : 'Create an account'}
+                            Welcome back
                         </h2>
                         <p className="text-slate-500 dark:text-slate-400">
-                            {isLogin ? 'Enter your details to access your admin panel.' : 'Get started with a 14-day free trial.'}
+                            Enter your details to access your admin panel.
                         </p>
                     </div>
 
                     <AnimatePresence mode="wait">
                         <motion.form
-                            key={isLogin ? 'login' : 'register'}
+                            key="login"
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
@@ -148,16 +138,6 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
                             onSubmit={handleSubmit}
                             className="space-y-5"
                         >
-                            {!isLogin && (
-                                <InputField 
-                                    icon={User} 
-                                    type="text" 
-                                    placeholder="Full Name" 
-                                    value={name}
-                                    onChange={(e: any) => setName(e.target.value)}
-                                />
-                            )}
-                            
                             <InputField 
                                 icon={Mail} 
                                 type="text" 
@@ -176,13 +156,11 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
                                     showPassword={showPassword}
                                     setShowPassword={setShowPassword}
                                 />
-                                {isLogin && (
-                                    <div className="flex justify-end">
-                                        <button type="button" className="text-xs font-bold text-primary dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
-                                            Forgot password?
-                                        </button>
-                                    </div>
-                                )}
+                                <div className="flex justify-end">
+                                    <button type="button" className="text-xs font-bold text-primary dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
+                                        Forgot password?
+                                    </button>
+                                </div>
                             </div>
 
                             <button
@@ -194,25 +172,13 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
                                     <Loader2 size={18} className="animate-spin" />
                                 ) : (
                                     <>
-                                        {isLogin ? 'Sign In' : 'Create Account'}
+                                        Sign In
                                         <ArrowRight size={18} />
                                     </>
                                 )}
                             </button>
                         </motion.form>
                     </AnimatePresence>
-
-                    <div className="text-center pt-2">
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                            {isLogin ? "Don't have an account?" : "Already have an account?"}
-                            <button 
-                                onClick={toggleMode}
-                                className="ml-1.5 font-bold text-primary dark:text-blue-400 hover:underline focus:outline-none"
-                            >
-                                {isLogin ? 'Sign up' : 'Log in'}
-                            </button>
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>

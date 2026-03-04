@@ -82,7 +82,7 @@ function App() {
       {!isAuthenticated ? (
           <Auth onLogin={handleLogin} />
       ) : (
-          <Layout currentView={currentView} setCurrentView={setCurrentView}>
+          <Layout currentView={currentView} setCurrentView={setCurrentView} onLogout={handleLogout}>
               {renderContent()}
           </Layout>
       )}
