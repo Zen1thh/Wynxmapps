@@ -1,6 +1,6 @@
 
 
-import { Station, Booking, User, ChartData, Review, Vehicle, SubscriptionPlan } from './types';
+import { Station, Booking, User, ChartData, Review, Vehicle, SubscriptionPlan, Employee } from './types';
 import { Zap, Shield, Crown } from 'lucide-react';
 import React from 'react';
 
@@ -10,6 +10,117 @@ const getDate = (daysAgo: number) => {
     date.setDate(date.getDate() - daysAgo);
     return date.toISOString().split('T')[0];
 };
+
+export const MOCK_EMPLOYEES: Employee[] = [
+    {
+        id: 'emp_001',
+        name: 'John Doe',
+        role: 'Field Technician',
+        avatar: 'https://i.pravatar.cc/150?u=john',
+        status: 'Active',
+        currentLocation: {
+            lat: 14.5547,
+            lng: 121.0244,
+            address: 'Ayala Triangle, Makati'
+        },
+        vehicle: {
+            model: 'Ford E-Transit',
+            licensePlate: 'ABC 123',
+            batteryLevel: 85,
+            speed: 45,
+            heading: 90
+        },
+        lastUpdate: 'Just now',
+        shiftStart: '08:00 AM',
+        shiftEnd: '05:00 PM',
+        routeProgress: 65
+    },
+    {
+        id: 'emp_002',
+        name: 'Jane Smith',
+        role: 'Maintenance Crew',
+        avatar: 'https://i.pravatar.cc/150?u=jane',
+        status: 'Idle',
+        currentLocation: {
+            lat: 14.5509,
+            lng: 121.0503,
+            address: 'BGC High Street, Taguig'
+        },
+        vehicle: {
+            model: 'Rivian R1T',
+            licensePlate: 'XYZ 789',
+            batteryLevel: 42,
+            speed: 0,
+            heading: 180
+        },
+        lastUpdate: '5 mins ago',
+        shiftStart: '09:00 AM',
+        shiftEnd: '06:00 PM',
+        routeProgress: 30
+    },
+    {
+        id: 'emp_003',
+        name: 'Mike Ross',
+        role: 'Support Specialist',
+        avatar: 'https://i.pravatar.cc/150?u=mike',
+        status: 'On Break',
+        currentLocation: {
+            lat: 14.5995,
+            lng: 120.9842,
+            address: 'Intramuros, Manila'
+        },
+        vehicle: {
+            model: 'Chevy Bolt EUV',
+            licensePlate: 'LMN 456',
+            batteryLevel: 92,
+            speed: 0,
+            heading: 270
+        },
+        lastUpdate: '12 mins ago',
+        shiftStart: '07:00 AM',
+        shiftEnd: '04:00 PM',
+        routeProgress: 88
+    },
+    {
+        id: 'emp_004',
+        name: 'Rachel Green',
+        role: 'Field Supervisor',
+        avatar: 'https://i.pravatar.cc/150?u=rachel',
+        status: 'Offline',
+        currentLocation: {
+            lat: 14.6091,
+            lng: 121.0223,
+            address: 'San Juan, Metro Manila'
+        },
+        lastUpdate: '2 hours ago',
+        shiftStart: '08:00 AM',
+        shiftEnd: '05:00 PM',
+        routeProgress: 0
+    },
+    {
+        id: 'emp_005',
+        name: 'Harvey Specter',
+        role: 'Senior Technician',
+        avatar: 'https://i.pravatar.cc/150?u=harvey',
+        status: 'Active',
+        currentLocation: {
+            lat: 14.6760,
+            lng: 121.0437,
+            address: 'Quezon City Circle'
+        },
+        vehicle: {
+            model: 'Tesla Model Y',
+            licensePlate: 'LAW 999',
+            batteryLevel: 68,
+            speed: 60,
+            heading: 45
+        },
+        lastUpdate: 'Just now',
+        shiftStart: '10:00 AM',
+        shiftEnd: '07:00 PM',
+        routeProgress: 45
+    }
+];
 
 export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
     {

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Modal } from './ui/Modal';
 
 interface AuthProps {
     onLogin: () => void;
@@ -49,6 +50,16 @@ const InputField = ({
 export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    
+    // Force light mode on auth page
+    useEffect(() => {
+        document.documentElement.classList.remove('dark');
+    }, []);
+    
+    // Forgot Password States
+    const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
+    const [resetEmail, setResetEmail] = useState('');
+    const [isResetLoading, setIsResetLoading] = useState(false);
 
     // Form States
     const [email, setEmail] = useState('');
@@ -66,6 +77,22 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
                 duration: 3000,
             });
             onLogin();
+        }, 1500);
+    };
+
+    const handleForgotPassword = (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsResetLoading(true);
+
+        // Simulate API call
+        setTimeout(() => {
+            setIsResetLoading(false);
+            setIsForgotPasswordModalOpen(false);
+            setResetEmail('');
+            toast.success("Reset link sent!", {
+                description: "Check your email for instructions to reset your password.",
+                duration: 4000,
+            });
         }, 1500);
     };
 
@@ -157,7 +184,11 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
                                     setShowPassword={setShowPassword}
                                 />
                                 <div className="flex justify-end">
-                                    <button type="button" className="text-xs font-bold text-primary dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setIsForgotPasswordModalOpen(true)}
+                                        className="text-xs font-bold text-primary dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                                    >
                                         Forgot password?
                                     </button>
                                 </div>
@@ -181,6 +212,56 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
                     </AnimatePresence>
                 </div>
             </div>
+
+            {/* Forgot Password Modal */}
+            <Modal
+                isOpen={isForgotPasswordModalOpen}
+                onClose={() => setIsForgotPasswordModalOpen(false)}
+                title="Reset Password"
+            >
+                <div className="flex flex-col">
+                    <div className="mb-6 text-center">
+                        <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center mx-auto mb-4">
+                            <Mail className="text-primary dark:text-blue-400" size={24} />
+                        </div>
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Forgot your password?</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm">
+                            Enter your email address and we'll send you a link to reset your password.
+                        </p>
+                    </div>
+
+                    <form onSubmit={handleForgotPassword} className="space-y-4">
+                        <InputField 
+                            icon={Mail} 
+                            type="email" 
+                            placeholder="Email Address" 
+                            value={resetEmail}
+                            onChange={(e: any) => setResetEmail(e.target.value)}
+                        />
+                        
+                        <div className="flex gap-3 pt-2">
+                            <button
+                                type="button"
+                                onClick={() => setIsForgotPasswordModalOpen(false)}
+                                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={isResetLoading}
+                                className="flex-1 px-4 py-2.5 rounded-xl bg-[#153385] dark:bg-blue-600 hover:bg-blue-900 dark:hover:bg-blue-500 text-white font-bold shadow-lg shadow-blue-900/20 transition-all flex items-center justify-center gap-2"
+                            >
+                                {isResetLoading ? (
+                                    <Loader2 size={18} className="animate-spin" />
+                                ) : (
+                                    'Send Reset Link'
+                                )}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </Modal>
         </div>
     );
 };

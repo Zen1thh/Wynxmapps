@@ -8,7 +8,7 @@ import { Support } from './components/Support';
 import { Reviews } from './components/Reviews';
 import { Subscription } from './components/Subscription';
 import { WynxAI } from './components/WynxAI';
-import { MapRoutes } from './components/MapRoutes';
+import { FleetTracker } from './components/FleetTracker';
 import { Settings } from './components/Settings';
 import { Vehicles } from './components/Vehicles'; // Import Vehicles component
 import { Logs } from './components/Logs'; // Import Logs component
@@ -61,8 +61,8 @@ function App() {
             return <Subscription />;
         case ViewState.WYNX_AI:
             return <WynxAI />;
-        case ViewState.MAP_ROUTES:
-            return <MapRoutes />;
+        case ViewState.FLEET_TRACKER:
+            return <FleetTracker />;
         case ViewState.SETTINGS:
             return <Settings />;
         case ViewState.SUPPORT:

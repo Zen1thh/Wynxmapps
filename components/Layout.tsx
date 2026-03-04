@@ -80,9 +80,9 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
                     />
                     <NavItem 
                         icon={<Route size={18} />} 
-                        label="Map Routes" 
-                        active={currentView === ViewState.MAP_ROUTES}
-                        onClick={() => { setCurrentView(ViewState.MAP_ROUTES); setSidebarOpen(false); }}
+                        label="Fleet Tracker" 
+                        active={currentView === ViewState.FLEET_TRACKER}
+                        onClick={() => { setCurrentView(ViewState.FLEET_TRACKER); setSidebarOpen(false); }}
                     />
                     <NavItem 
                         icon={<Calendar size={18} />} 

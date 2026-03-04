@@ -107,7 +107,7 @@ export enum ViewState {
     VEHICLES = 'VEHICLES',
     SUBSCRIPTIONS = 'SUBSCRIPTIONS',
     WYNX_AI = 'WYNX_AI',
-    MAP_ROUTES = 'MAP_ROUTES',
+    FLEET_TRACKER = 'FLEET_TRACKER',
     SUPPORT = 'SUPPORT',
     REVIEWS = 'REVIEWS',
     LOGS = 'LOGS',
@@ -133,4 +133,28 @@ export interface SubscriptionPlan {
     isPopular?: boolean;
     tag?: string; // Custom tag text (e.g. "Most Popular", "Best Value")
     status: PlanStatus; 
+}
+
+export interface Employee {
+    id: string;
+    name: string;
+    role: string;
+    avatar: string;
+    status: 'Active' | 'Idle' | 'Offline' | 'On Break';
+    currentLocation: {
+        lat: number;
+        lng: number;
+        address: string;
+    };
+    vehicle?: {
+        model: string;
+        licensePlate: string;
+        batteryLevel: number;
+        speed: number; // km/h
+        heading: number; // degrees
+    };
+    lastUpdate: string;
+    shiftStart: string;
+    shiftEnd: string;
+    routeProgress?: number; // percentage
 }
