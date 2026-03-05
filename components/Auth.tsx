@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { Modal } from './ui/Modal';
 
 interface AuthProps {
-    onLogin: () => void;
+    onLogin: (role: 'admin' | 'superadmin') => void;
 }
 
 const InputField = ({ 
@@ -69,14 +69,16 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
         e.preventDefault();
         setIsLoading(true);
 
+        const role = (email.toLowerCase() === 'admin@wynxsmapp.com' || email.toLowerCase() === 'admin') ? 'admin' : 'superadmin';
+
         // Simulate API call
         setTimeout(() => {
             setIsLoading(false);
-            toast.success("Welcome back, Admin!", {
-                description: "You have successfully signed in to Wynxsmapp Admin.",
+            toast.success(`Welcome back, ${role === 'admin' ? 'Admin' : 'Super Admin'}!`, {
+                description: `You have successfully signed in to Wynxsmapp ${role === 'admin' ? 'Admin' : 'Super Admin'}.`,
                 duration: 3000,
             });
-            onLogin();
+            onLogin(role);
         }, 1500);
     };
 

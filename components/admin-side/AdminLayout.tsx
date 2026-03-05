@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ViewState } from '../types';
+import { ViewState } from '../../types';
 import { 
-    LayoutDashboard, MapPin, Calendar, Users, MessageSquare, Settings, LogOut, Bell, Search, Menu, Star, CreditCard, Bot, Route, Cog, Car, ScrollText, AlertTriangle
+    Settings, LogOut, Bell, Search, Menu, AlertTriangle, LayoutDashboard
 } from 'lucide-react';
-import { Modal } from './ui/Modal';
+import { Modal } from '../ui/Modal';
 
-interface LayoutProps {
+interface AdminLayoutProps {
     currentView: ViewState;
     setCurrentView: (view: ViewState) => void;
     children: React.ReactNode;
@@ -30,7 +30,7 @@ const NavItem: React.FC<{
     </button>
 );
 
-export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, children, onLogout }) => {
+export const AdminLayout: React.FC<AdminLayoutProps> = ({ currentView, setCurrentView, children, onLogout }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
@@ -60,7 +60,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
                     <div className="w-8 h-8 rounded-lg bg-primary dark:bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
                         <span className="font-bold text-lg text-white">W</span>
                     </div>
-                    <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Wynxsmapp <span className="text-primary dark:text-blue-500">Super Admin</span></span>
+                    <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Wynxsmapp <span className="text-primary dark:text-blue-500">Admin</span></span>
                 </div>
 
                 <div className="w-full h-[1px] bg-slate-100 dark:bg-gradient-to-r dark:from-transparent dark:via-white/10 dark:to-transparent my-2" />
@@ -72,73 +72,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
                         active={currentView === ViewState.DASHBOARD}
                         onClick={() => { setCurrentView(ViewState.DASHBOARD); setSidebarOpen(false); }}
                     />
-                    <NavItem 
-                        icon={<MapPin size={18} />} 
-                        label="Stations" 
-                        active={currentView === ViewState.STATIONS}
-                        onClick={() => { setCurrentView(ViewState.STATIONS); setSidebarOpen(false); }}
-                    />
-                    <NavItem 
-                        icon={<Route size={18} />} 
-                        label="Fleet Tracker" 
-                        active={currentView === ViewState.FLEET_TRACKER}
-                        onClick={() => { setCurrentView(ViewState.FLEET_TRACKER); setSidebarOpen(false); }}
-                    />
-                    <NavItem 
-                        icon={<Calendar size={18} />} 
-                        label="Bookings" 
-                        active={currentView === ViewState.BOOKINGS}
-                        onClick={() => { setCurrentView(ViewState.BOOKINGS); setSidebarOpen(false); }}
-                    />
-                    <NavItem 
-                        icon={<Users size={18} />} 
-                        label="Users" 
-                        active={currentView === ViewState.USERS}
-                        onClick={() => { setCurrentView(ViewState.USERS); setSidebarOpen(false); }}
-                    />
-                    <NavItem 
-                        icon={<Car size={18} />} 
-                        label="Vehicles" 
-                        active={currentView === ViewState.VEHICLES}
-                        onClick={() => { setCurrentView(ViewState.VEHICLES); setSidebarOpen(false); }}
-                    />
-                     <NavItem 
-                        icon={<CreditCard size={18} />} 
-                        label="Subscription" 
-                        active={currentView === ViewState.SUBSCRIPTIONS}
-                        onClick={() => { setCurrentView(ViewState.SUBSCRIPTIONS); setSidebarOpen(false); }}
-                    />
-                    <div className="w-full h-[1px] bg-slate-100 dark:bg-gradient-to-r dark:from-transparent dark:via-white/5 dark:to-transparent my-2" />
-                    <NavItem 
-                        icon={<Bot size={18} />} 
-                        label="Wynx AI" 
-                        active={currentView === ViewState.WYNX_AI}
-                        onClick={() => { setCurrentView(ViewState.WYNX_AI); setSidebarOpen(false); }}
-                    />
-                    <NavItem 
-                        icon={<Star size={18} />} 
-                        label="Reviews" 
-                        active={currentView === ViewState.REVIEWS}
-                        onClick={() => { setCurrentView(ViewState.REVIEWS); setSidebarOpen(false); }}
-                    />
-                    <NavItem 
-                        icon={<MessageSquare size={18} />} 
-                        label="Support" 
-                        active={currentView === ViewState.SUPPORT}
-                        onClick={() => { setCurrentView(ViewState.SUPPORT); setSidebarOpen(false); }}
-                    />
-                    <NavItem 
-                        icon={<ScrollText size={18} />} 
-                        label="Logs" 
-                        active={currentView === ViewState.LOGS}
-                        onClick={() => { setCurrentView(ViewState.LOGS); setSidebarOpen(false); }}
-                    />
-                    <NavItem 
-                        icon={<Cog size={18} />} 
-                        label="Settings" 
-                        active={currentView === ViewState.SETTINGS}
-                        onClick={() => { setCurrentView(ViewState.SETTINGS); setSidebarOpen(false); }}
-                    />
+                    {/* Categories will be added here later */}
                 </nav>
 
                 <div className="p-4 border-t border-slate-200 dark:border-white/5">
@@ -227,8 +161,8 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
                             </button>
                             <div className="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-white/10">
                                 <div className="text-right hidden sm:block">
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white">Mark Johnson</p>
-                                    <p className="text-xs text-slate-500 dark:text-slate-400">Super Admin</p>
+                                    <p className="text-sm font-bold text-slate-900 dark:text-white">Admin User</p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400">Admin</p>
                                 </div>
                                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-blue-500 dark:from-blue-400 dark:to-indigo-500 p-[2px] shadow-lg shadow-blue-500/20">
                                     <img 

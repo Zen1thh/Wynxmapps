@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { Card } from './ui/Card';
-import { REVENUE_DATA, STATION_USAGE_DATA, MOCK_STATIONS, MOCK_USERS, SUBSCRIPTION_PLANS } from '../constants';
+import { Card } from '../ui/Card';
+import { REVENUE_DATA, STATION_USAGE_DATA, MOCK_STATIONS, MOCK_USERS, SUBSCRIPTION_PLANS } from '../../constants';
 import { 
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
     BarChart, Bar, Legend
@@ -43,7 +43,7 @@ const StatCard: React.FC<{
     );
 };
 
-export const Dashboard: React.FC = () => {
+export const AdminDashboard: React.FC = () => {
     const headerRef = useRef(null);
     const chartsRef = useRef(null);
 
@@ -62,8 +62,8 @@ export const Dashboard: React.FC = () => {
         <div className="space-y-6">
             <div ref={headerRef} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Wynxsmapp Super Admin Dashboard</h1>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">Welcome back, Super Admin. Here is the latest solar charging data.</p>
+                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Wynxsmapp Admin Dashboard</h1>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">Welcome back, Admin. Here is the latest solar charging data.</p>
                 </div>
             </div>
 

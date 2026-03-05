@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from './components/Layout';
+import { AdminLayout } from './components/admin-side/AdminLayout';
 import { Dashboard } from './components/Dashboard';
+import { AdminDashboard } from './components/admin-side/AdminDashboard';
 import { Stations } from './components/Stations';
 import { Bookings } from './components/Bookings';
 import { Users } from './components/Users';
@@ -25,30 +27,36 @@ const PlaceholderView: React.FC<{ title: string }> = ({ title }) => (
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<'admin' | 'superadmin'>('superadmin');
   const [currentView, setCurrentView] = useState<ViewState>(ViewState.DASHBOARD);
 
   // Check for existing session (Optional, purely for UX persistence in this demo)
   useEffect(() => {
       const isAuth = localStorage.getItem('isAuth');
+      const role = localStorage.getItem('userRole') as 'admin' | 'superadmin';
       if (isAuth === 'true') {
           setIsAuthenticated(true);
+          if (role) setUserRole(role);
       }
   }, []);
 
-  const handleLogin = () => {
+  const handleLogin = (role: 'admin' | 'superadmin') => {
       setIsAuthenticated(true);
+      setUserRole(role);
       localStorage.setItem('isAuth', 'true');
+      localStorage.setItem('userRole', role);
   };
 
   const handleLogout = () => {
       setIsAuthenticated(false);
       localStorage.removeItem('isAuth');
+      localStorage.removeItem('userRole');
   };
 
   const renderContent = () => {
     switch (currentView) {
         case ViewState.DASHBOARD:
-            return <Dashboard />;
+            return userRole === 'admin' ? <AdminDashboard /> : <Dashboard />;
         case ViewState.STATIONS:
             return <Stations />;
         case ViewState.BOOKINGS:
@@ -81,6 +89,10 @@ function App() {
       <Toaster position="top-center" richColors closeButton />
       {!isAuthenticated ? (
           <Auth onLogin={handleLogin} />
+      ) : userRole === 'admin' ? (
+          <AdminLayout currentView={currentView} setCurrentView={setCurrentView} onLogout={handleLogout}>
+              {renderContent()}
+          </AdminLayout>
       ) : (
           <Layout currentView={currentView} setCurrentView={setCurrentView} onLogout={handleLogout}>
               {renderContent()}
