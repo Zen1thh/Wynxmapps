@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Layout } from './components/Layout';
 import { AdminLayout } from './components/admin-side/AdminLayout';
 import { Dashboard } from './components/Dashboard';
 import { AdminDashboard } from './components/admin-side/AdminDashboard';
 import { Stations } from './components/Stations';
+import { AdminStations } from './components/admin-side/AdminStations';
 import { Bookings } from './components/Bookings';
 import { Users } from './components/Users';
+import { AdminUsers } from './components/admin-side/AdminUsers';
 import { Support } from './components/Support';
 import { Reviews } from './components/Reviews';
 import { Subscription } from './components/Subscription';
 import { WynxAI } from './components/WynxAI';
 import { FleetTracker } from './components/FleetTracker';
 import { Settings } from './components/Settings';
+import { AdminSettings } from './components/admin-side/AdminSettings';
 import { Vehicles } from './components/Vehicles'; // Import Vehicles component
 import { Logs } from './components/Logs'; // Import Logs component
 import { Auth } from './components/Auth';
@@ -54,34 +58,62 @@ function App() {
   };
 
   const renderContent = () => {
+    let content;
     switch (currentView) {
         case ViewState.DASHBOARD:
-            return userRole === 'admin' ? <AdminDashboard /> : <Dashboard />;
+            content = userRole === 'admin' ? <AdminDashboard /> : <Dashboard />;
+            break;
         case ViewState.STATIONS:
-            return <Stations />;
+            content = userRole === 'admin' ? <AdminStations /> : <Stations />;
+            break;
         case ViewState.BOOKINGS:
-            return <Bookings />;
+            content = <Bookings />;
+            break;
         case ViewState.USERS:
-            return <Users />;
+            content = userRole === 'admin' ? <AdminUsers /> : <Users />;
+            break;
         case ViewState.VEHICLES:
-            return <Vehicles />; // Use the new component
+            content = <Vehicles />; // Use the new component
+            break;
         case ViewState.SUBSCRIPTIONS:
-            return <Subscription />;
+            content = <Subscription />;
+            break;
         case ViewState.WYNX_AI:
-            return <WynxAI />;
+            content = <WynxAI />;
+            break;
         case ViewState.FLEET_TRACKER:
-            return <FleetTracker />;
+            content = <FleetTracker />;
+            break;
         case ViewState.SETTINGS:
-            return <Settings />;
+            content = userRole === 'admin' ? <AdminSettings /> : <Settings />;
+            break;
         case ViewState.SUPPORT:
-            return <Support />;
+            content = <Support />;
+            break;
         case ViewState.REVIEWS:
-            return <Reviews />;
+            content = <Reviews />;
+            break;
         case ViewState.LOGS:
-            return <Logs />;
+            content = <Logs />;
+            break;
         default:
-            return <PlaceholderView title={currentView} />;
+            content = <PlaceholderView title={currentView} />;
     }
+
+    return (
+        <AnimatePresence mode="wait">
+            <motion.div
+                key={currentView}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="h-full"
+            >
+                {content}
+            </motion.div>
+        </AnimatePresence>
+    );
   };
 
   return (

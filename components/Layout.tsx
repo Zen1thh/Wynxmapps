@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ViewState } from '../types';
+import { AnimatePresence, motion } from 'framer-motion';
 import { 
     LayoutDashboard, MapPin, Calendar, Users, MessageSquare, Settings, LogOut, Bell, Search, Menu, Star, CreditCard, Bot, Route, Cog, Car, ScrollText, AlertTriangle
 } from 'lucide-react';
@@ -47,12 +48,18 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, chi
     return (
         <div className="flex h-screen overflow-hidden bg-slate-50 dark:bg-[#0b1121] text-slate-900 dark:text-white transition-colors duration-300">
             {/* Mobile Sidebar Overlay */}
-            {sidebarOpen && (
-                <div 
-                    className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
-                    onClick={() => setSidebarOpen(false)}
-                />
-            )}
+            <AnimatePresence>
+                {sidebarOpen && (
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+                        onClick={() => setSidebarOpen(false)}
+                    />
+                )}
+            </AnimatePresence>
 
             {/* Sidebar */}
             <aside className={`fixed md:relative z-50 w-64 h-full bg-white dark:bg-transparent dark:glass-panel border-r border-slate-200 dark:border-white/5 flex flex-col transition-transform duration-300 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
