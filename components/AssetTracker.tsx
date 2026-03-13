@@ -5,8 +5,10 @@ import { Card } from './ui/Card';
 import { 
     Search, Filter, MapPin, Navigation, Clock, Battery, 
     Car, User, Phone, CheckCircle2, AlertCircle, MinusCircle,
-    Sun, Moon, Satellite, Crosshair, ChevronRight, Activity
+    Sun, Moon, Satellite, Crosshair, ChevronRight, Activity, Zap
 } from 'lucide-react';
+import { MOCK_STATIONS } from '../constants';
+import { Station } from '../types';
 
 // --- Types ---
 type MapStyle = 'dark' | 'light' | 'satellite';
@@ -107,7 +109,7 @@ const MOCK_EMPLOYEES: EmployeeLocation[] = [
     }
 ];
 
-export const FleetTracker: React.FC = () => {
+export const AssetTracker: React.FC = () => {
     // Refs
     const mapRef = useRef<HTMLDivElement>(null);
     const mapInstanceRef = useRef<L.Map | null>(null);
@@ -118,19 +120,35 @@ export const FleetTracker: React.FC = () => {
     // State
     const [mapStyle, setMapStyle] = useState<MapStyle>('dark');
     const [searchQuery, setSearchQuery] = useState('');
-    const [statusFilter, setStatusFilter] = useState<EmployeeStatus | 'All'>('All');
+    const [typeFilter, setTypeFilter] = useState<'All' | 'Users' | 'Cars' | 'Stations'>('All');
     const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
+    const [isMapReady, setIsMapReady] = useState(false);
 
     // Filtered Employees
     const filteredEmployees = useMemo(() => {
+        if (typeFilter === 'Stations') return [];
         return MOCK_EMPLOYEES.filter(emp => {
             const matchesSearch = emp.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                                   emp.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
                                   emp.vehicle.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesStatus = statusFilter === 'All' || emp.status === statusFilter;
-            return matchesSearch && matchesStatus;
+            
+            let matchesType = true;
+            if (typeFilter === 'Users') matchesType = emp.role.includes('Specialist') || emp.role.includes('Response');
+            if (typeFilter === 'Cars') matchesType = emp.role.includes('Technician') || emp.role.includes('Maintenance');
+
+            return matchesSearch && matchesType;
         });
-    }, [searchQuery, statusFilter]);
+    }, [searchQuery, typeFilter]);
+
+    // Filtered Stations
+    const filteredStations = useMemo(() => {
+        if (typeFilter === 'Users' || typeFilter === 'Cars') return [];
+        return MOCK_STATIONS.filter(station => {
+            const matchesSearch = station.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                  station.location.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesSearch;
+        });
+    }, [searchQuery, typeFilter]);
 
     // Check theme for initial map style
     useEffect(() => {
@@ -178,6 +196,7 @@ export const FleetTracker: React.FC = () => {
             markersLayerRef.current = markersLayer;
 
             mapInstanceRef.current = map;
+            setIsMapReady(true);
 
             setTimeout(() => {
                 map.invalidateSize();
@@ -192,6 +211,7 @@ export const FleetTracker: React.FC = () => {
                 mapInstanceRef.current = null;
                 markersLayerRef.current = null;
                 tileLayerRef.current = null;
+                setIsMapReady(false);
             }
         };
     }, []); 
@@ -230,8 +250,12 @@ export const FleetTracker: React.FC = () => {
             const markerHtml = `
                 <div class="relative flex items-center justify-center w-10 h-10 transition-transform ${isSelected ? 'scale-125 z-50' : 'hover:scale-110 z-10'}">
                     ${pulseHtml}
-                    <div class="relative w-10 h-10 rounded-full border-2 ${isSelected ? 'border-primary dark:border-blue-500' : 'border-white dark:border-slate-800'} shadow-lg overflow-hidden bg-white dark:bg-slate-800">
-                        <img src="${emp.avatar}" alt="${emp.name}" class="w-full h-full object-cover ${emp.status === 'Offline' ? 'grayscale opacity-70' : ''}" />
+                    <div class="relative w-10 h-10 rounded-full border-2 ${isSelected ? 'border-primary dark:border-blue-500' : 'border-white dark:border-slate-800'} shadow-lg overflow-hidden bg-white dark:bg-slate-800 flex items-center justify-center">
+                        ${emp.role.includes('Technician') || emp.role.includes('Maintenance') ? 
+                            `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-700 dark:text-slate-300"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1 .4-1 1v10c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+                             <img src="${emp.avatar}" alt="${emp.name}" class="absolute inset-0 w-full h-full object-cover opacity-0 hover:opacity-100 transition-opacity ${emp.status === 'Offline' ? 'grayscale opacity-70' : ''}" />` : 
+                            `<img src="${emp.avatar}" alt="${emp.name}" class="w-full h-full object-cover ${emp.status === 'Offline' ? 'grayscale opacity-70' : ''}" />`
+                        }
                     </div>
                     <div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white dark:border-slate-800 ${statusColor} z-20"></div>
                 </div>
@@ -255,7 +279,47 @@ export const FleetTracker: React.FC = () => {
             });
         });
 
-    }, [filteredEmployees, selectedEmployeeId]);
+        filteredStations.forEach(station => {
+            let markerHtml = '';
+            const baseClasses = "w-8 h-8 rounded-full border flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-200 backdrop-blur-sm";
+
+            if (station.status === 'Online') {
+                markerHtml = `<div class="${baseClasses} bg-primary/90 dark:bg-emerald-900/80 text-white dark:text-emerald-400 border-white dark:border-emerald-500 shadow-[0_0_12px_rgba(21,51,133,0.5)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>`;
+            } else if (station.status === 'Maintenance') {
+                markerHtml = `<div class="${baseClasses} bg-amber-500/90 dark:bg-amber-900/80 text-white dark:text-amber-400 border-white dark:border-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.5)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                </div>`;
+            } else if (station.status === 'Error') {
+                markerHtml = `<div class="${baseClasses} bg-rose-500/90 dark:bg-rose-900/80 text-white dark:text-rose-400 border-white dark:border-rose-500 shadow-[0_0_12px_rgba(244,63,94,0.5)] animate-pulse">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>`;
+            } else {
+                // Offline
+                markerHtml = `<div class="${baseClasses} bg-slate-700/90 dark:bg-red-900/80 text-white dark:text-red-400 border-white dark:border-red-500 shadow-[0_0_12px_rgba(239,68,68,0.5)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+                </div>`;
+            }
+
+            const icon = L.divIcon({
+                className: 'station-marker',
+                html: markerHtml,
+                iconSize: [32, 32],
+                iconAnchor: [16, 16],
+            });
+
+            const marker = L.marker([station.coordinates.lat, station.coordinates.lng], { icon }).addTo(layerGroup);
+            
+            marker.on('click', () => {
+                map.flyTo([station.coordinates.lat, station.coordinates.lng], 15, {
+                    duration: 1.5,
+                    easeLinearity: 0.25
+                });
+            });
+        });
+
+    }, [filteredEmployees, filteredStations, selectedEmployeeId, isMapReady]);
 
     // Handlers
     const handleEmployeeClick = (emp: EmployeeLocation) => {
@@ -304,9 +368,9 @@ export const FleetTracker: React.FC = () => {
                 <div className="p-4 border-b border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#0b1121] space-y-4 shrink-0">
                     <div>
                         <h2 className="text-xl font-bold text-primary dark:text-white flex items-center gap-2">
-                            <Activity size={20} /> Fleet Tracking
+                            <Activity size={20} /> Asset Tracking
                         </h2>
-                        <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">Monitor employee vehicles in real-time.</p>
+                        <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">Monitor assets in real-time.</p>
                     </div>
 
                     <div className="relative">
@@ -315,85 +379,137 @@ export const FleetTracker: React.FC = () => {
                             type="text" 
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search employees, roles..." 
+                            placeholder="Search assets, roles..." 
                             className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 pl-9 text-slate-900 dark:text-white text-sm focus:border-primary dark:focus:border-blue-500 outline-none transition-colors placeholder-slate-400" 
                         />
                     </div>
 
-                    {/* Status Filters */}
+                    {/* Type Filters */}
                     <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar">
-                        {['All', 'Active', 'Idle', 'Offline'].map((status) => (
+                        {['All', 'Users', 'Cars', 'Stations'].map((type) => (
                             <button
-                                key={status}
-                                onClick={() => setStatusFilter(status as any)}
+                                key={type}
+                                onClick={() => setTypeFilter(type as any)}
                                 className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-colors border ${
-                                    statusFilter === status 
+                                    typeFilter === type 
                                     ? 'bg-primary dark:bg-blue-600 text-white border-primary dark:border-blue-500 shadow-md' 
                                     : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800'
                                 }`}
                             >
-                                {status}
+                                {type}
                             </button>
                         ))}
                     </div>
                 </div>
 
-                {/* Employee List */}
+                {/* Asset List */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar bg-white dark:bg-[#0b1121] min-h-0">
-                    {filteredEmployees.length === 0 ? (
+                    {filteredEmployees.length === 0 && filteredStations.length === 0 ? (
                         <div className="text-center py-10 text-slate-500 dark:text-slate-400">
-                            <User size={32} className="mx-auto mb-3 opacity-50" />
-                            <p className="text-sm">No employees found.</p>
+                            <Activity size={32} className="mx-auto mb-3 opacity-50" />
+                            <p className="text-sm">No assets found.</p>
                         </div>
                     ) : (
-                        filteredEmployees.map(emp => (
-                            <div 
-                                key={emp.id}
-                                onClick={() => handleEmployeeClick(emp)}
-                                className={`p-3 rounded-xl border cursor-pointer transition-all group relative ${
-                                    selectedEmployeeId === emp.id 
-                                    ? 'bg-blue-50 dark:bg-blue-600/10 border-primary/50 dark:border-blue-500/50 ring-1 ring-primary/20 dark:ring-blue-500/20' 
-                                    : 'bg-white dark:bg-slate-950/30 border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5'
-                                }`}
-                            >
-                                <div className="flex items-start gap-3">
-                                    <div className="relative">
-                                        <img src={emp.avatar} alt={emp.name} className={`w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 ${emp.status === 'Offline' ? 'grayscale opacity-70' : ''}`} />
-                                        <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${emp.status === 'Active' ? 'bg-emerald-500' : emp.status === 'Idle' ? 'bg-amber-500' : 'bg-slate-500'}`}></div>
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex justify-between items-start mb-0.5">
-                                            <h4 className={`text-sm font-bold truncate ${selectedEmployeeId === emp.id ? 'text-primary dark:text-blue-400' : 'text-slate-900 dark:text-white'}`}>
-                                                {emp.name}
-                                            </h4>
-                                            <span className={`text-[9px] px-1.5 py-0.5 rounded border uppercase font-bold flex items-center gap-1 ${getStatusBadge(emp.status)}`}>
-                                                {emp.status}
-                                            </span>
+                        <>
+                            {filteredEmployees.map(emp => (
+                                <div 
+                                    key={emp.id}
+                                    onClick={() => handleEmployeeClick(emp)}
+                                    className={`p-3 rounded-xl border cursor-pointer transition-all group relative ${
+                                        selectedEmployeeId === emp.id 
+                                        ? 'bg-blue-50 dark:bg-blue-600/10 border-primary/50 dark:border-blue-500/50 ring-1 ring-primary/20 dark:ring-blue-500/20' 
+                                        : 'bg-white dark:bg-slate-950/30 border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5'
+                                    }`}
+                                >
+                                    <div className="flex items-start gap-3">
+                                        <div className="relative">
+                                            <img src={emp.avatar} alt={emp.name} className={`w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700 ${emp.status === 'Offline' ? 'grayscale opacity-70' : ''}`} />
+                                            <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${emp.status === 'Active' ? 'bg-emerald-500' : emp.status === 'Idle' ? 'bg-amber-500' : 'bg-slate-500'}`}></div>
                                         </div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate mb-2">{emp.role}</p>
-                                        
-                                        <div className="grid grid-cols-2 gap-2 mt-2">
-                                            <div className="flex items-center gap-1.5 text-[10px] text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded-md">
-                                                <Car size={12} className="text-slate-400" />
-                                                <span className="truncate">{emp.vehicle}</span>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex justify-between items-start mb-0.5">
+                                                <h4 className={`text-sm font-bold truncate ${selectedEmployeeId === emp.id ? 'text-primary dark:text-blue-400' : 'text-slate-900 dark:text-white'}`}>
+                                                    {emp.name}
+                                                </h4>
+                                                <span className={`text-[9px] px-1.5 py-0.5 rounded border uppercase font-bold flex items-center gap-1 ${getStatusBadge(emp.status)}`}>
+                                                    {emp.status}
+                                                </span>
                                             </div>
-                                            <div className="flex items-center gap-1.5 text-[10px] text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded-md">
-                                                <Battery size={12} className={emp.batteryLevel > 20 ? 'text-emerald-500' : 'text-red-500'} />
-                                                <span>{emp.batteryLevel}%</span>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 truncate mb-2">{emp.role}</p>
+                                            
+                                            <div className="grid grid-cols-2 gap-2 mt-2">
+                                                <div className="flex items-center gap-1.5 text-[10px] text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded-md">
+                                                    <Car size={12} className="text-slate-400" />
+                                                    <span className="truncate">{emp.vehicle}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5 text-[10px] text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded-md">
+                                                    <Battery size={12} className={emp.batteryLevel > 20 ? 'text-emerald-500' : 'text-red-500'} />
+                                                    <span>{emp.batteryLevel}%</span>
+                                                </div>
                                             </div>
+                                            
+                                            {emp.destination && emp.status === 'Active' && (
+                                                <div className="mt-2 flex items-center gap-1.5 text-[10px] text-primary dark:text-blue-400 font-medium">
+                                                    <Navigation size={10} />
+                                                    <span className="truncate">Heading to: {emp.destination}</span>
+                                                </div>
+                                            )}
                                         </div>
-                                        
-                                        {emp.destination && emp.status === 'Active' && (
-                                            <div className="mt-2 flex items-center gap-1.5 text-[10px] text-primary dark:text-blue-400 font-medium">
-                                                <Navigation size={10} />
-                                                <span className="truncate">Heading to: {emp.destination}</span>
-                                            </div>
-                                        )}
                                     </div>
+                                    <ChevronRight size={16} className={`absolute right-3 top-1/2 -translate-y-1/2 transition-transform ${selectedEmployeeId === emp.id ? 'text-primary dark:text-blue-500 translate-x-1' : 'text-slate-300 dark:text-slate-600 opacity-0 group-hover:opacity-100'}`} />
                                 </div>
-                                <ChevronRight size={16} className={`absolute right-3 top-1/2 -translate-y-1/2 transition-transform ${selectedEmployeeId === emp.id ? 'text-primary dark:text-blue-500 translate-x-1' : 'text-slate-300 dark:text-slate-600 opacity-0 group-hover:opacity-100'}`} />
-                            </div>
-                        ))
+                            ))}
+                            
+                            {filteredStations.map(station => (
+                                <div 
+                                    key={station.id}
+                                    onClick={() => {
+                                        setSelectedEmployeeId(station.id);
+                                        if (mapInstanceRef.current) {
+                                            mapInstanceRef.current.flyTo([station.coordinates.lat, station.coordinates.lng], 15, { duration: 1.5, easeLinearity: 0.25 });
+                                        }
+                                    }}
+                                    className={`p-3 rounded-xl border cursor-pointer transition-all group relative ${
+                                        selectedEmployeeId === station.id 
+                                        ? 'bg-blue-50 dark:bg-blue-600/10 border-primary/50 dark:border-blue-500/50 ring-1 ring-primary/20 dark:ring-blue-500/20' 
+                                        : 'bg-white dark:bg-slate-950/30 border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5'
+                                    }`}
+                                >
+                                    <div className="flex items-start gap-3">
+                                        <div className="relative flex items-center justify-center w-10 h-10 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
+                                            <Zap size={20} className={station.status === 'Online' ? 'text-emerald-500' : station.status === 'Maintenance' ? 'text-amber-500' : 'text-rose-500'} />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex justify-between items-start mb-0.5">
+                                                <h4 className={`text-sm font-bold truncate ${selectedEmployeeId === station.id ? 'text-primary dark:text-blue-400' : 'text-slate-900 dark:text-white'}`}>
+                                                    {station.name}
+                                                </h4>
+                                                <span className={`text-[9px] px-1.5 py-0.5 rounded border uppercase font-bold flex items-center gap-1 ${
+                                                    station.status === 'Online' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' :
+                                                    station.status === 'Maintenance' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' :
+                                                    'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'
+                                                }`}>
+                                                    {station.status}
+                                                </span>
+                                            </div>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400 truncate mb-2">{station.location}</p>
+                                            
+                                            <div className="grid grid-cols-2 gap-2 mt-2">
+                                                <div className="flex items-center gap-1.5 text-[10px] text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded-md">
+                                                    <Battery size={12} className="text-slate-400" />
+                                                    <span className="truncate">{station.power}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5 text-[10px] text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded-md">
+                                                    <Activity size={12} className="text-emerald-500" />
+                                                    <span>{station.totalSlots} Slots</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ChevronRight size={16} className={`absolute right-3 top-1/2 -translate-y-1/2 transition-transform ${selectedEmployeeId === station.id ? 'text-primary dark:text-blue-500 translate-x-1' : 'text-slate-300 dark:text-slate-600 opacity-0 group-hover:opacity-100'}`} />
+                                </div>
+                            ))}
+                        </>
                     )}
                 </div>
             </div>

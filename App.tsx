@@ -13,7 +13,7 @@ import { Support } from './components/Support';
 import { Reviews } from './components/Reviews';
 import { Subscription } from './components/Subscription';
 import { WynxAI } from './components/WynxAI';
-import { FleetTracker } from './components/FleetTracker';
+import { AssetTracker } from './components/AssetTracker';
 import { Settings } from './components/Settings';
 import { AdminSettings } from './components/admin-side/AdminSettings';
 import { Vehicles } from './components/Vehicles'; // Import Vehicles component
@@ -81,8 +81,8 @@ function App() {
         case ViewState.WYNX_AI:
             content = <WynxAI />;
             break;
-        case ViewState.FLEET_TRACKER:
-            content = <FleetTracker />;
+        case ViewState.ASSET_TRACKER:
+            content = <AssetTracker />;
             break;
         case ViewState.SETTINGS:
             content = userRole === 'admin' ? <AdminSettings /> : <Settings />;
